@@ -34,41 +34,38 @@ public class CopilotBasicTests extends CopilotTestUtils {
         copilotAPI = new CopilotAPIImpl(header);
         gsDataAPI = new GSDataImpl(header);
         tenantInfo = gsDataAPI.getTenantInfo(sfinfo.getOrg());
-        /*
+
         if (true) {
             createCustomFields();
             cleanAndGenerateData();
         }
-        */
 
     }
 
     @Test
     public void accountStrategyAccountAsBaseObject() throws Exception {
         //Create and validate smartlist
-        SmartList actualSmartList = createAndValidateSmartList(mapper.readValue(new File(testDataDir + "Basic_cases/t1/T1_SmartList.json"), SmartList.class), 30, 1);
+        SmartList actualSmartList = createAndValidateSmartList(mapper.readValue(new File(testDataDir + "test/Basic_cases/T1_SmartList.json"), SmartList.class), 30, 1);
         actualSmartList = updateSmartListTriggerCriteria(actualSmartList, "A OR B", "{\"alias\":\"B\",\"left\":{\"keys\":[],\"type\":\"field\",\"valueType\":\"STRING\",\"entity\":\"Account\",\"field\":\"Name\",\"fieldName\":\"Name\",\"objectName\":\"Account\",\"fieldType\":\"STRING\",\"label\":\"Account Name\",\"isExternalCriteria\":false},\"operator\":\"contains\",\"right\":{\"keys\":[],\"type\":\"value\",\"valueType\":\"STRING\",\"isNull\":false,\"value\":\"Gallo Ernst & Julio Winery\"}}");
-
         actualSmartList = updateSmartListActionInfo(actualSmartList, "{\"type\":\"calculated\",\"valueType\":\"BOOLEAN\",\"expression\":{\"alias\":\"undefined\",\"left\":{\"keys\":[],\"type\":\"field\",\"valueType\":\"STRING\",\"entity\":\"Contact\",\"field\":\"Contact.Name\",\"fieldName\":\"Name\",\"objectName\":\"Contact\",\"fieldType\":\"STRING\",\"label\":\"Full Name\",\"isExternalCriteria\":true},\"operator\":\"contains\",\"right\":{\"keys\":[],\"type\":\"value\",\"valueType\":\"STRING\",\"isNull\":false,\"value\":\"giri\"}}}");
-
         actualSmartList = runUpdatedSmartList(actualSmartList,2,2);
 
         //Update the smart list name & verify the updated smartlist name.
-        actualSmartList = copilotAPI.updateSmartListName(actualSmartList.getSmartListId(), "Updated Powerlist Name");
-        Assert.assertEquals(actualSmartList.getSmartListName(), "Updated Powerlist Name");
+        actualSmartList = copilotAPI.updateSmartListName(actualSmartList.getSmartListId(), "Updated Account strategy Powerlist Name");
+        Assert.assertEquals(actualSmartList.getSmartListName(), "Updated Account strategy Powerlist Name");
 
         //Resync smart list & verify the status again.
         reSyncSmartList(actualSmartList, 2, 2, 2);
 
         //Create email template & verify the same.
-        EmailTemplate actualEmailTemplate = createAndValidateEmailTemplate(mapper.readValue(new File(testDataDir + "test/t1/T1_EmailTemplate.json"), EmailTemplate.class));
+        EmailTemplate actualEmailTemplate = createAndValidateEmailTemplate(mapper.readValue(new File(testDataDir + "test/Basic_cases/T1_T2_T3_T4_T5_EmailTemplate.json"), EmailTemplate.class));
 
         //Verify Email Template Name Change.
         actualEmailTemplate = copilotAPI.updateEmailTemplateName(actualEmailTemplate.getTemplateId(), "UPDATED EMAIL TEMPLATE NAME");
         Assert.assertEquals(actualEmailTemplate.getTitle(), "UPDATED EMAIL TEMPLATE NAME");
 
         //Create out reach & verify the same.
-        OutReach actualOutReach = createAndTriggerOutreach(mapper.readValue(new File(testDataDir + "test/t1/T1_OutReach.json"), OutReach.class), actualSmartList, actualEmailTemplate);
+        OutReach actualOutReach = createAndTriggerOutreach(mapper.readValue(new File(testDataDir + "test/Basic_cases/T1_OutReach.json"), OutReach.class), actualSmartList, actualEmailTemplate);
         verifyOutReachExecutionHistory(actualOutReach.getStatusId(), 2, 0);
         Assert.assertEquals(actualOutReach.getLastRunStatus(), "SUCCESS");
 
@@ -90,8 +87,8 @@ public class CopilotBasicTests extends CopilotTestUtils {
         verifyTemplateUsedInOutreach(actualEmailTemplate, actualOutReach);
 
         //Verifying outreach name - updated.
-        actualOutReach = copilotAPI.updateOutReachName(actualOutReach.getCampaignId(), "OUT REACH NAME UPDATED");
-        Assert.assertEquals(actualOutReach.getName(), "OUT REACH NAME UPDATED");
+        actualOutReach = copilotAPI.updateOutReachName(actualOutReach.getCampaignId(), "ACCOUNT STRATEGY OUTREACH NAME UPDATED");
+        Assert.assertEquals(actualOutReach.getName(), "ACCOUNT STRATEGY OUTREACH NAME UPDATED");
 
         //Delete outreach, email template, smart list.
         Assert.assertTrue(copilotAPI.deleteOutReach(actualOutReach.getCampaignId()), "Outreach delete failed.");
@@ -112,29 +109,26 @@ public class CopilotBasicTests extends CopilotTestUtils {
 
         //Create and validate smartlist
         SmartList actualSmartList = createAndValidateSmartList(mapper.readValue(new File(testDataDir + "test/Basic_cases/T2_SmartList.json"), SmartList.class), 1, 1);
-        System.out.println("COPILOTCONTACTSMARTLIST"+actualSmartList);
         actualSmartList = updateSmartListTriggerCriteria(actualSmartList, "A OR B", "{\"alias\":\"B\",\"left\":{\"keys\":[],\"type\":\"field\",\"valueType\":\"STRING\",\"entity\":\"Account\",\"field\":\"Name\",\"fieldName\":\"Name\",\"objectName\":\"Account\",\"fieldType\":\"STRING\",\"label\":\"Account Name\",\"isExternalCriteria\":false},\"operator\":\"contains\",\"right\":{\"keys\":[],\"type\":\"value\",\"valueType\":\"STRING\",\"isNull\":false,\"value\":\"Gallo Ernst & Julio Winery\"}}");
-        System.out.println("UPDATEDCRITERIA"+actualSmartList);
-        actualSmartList = updateSmartListActionInfo(actualSmartList, "{\"type\":\"calculated\",\"valueType\":\"BOOLEAN\",\"expression\":{\"alias\":\"undefined\",\"left\":{\"keys\":[],\"type\":\"field\",\"valueType\":\"STRING\",\"entity\":\"Contact\",\"field\":\"Contact.Name\",\"fieldName\":\"Name\",\"objectName\":\"Contact\",\"fieldType\":\"STRING\",\"label\":\"Full Name\",\"isExternalCriteria\":true},\"operator\":\"contains\",\"right\":{\"keys\":[],\"type\":\"value\",\"valueType\":\"STRING\",\"isNull\":false,\"value\":\"giri\"}}}");
-        System.out.println("UPDATEDINFO"+actualSmartList);
+        actualSmartList = updateSmartListActionInfo(actualSmartList, "{\"type\":\"calculated\",\"valueType\":\"BOOLEAN\",\"expression\":{\"alias\":\"undefined\",\"left\":{\"keys\":[],\"type\":\"field\",\"valueType\":\"STRING\",\"entity\":\"Contact\",\"field\":\"Contact.Name\",\"fieldName\":\"Name\",\"objectName\":\"Contact\",\"fieldType\":\"STRING\",\"label\":\"Full Name\",\"isExternalCriteria\":true},\"operator\":\"ne\",\"right\":{\"keys\":[],\"type\":\"value\",\"valueType\":\"STRING\",\"isNull\":false,\"value\":\"giri\"}}}");
         actualSmartList = runUpdatedSmartList(actualSmartList,2,2);
 
         //Update the smart list name & verify the updated smartlist name.
-        actualSmartList = copilotAPI.updateSmartListName(actualSmartList.getSmartListId(), "This is My new Name");
-        Assert.assertEquals(actualSmartList.getSmartListName(), "This is My new Name");
+        actualSmartList = copilotAPI.updateSmartListName(actualSmartList.getSmartListId(), "Updated Contact strategy Powerlist Name");
+        Assert.assertEquals(actualSmartList.getSmartListName(), "Updated Contact strategy Powerlist Name");
 
         //Resync smart list & verify the status again.
         reSyncSmartList(actualSmartList, 2, 2, 2);
 
         //Create email template & verify the same.
-        EmailTemplate actualEmailTemplate = createAndValidateEmailTemplate(mapper.readValue(new File(testDataDir + "test/t1/T1_EmailTemplate.json"), EmailTemplate.class));
+        EmailTemplate actualEmailTemplate = createAndValidateEmailTemplate(mapper.readValue(new File(testDataDir + "test/Basic_cases/T1_T2_T3_T4_T5_EmailTemplate.json"), EmailTemplate.class));
 
         //Verify Email Template Name Change.
         actualEmailTemplate = copilotAPI.updateEmailTemplateName(actualEmailTemplate.getTemplateId(), "UPDATED EMAIL TEMPLATE NAME");
         Assert.assertEquals(actualEmailTemplate.getTitle(), "UPDATED EMAIL TEMPLATE NAME");
 
         //Create out reach & verify the same.
-        OutReach actualOutReach = createAndTriggerOutreach(mapper.readValue(new File(testDataDir + "test/t1/T1_OutReach.json"), OutReach.class), actualSmartList, actualEmailTemplate);
+        OutReach actualOutReach = createAndTriggerOutreach(mapper.readValue(new File(testDataDir + "test/Basic_cases/T2_OutReach.json"), OutReach.class), actualSmartList, actualEmailTemplate);
         verifyOutReachExecutionHistory(actualOutReach.getStatusId(), 2, 0);
         Assert.assertEquals(actualOutReach.getLastRunStatus(), "SUCCESS");
 
@@ -171,6 +165,7 @@ public class CopilotBasicTests extends CopilotTestUtils {
         Assert.assertEquals(emailTemplateNsResponse.getErrorCode(), MDAErrorCodes.EMAIL_TEMPLATE_NOT_FOUND.getGSCode(), "Email Template not found error code not matched.");
         NsResponseObj smartListNsResponse = copilotAPI.getSmartListNsResponse(actualSmartList.getSmartListId());
         Assert.assertEquals(smartListNsResponse.getErrorCode(), MDAErrorCodes.SMARTLIST_DOESNOT_EXISTS.getGSCode(), "Smart list not found error code not matched.");
+
     }
 
     @Test
@@ -178,24 +173,18 @@ public class CopilotBasicTests extends CopilotTestUtils {
 
         //Create and validate smartlist
         SmartList actualSmartList = createAndValidateSmartList(mapper.readValue(new File(testDataDir + "test/Basic_cases/T3_SmartList.json"), SmartList.class), 30, 1);
-        System.out.println("COPILOTCONTACTSMARTLIST"+actualSmartList);
         actualSmartList = updateSmartListTriggerCriteria(actualSmartList, "(A AND B) OR C ", "{\"alias\":\"C\",\"left\":{\"keys\":[],\"type\":\"field\",\"valueType\":\"STRING\",\"entity\":\"Contact\",\"field\":\"Account.Name\",\"fieldName\":\"Account.Name\",\"objectName\":\"Contact\",\"fieldType\":\"TEXT\",\"label\":\"Account ID Name\",\"isExternalCriteria\":false},\"operator\":\"contains\",\"right\":{\"keys\":[],\"type\":\"value\",\"valueType\":\"STRING\",\"isNull\":false,\"value\":\"Gallo Ernst & Julio Winery\"}}");
-        System.out.println("UPDATEDCRITERIA"+actualSmartList);
-
-        //actualSmartList = updateSmartListActionInfo(actualSmartList, "{\"type\":\"calculated\",\"valueType\":\"BOOLEAN\",\"expression\":{\"alias\":\"undefined\",\"left\":{\"keys\":[],\"type\":\"field\",\"valueType\":\"STRING\",\"entity\":\"Contact\",\"field\":\"Contact.Name\",\"fieldName\":\"Name\",\"objectName\":\"Contact\",\"fieldType\":\"STRING\",\"label\":\"Full Name\",\"isExternalCriteria\":true},\"operator\":\"contains\",\"right\":{\"keys\":[],\"type\":\"value\",\"valueType\":\"STRING\",\"isNull\":false,\"value\":\"giri\"}}}");
-
-        System.out.println("UPDATEDINFO"+actualSmartList);
         actualSmartList = runUpdatedSmartList(actualSmartList,45,2);
-        System.out.println("RUN UPDATED SMARTLIST SUCCESSFUL");
+
         //Update the smart list name & verify the updated smartlist name.
-        actualSmartList = copilotAPI.updateSmartListName(actualSmartList.getSmartListId(), "This is My new Name");
-        Assert.assertEquals(actualSmartList.getSmartListName(), "This is My new Name");
+        actualSmartList = copilotAPI.updateSmartListName(actualSmartList.getSmartListId(), "Updated No strategy Powerlist Name");
+        Assert.assertEquals(actualSmartList.getSmartListName(), "Updated No strategy Powerlist Name");
 
         //Resync smart list & verify the status again.
         reSyncSmartList(actualSmartList, 45, 2, 45);
 
         //Create email template & verify the same.
-        EmailTemplate actualEmailTemplate = createAndValidateEmailTemplate(mapper.readValue(new File(testDataDir + "test/t1/T1_EmailTemplate.json"), EmailTemplate.class));
+        EmailTemplate actualEmailTemplate = createAndValidateEmailTemplate(mapper.readValue(new File(testDataDir + "test/Basic_cases/T1_T2_T3_T4_T5_EmailTemplate.json"), EmailTemplate.class));
 
         //Verify Email Template Name Change.
         actualEmailTemplate = copilotAPI.updateEmailTemplateName(actualEmailTemplate.getTemplateId(), "UPDATED EMAIL TEMPLATE NAME");
@@ -224,8 +213,131 @@ public class CopilotBasicTests extends CopilotTestUtils {
         verifyTemplateUsedInOutreach(actualEmailTemplate, actualOutReach);
 
         //Verifying outreach name - updated.
-        actualOutReach = copilotAPI.updateOutReachName(actualOutReach.getCampaignId(), "OUT REACH NAME UPDATED");
-        Assert.assertEquals(actualOutReach.getName(), "OUT REACH NAME UPDATED");
+        actualOutReach = copilotAPI.updateOutReachName(actualOutReach.getCampaignId(), "NO STRATEGY OUTREACH NAME UPDATED");
+        Assert.assertEquals(actualOutReach.getName(), "NO STRATEGY OUTREACH NAME UPDATED");
+
+        //Delete outreach, email template, smart list.
+        Assert.assertTrue(copilotAPI.deleteOutReach(actualOutReach.getCampaignId()), "Outreach delete failed.");
+        Assert.assertTrue(copilotAPI.deleteEmailTemplate(actualEmailTemplate.getTemplateId()), "email template delete failed.");
+        Assert.assertTrue(copilotAPI.deleteSmartList(actualSmartList.getSmartListId()), "Smart list delete failed.");
+
+        //Verify the error code on invalid outreach, email template, smart list Id.
+        NsResponseObj outReachNsResponse = copilotAPI.getOutReachNsResponse(actualOutReach.getCampaignId());
+        Assert.assertEquals(outReachNsResponse.getErrorCode(), MDAErrorCodes.CAMPAIGN_NOT_FOUND.getGSCode(), "Outreach not found error code not matched.");
+        NsResponseObj emailTemplateNsResponse = copilotAPI.getEmailTemplateNsResponseObj(actualEmailTemplate.getTemplateId());
+        Assert.assertEquals(emailTemplateNsResponse.getErrorCode(), MDAErrorCodes.EMAIL_TEMPLATE_NOT_FOUND.getGSCode(), "Email Template not found error code not matched.");
+        NsResponseObj smartListNsResponse = copilotAPI.getSmartListNsResponse(actualSmartList.getSmartListId());
+        Assert.assertEquals(smartListNsResponse.getErrorCode(), MDAErrorCodes.SMARTLIST_DOESNOT_EXISTS.getGSCode(), "Smart list not found error code not matched.");
+    }
+
+    @Test
+    public void userStrategyAccountAsBaseObject() throws Exception {
+        //Create and validate smartlist
+        SmartList actualSmartList = createAndValidateSmartList(mapper.readValue(new File(testDataDir + "test/Basic_cases/T4_SmartList.json"), SmartList.class), 1, 1);
+        actualSmartList = updateSmartListTriggerCriteria(actualSmartList, "A OR B", "{\"alias\":\"B\",\"left\":{\"keys\":[],\"type\":\"field\",\"valueType\":\"STRING\",\"entity\":\"Account\",\"field\":\"Name\",\"fieldName\":\"Name\",\"objectName\":\"Account\",\"fieldType\":\"STRING\",\"label\":\"Account Name\",\"isExternalCriteria\":false},\"operator\":\"contains\",\"right\":{\"keys\":[],\"type\":\"value\",\"valueType\":\"STRING\",\"isNull\":false,\"value\":\"Galbreath\"}}");
+        actualSmartList = runUpdatedSmartList(actualSmartList,1,2);
+
+        //Update the smart list name & verify the updated smartlist name.
+        actualSmartList = copilotAPI.updateSmartListName(actualSmartList.getSmartListId(), "Updated User strategy Powerlist Name");
+        Assert.assertEquals(actualSmartList.getSmartListName(), "Updated User strategy Powerlist Name");
+
+        //Resync smart list & verify the status again.
+        reSyncSmartList(actualSmartList, 1, 2, 2);
+
+        //Create email template & verify the same.
+        EmailTemplate actualEmailTemplate = createAndValidateEmailTemplate(mapper.readValue(new File(testDataDir + "test/Basic_cases/T1_T2_T3_T4_T5_EmailTemplate.json"), EmailTemplate.class));
+
+        //Verify Email Template Name Change.
+        actualEmailTemplate = copilotAPI.updateEmailTemplateName(actualEmailTemplate.getTemplateId(), "UPDATED EMAIL TEMPLATE NAME");
+        Assert.assertEquals(actualEmailTemplate.getTitle(), "UPDATED EMAIL TEMPLATE NAME");
+
+        //Create out reach & verify the same.
+        OutReach actualOutReach = createAndTriggerOutreach(mapper.readValue(new File(testDataDir + "test/Basic_cases/T4_OutReach.json"), OutReach.class), actualSmartList, actualEmailTemplate);
+        verifyOutReachExecutionHistory(actualOutReach.getStatusId(), 2, 0);
+        Assert.assertEquals(actualOutReach.getLastRunStatus(), "SUCCESS");
+
+        //Re-Trigger out reach, wait for outreach process, verify the execution history of out reach.
+        actualOutReach = triggerOutreach(actualOutReach);
+        Assert.assertEquals(actualOutReach.getLastRunStatus(), "FAILURE");
+        verifyOutReachExecutionHistory(actualOutReach.getStatusId(), 0, 2);
+
+        //Update outreach -- Re-Trigger out reach, wait for outreach process, verify the execution history of out reach.
+        actualOutReach.getDefaultECA().get(0).getActions().get(0).setPreventDuplicateDays(0);
+        actualOutReach.setPreventDuplicateDays(0);
+        actualOutReach = copilotAPI.updateOutReach(mapper.writeValueAsString(actualOutReach));
+
+        actualOutReach = triggerOutreach(actualOutReach);//should inform the assertion msg to this method
+        Assert.assertEquals(actualOutReach.getLastRunStatus(), "SUCCESS");
+        verifyOutReachExecutionHistory(actualOutReach.getStatusId(), 2, 0);
+
+        //Get the email template references in outreaches & verify the template use in outreach.
+        verifyTemplateUsedInOutreach(actualEmailTemplate, actualOutReach);
+
+        //Verifying outreach name - updated.
+        actualOutReach = copilotAPI.updateOutReachName(actualOutReach.getCampaignId(), "USER STRATEGY OUTREACH NAME UPDATED");
+        Assert.assertEquals(actualOutReach.getName(), "USER STRATEGY OUTREACH NAME UPDATED");
+
+        //Delete outreach, email template, smart list.
+        Assert.assertTrue(copilotAPI.deleteOutReach(actualOutReach.getCampaignId()), "Outreach delete failed.");
+        Assert.assertTrue(copilotAPI.deleteEmailTemplate(actualEmailTemplate.getTemplateId()), "email template delete failed.");
+        Assert.assertTrue(copilotAPI.deleteSmartList(actualSmartList.getSmartListId()), "Smart list delete failed.");
+
+        //Verify the error code on invalid outreach, email template, smart list Id.
+        NsResponseObj outReachNsResponse = copilotAPI.getOutReachNsResponse(actualOutReach.getCampaignId());
+        Assert.assertEquals(outReachNsResponse.getErrorCode(), MDAErrorCodes.CAMPAIGN_NOT_FOUND.getGSCode(), "Outreach not found error code not matched.");
+        NsResponseObj emailTemplateNsResponse = copilotAPI.getEmailTemplateNsResponseObj(actualEmailTemplate.getTemplateId());
+        Assert.assertEquals(emailTemplateNsResponse.getErrorCode(), MDAErrorCodes.EMAIL_TEMPLATE_NOT_FOUND.getGSCode(), "Email Template not found error code not matched.");
+        NsResponseObj smartListNsResponse = copilotAPI.getSmartListNsResponse(actualSmartList.getSmartListId());
+        Assert.assertEquals(smartListNsResponse.getErrorCode(), MDAErrorCodes.SMARTLIST_DOESNOT_EXISTS.getGSCode(), "Smart list not found error code not matched.");
+    }
+
+
+    @Test
+    public void emailStrategyAccountAsBaseObject() throws Exception {
+        //Create and validate smartlist
+        SmartList actualSmartList = createAndValidateSmartList(mapper.readValue(new File(testDataDir + "test/Basic_cases/T5_SmartList.json"), SmartList.class), 1, 1);
+        actualSmartList = updateSmartListTriggerCriteria(actualSmartList, "A OR B", "{\"alias\":\"B\",\"left\":{\"keys\":[],\"type\":\"field\",\"valueType\":\"STRING\",\"entity\":\"Account\",\"field\":\"Name\",\"fieldName\":\"Name\",\"objectName\":\"Account\",\"fieldType\":\"STRING\",\"label\":\"Account Name\",\"isExternalCriteria\":false},\"operator\":\"contains\",\"right\":{\"keys\":[],\"type\":\"value\",\"valueType\":\"STRING\",\"isNull\":false,\"value\":\"Galbreath\"}}");
+        actualSmartList = runUpdatedSmartList(actualSmartList,2,2);
+
+        //Update the smart list name & verify the updated smartlist name.
+        actualSmartList = copilotAPI.updateSmartListName(actualSmartList.getSmartListId(), "Updated Email strategy Powerlist Name");
+        Assert.assertEquals(actualSmartList.getSmartListName(), "Updated Email strategy Powerlist Name");
+
+        //Resync smart list & verify the status again.
+        reSyncSmartList(actualSmartList, 2, 2, 2);
+
+        //Create email template & verify the same.
+        EmailTemplate actualEmailTemplate = createAndValidateEmailTemplate(mapper.readValue(new File(testDataDir + "test/Basic_cases/T1_T2_T3_T4_T5_EmailTemplate.json"), EmailTemplate.class));
+
+        //Verify Email Template Name Change.
+        actualEmailTemplate = copilotAPI.updateEmailTemplateName(actualEmailTemplate.getTemplateId(), "UPDATED EMAIL TEMPLATE NAME");
+        Assert.assertEquals(actualEmailTemplate.getTitle(), "UPDATED EMAIL TEMPLATE NAME");
+
+        //Create out reach & verify the same.
+        OutReach actualOutReach = createAndTriggerOutreach(mapper.readValue(new File(testDataDir + "test/Basic_cases/T5_OutReach.json"), OutReach.class), actualSmartList, actualEmailTemplate);
+        verifyOutReachExecutionHistory(actualOutReach.getStatusId(), 2, 0);
+        Assert.assertEquals(actualOutReach.getLastRunStatus(), "SUCCESS");
+
+        //Re-Trigger out reach, wait for outreach process, verify the execution history of out reach.
+        actualOutReach = triggerOutreach(actualOutReach);
+        Assert.assertEquals(actualOutReach.getLastRunStatus(), "FAILURE");
+        verifyOutReachExecutionHistory(actualOutReach.getStatusId(), 0, 2);
+
+        //Update outreach -- Re-Trigger out reach, wait for outreach process, verify the execution history of out reach.
+        actualOutReach.getDefaultECA().get(0).getActions().get(0).setPreventDuplicateDays(0);
+        actualOutReach.setPreventDuplicateDays(0);
+        actualOutReach = copilotAPI.updateOutReach(mapper.writeValueAsString(actualOutReach));
+
+        actualOutReach = triggerOutreach(actualOutReach);//should inform the assertion msg to this method
+        Assert.assertEquals(actualOutReach.getLastRunStatus(), "SUCCESS");
+        verifyOutReachExecutionHistory(actualOutReach.getStatusId(), 2, 0);
+
+        //Get the email template references in outreaches & verify the template use in outreach.
+        verifyTemplateUsedInOutreach(actualEmailTemplate, actualOutReach);
+
+        //Verifying outreach name - updated.
+        actualOutReach = copilotAPI.updateOutReachName(actualOutReach.getCampaignId(), "EMAIL STRATEGY OUTREACH NAME UPDATED");
+        Assert.assertEquals(actualOutReach.getName(), "EMAIL STRATEGY OUTREACH NAME UPDATED");
 
         //Delete outreach, email template, smart list.
         Assert.assertTrue(copilotAPI.deleteOutReach(actualOutReach.getCampaignId()), "Outreach delete failed.");
