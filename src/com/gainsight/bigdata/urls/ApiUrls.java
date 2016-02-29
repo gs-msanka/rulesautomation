@@ -140,5 +140,6 @@ public interface ApiUrls extends NSURLs {
     String API_ZENDESK_LINK_CTA = NS_URL + "/api/zendesk/tickets/%s/ctas/%s"; // Link Zendesk ticket to SFDC CTA
     String API_ZENDESK_TICKET_TO_SFDC_CTA = NS_URL + "/api/zendesk/tickets/%s/ctas"; // Link Zendesk ticket to SFDC CTA
     String API_ZENDESK_UNLINK_CTA = NS_URL + "/api/zendesk/tickets/2006/ctas"; // UnLink Zendesk ticket to SFDC CTA
+    String API_ZENDESK_CREATE_DELETE_SYNC_SCHEDULE = NS_URL + "/api/zendesk/tickets/sync/schedule"; // creates/delete sync schedule
 
 }

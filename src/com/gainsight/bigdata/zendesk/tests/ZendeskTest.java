@@ -5,6 +5,8 @@ import com.gainsight.bigdata.pojo.NsResponseObj;
 import com.gainsight.bigdata.rulesengine.RulesUtil;
 import com.gainsight.bigdata.zendesk.apiImpl.ZendeskImpl;
 import com.gainsight.bigdata.zendesk.pojos.TicketLookup;
+import com.gainsight.bigdata.zendesk.pojos.TicketSyncSchedule;
+import com.gainsight.sfdc.util.DateUtil;
 import com.gainsight.sfdc.util.datagen.DataETL;
 import com.gainsight.sfdc.util.datagen.JobInfo;
 import com.gainsight.testdriver.Application;
@@ -21,7 +23,6 @@ import org.testng.annotations.Test;
 
 import java.io.File;
 import java.io.FileReader;
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -52,7 +53,7 @@ public class ZendeskTest extends NSTestBase {
     @Test()
     @TestInfo(testCaseIds = {"GS-6191"})
     public void zendeskOrgToAccountLookUp() throws Exception {
-        TicketLookup ticketLookup = mapper.readValue(new File(Application.basedir + "/testdata/newstack/Zendesk/data/TC1.json"), TicketLookup.class);
+        TicketLookup ticketLookup = new TicketLookup();
         SObject[] account = sfdc.getRecords(("SELECT ID,Name FROM Account where name='Zendesk Account 1' and isDeleted=false"));
         ticketLookup.setSubdomain(env.getProperty("zendesk.subdomain"));
         ticketLookup.setOrganization(Integer.parseInt(env.getProperty("zendesk.organization")));
@@ -251,7 +252,7 @@ public class ZendeskTest extends NSTestBase {
         Log.info("Total number of open cases shown in Summary widget is: " + actualData);
         Assert.assertEquals(actualData, sfdc.getRecordCount("SELECT ID, IsClosed,AccountId,Account.Name FROM Case where Account.Name='Zendesk Account 1' and isDeleted=false"));
 
-        // Validating OPEN CTA's WIDGET Data
+        // Validating OPEN CTA's WIDGET Data also creating map object since its easy to debug the code in future
         Map<String, String> valuesMap2 = new HashMap<String, String>();
         valuesMap2.put("AccountID", account[0].getId());
         SObject[] openCtaWidgetID = sfdc.getRecords((resolveStrNameSpace("SELECT Id,JBCXM__SystemName__c FROM JBCXM__Widgets__c  where JBCXM__SystemName__c='OCTA' and isDeleted=false limit 1")));
@@ -270,6 +271,22 @@ public class ZendeskTest extends NSTestBase {
         Assert.assertEquals(riskCTA, sfdc.getRecordCount(resolveStrNameSpace("SELECT Id,JBCXM__ClosedDate__c,JBCXM__TypeName__c,JBCXM__Account__r.Name FROM JBCXM__CTA__c where JBCXM__TypeName__c='Risk' and JBCXM__Account__r.Name='Zendesk Account 1' and JBCXM__ClosedDate__c=null and isDeleted=false")), "Risk CTA's in widget are not matching");
         Assert.assertEquals(opportunityCTA, sfdc.getRecordCount(resolveStrNameSpace("SELECT Id,JBCXM__ClosedDate__c,JBCXM__TypeName__c,JBCXM__Account__r.Name FROM JBCXM__CTA__c where JBCXM__TypeName__c='Opportunity' and JBCXM__Account__r.Name='Zendesk Account 1' and JBCXM__ClosedDate__c=null and isDeleted=false")), "Opportunity CTA's in widget are not matching");
         Assert.assertEquals(eventCTA, sfdc.getRecordCount(resolveStrNameSpace("SELECT Id,JBCXM__ClosedDate__c,JBCXM__TypeName__c,JBCXM__Account__r.Name FROM JBCXM__CTA__c where JBCXM__TypeName__c='Event' and JBCXM__Account__r.Name='Zendesk Account 1' and JBCXM__ClosedDate__c=null and isDeleted=false")), "Event CTA's in widget are not matching");
+
+        // Validating ENGAGEMENT count in Summary Widget
+        Map<String, String> valuesMap3 = new HashMap<String, String>();
+        valuesMap3.put("AccountID", account[0].getId());
+        SObject[] engagementWidgetID = sfdc.getRecords((resolveStrNameSpace("SELECT Id,JBCXM__SystemName__c FROM JBCXM__Widgets__c  where JBCXM__SystemName__c='ENGAGEMENT' and isDeleted=false limit 1")));
+        valuesMap3.put("WidgetID", engagementWidgetID[0].getId());
+        String payload3 = "{\"params\":\"{\\\"action\\\":\\\"summary.getusagedata\\\",\\\"custInfo\\\":{\\\"accountId\\\":\\\"${AccountID}\\\",\\\"widgetid\\\":\\\"${WidgetID}\\\"}}\",\"actionType\":\"\"}";
+        StrSubstitutor sub3 = new StrSubstitutor(valuesMap3);
+        String actualPayload3 = sub3.replace(payload3);
+        NsResponseObj response3 = zendeskImpl.zendeskSfdcProxy(resolveStrNameSpace(actualPayload3));
+        Assert.assertTrue(response3.isResult(), "Result is not correct, please check response for more details");
+        JsonNode data3 = mapper.readTree(response3.getData().toString());
+        Assert.assertTrue(data3.get("success").asBoolean(), "Data is not success, please check response for more details");
+
+        int actualUsers = data3.get("dataObj").get("userCount").asInt();
+        Assert.assertEquals(actualUsers, 0, "Users count is not matching");
 
         // Validating Health Score shown in summary widget for the customer
         sfdc.runApexCode(getNameSpaceResolvedFileContents(Application.basedir + "/apex_scripts/scorecard/Scorecard_CleanUp.txt"));
@@ -292,21 +309,69 @@ public class ZendeskTest extends NSTestBase {
         JsonNode data4 = mapper.readTree(response4.getData().toString());
         int actualOverallScore = data4.get("dataObj").get("account").findValue("curScore").asInt();
         Assert.assertEquals(actualOverallScore, 63, "Overall Score showing in widget is not matching");
+    }
 
-        // Validating ENGAGEMENT count in Summary Widget
-        Map<String, String> valuesMap3 = new HashMap<String, String>();
-        valuesMap3.put("AccountID", account[0].getId());
-        SObject[] engagementWidgetID = sfdc.getRecords((resolveStrNameSpace("SELECT Id,JBCXM__SystemName__c FROM JBCXM__Widgets__c  where JBCXM__SystemName__c='ENGAGEMENT' and isDeleted=false limit 1")));
-        valuesMap3.put("WidgetID", engagementWidgetID[0].getId());
-        String payload3 = "{\"params\":\"{\\\"action\\\":\\\"summary.getusagedata\\\",\\\"custInfo\\\":{\\\"accountId\\\":\\\"${AccountID}\\\",\\\"widgetid\\\":\\\"${WidgetID}\\\"}}\",\"actionType\":\"\"}";
-        StrSubstitutor sub3 = new StrSubstitutor(valuesMap3);
-        String actualPayload3 = sub3.replace(payload3);
-        NsResponseObj response3 = zendeskImpl.zendeskSfdcProxy(resolveStrNameSpace(actualPayload3));
-        Assert.assertTrue(response3.isResult(), "Result is not correct, please check response for more details");
-        JsonNode data3 = mapper.readTree(response3.getData().toString());
-        Assert.assertTrue(data3.get("success").asBoolean(), "Data is not success, please check response for more details");
+    @Test
+    public void createSyncSchedule() throws Exception {
+        TicketSyncSchedule schedule = mapper.readValue(new File(Application.basedir + "/testdata/newstack/Zendesk/data/CreateSyncSchedule.txt"), TicketSyncSchedule.class);
+        schedule.setSubdomain(env.getProperty("zendesk.subdomain"));
+        // creating sync schedule for the cron expression give in testdata
+        boolean result = zendeskImpl.createSyncSchedule(mapper.writeValueAsString(schedule));
+        Assert.assertTrue(result, "Schedule is not created, Check log for more details");
+    }
 
-        int actualUsers = data3.get("dataObj").get("userCount").asInt();
-        Assert.assertEquals(actualUsers, 0);
+    @Test
+    public void deleteSyncSchedule() throws Exception {
+        // creating a sync scheduler before deleting
+        TicketSyncSchedule schedule = mapper.readValue(new File(Application.basedir + "/testdata/newstack/Zendesk/data/CreateSyncSchedule.txt"), TicketSyncSchedule.class);
+        schedule.setSubdomain(env.getProperty("zendesk.subdomain"));
+        boolean result = zendeskImpl.createSyncSchedule(mapper.writeValueAsString(schedule));
+        Assert.assertTrue(result, "Schedule is not created, Check log for more details");
+        Map<String, String> valuesMap = new HashMap<String, String>();
+        valuesMap.put("SubDomain", env.getProperty("zendesk.subdomain"));
+        String payload = "{\"subdomain\":\"${SubDomain}\"}";
+        StrSubstitutor sub = new StrSubstitutor(valuesMap);
+        String actualPayload3 = sub.replace(payload);
+        boolean isSchedulerDeleted = zendeskImpl.deleteSyncSchedule(actualPayload3);
+        Assert.assertTrue(isSchedulerDeleted, "Sync schedule is not deleted, Check log for more details");
+    }
+
+    @Test
+    public void getUsageDataDetails() throws Exception {
+        metaUtil.createFieldsOnUsageData(sfdc);
+        sfdc.runApexCode(resolveStrNameSpace("Delete [SELECT Id FROM JBCXM__UsageData__c];"));
+        SObject[] account = sfdc.getRecords(("SELECT ID,Name FROM Account where name='Zendesk Account 1' and isDeleted=false limit 1"));
+        sfdc.runApexCode(getNameSpaceResolvedFileContents(Application.basedir + "/testdata/sfdc/rulesEngine/scripts/Set_Account_Level_Monthly.apex"));
+        sfdc.runApexCode(getNameSpaceResolvedFileContents(Application.basedir + "/testdata/sfdc/rulesEngine/scripts/UsageData_Measures.apex"));
+        JobInfo jobInfo = mapper.readValue(getNameSpaceResolvedFileContents(Application.basedir + "/testdata/newstack/Zendesk/Jobs/LoadToUsageData.txt"), JobInfo.class);
+        dataETL.execute(jobInfo);
+        // Building expected data using apache string substitutor below, Had discussion with sunand before doing this
+        Map<String, Object> valuesMap = new HashMap<String, Object>();
+        valuesMap.put("CurrentMonth-1", DateUtil.getMonth(-1, sfinfo.getUserTimeZone()));
+        valuesMap.put("YearOfCurrentMonth-1", DateUtil.getYear(-1, sfinfo.getUserTimeZone()));
+        valuesMap.put("CurrentMonth-2", DateUtil.getMonth(-2, sfinfo.getUserTimeZone()));
+        valuesMap.put("YearOfCurrentMonth-2", DateUtil.getYear(-2, sfinfo.getUserTimeZone()));
+        valuesMap.put("CurrentMonth-3", DateUtil.getMonth(-3, sfinfo.getUserTimeZone()));
+        valuesMap.put("YearOfCurrentMonth-3", DateUtil.getYear(-3, sfinfo.getUserTimeZone()));
+        valuesMap.put("CurrentMonth-4", DateUtil.getMonth(-4, sfinfo.getUserTimeZone()));
+        valuesMap.put("YearOfCurrentMonth-4", DateUtil.getYear(-4, sfinfo.getUserTimeZone()));
+        valuesMap.put("CurrentMonth-5", DateUtil.getMonth(-5, sfinfo.getUserTimeZone()));
+        valuesMap.put("YearOfCurrentMonth-5", DateUtil.getYear(-5, sfinfo.getUserTimeZone()));
+        valuesMap.put("AccountID", account[0].getId());
+        valuesMap.put("CurrentMonth", DateUtil.getMonth(0, sfinfo.getUserTimeZone()));
+        valuesMap.put("CurrentYear", DateUtil.getYear(0, sfinfo.getUserTimeZone()));
+        String expectedResponse = "[{\"attributes\":{\"type\":\"AggregateResult\"},\"admonth\":${CurrentMonth-5},\"adyear\":${YearOfCurrentMonth-5},\"adpMS1\":1000.0},{\"attributes\":{\"type\":\"AggregateResult\"},\"admonth\":${CurrentMonth-4},\"adyear\":${YearOfCurrentMonth-4},\"adpMS1\":900.0},{\"attributes\":{\"type\":\"AggregateResult\"},\"admonth\":${CurrentMonth-3},\"adyear\":${YearOfCurrentMonth-3},\"adpMS1\":800.0},{\"attributes\":{\"type\":\"AggregateResult\"},\"admonth\":${CurrentMonth-2},\"adyear\":${YearOfCurrentMonth-2},\"adpMS1\":700.0},{\"attributes\":{\"type\":\"AggregateResult\"},\"admonth\":${CurrentMonth-1},\"adyear\":${YearOfCurrentMonth-1},\"adpMS1\":600.0}]";
+        StrSubstitutor sub = new StrSubstitutor(valuesMap);
+        String expectedResponse2 = sub.replace(expectedResponse);
+        Log.info("Expected usage data results are: " + expectedResponse2);
+        String payload="{\"params\":\"{\\\"action\\\":\\\"adoptionAnalytics.getTrendData\\\",\\\"data\\\":{\\\"measures\\\":\\\"[{\\\\\\\"label\\\\\\\":\\\\\\\"Page Visits\\\\\\\",\\\\\\\"fieldName\\\\\\\":\\\\\\\"Page_Visits__c\\\\\\\",\\\\\\\"sysName\\\\\\\":\\\\\\\"Page Visits\\\\\\\",\\\\\\\"color\\\\\\\":\\\\\\\"#c3ed87\\\\\\\",\\\\\\\"shortName\\\\\\\":\\\\\\\"Page Visits\\\\\\\"}]\\\",\\\"selWeek\\\":null,\\\"selMonth\\\":${CurrentMonth},\\\"selYear\\\":${CurrentYear},\\\"numOfPeriods\\\":6,\\\"isWeeklyAdoption\\\":false,\\\"aggregationLevel\\\":\\\"ACCOUNTLEVEL\\\",\\\"selCustomer\\\":\\\"${AccountID}\\\",\\\"aggType\\\":\\\"ACCOUNTLEVEL\\\"}}\",\"actionType\":\"\",\"sectionName\":\"BULK\"}";
+        String actualPayload = sub.replace(payload);
+
+        NsResponseObj result = zendeskImpl.zendeskSfdcProxy(actualPayload);
+        Assert.assertTrue(result.isResult(), "Error occured while fetching usage data results, Check log for more details");
+        JsonNode data = mapper.readTree(result.getData().toString());
+        JsonNode array = data.get("dataObj").findValue("usageData");
+        Log.info("Actual usage data is: " + array);
+        JsonFluentAssert.assertThatJson(array.toString()).isEqualTo(expectedResponse2);
     }
 }

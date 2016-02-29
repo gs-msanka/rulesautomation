@@ -6,7 +6,9 @@ import com.gainsight.bigdata.zendesk.pojos.TicketLookup;
 import com.gainsight.http.Header;
 import com.gainsight.http.ResponseObj;
 import com.gainsight.http.WebAction;
+import com.gainsight.http.WebAction.HttpDeleteWithBody;
 import com.gainsight.testdriver.Log;
+
 import org.apache.http.HttpStatus;
 import org.codehaus.jackson.map.ObjectMapper;
 
@@ -165,6 +167,50 @@ public class ZendeskImpl {
             }
         } catch (Exception ex) {
             throw new RuntimeException("Error occurred while Un-linking Zendesk ticket to SFDC CTA " + ex);
+        }
+        return result;
+    }
+
+    /**
+     * Method to create zendesk sync schedule
+     *
+     * @param payload
+     * @return
+     * @throws Exception
+     */
+    public boolean createSyncSchedule(String payload) throws Exception {
+        boolean result = false;
+        try {
+            ResponseObj responseObj = wa.doPost(API_ZENDESK_CREATE_DELETE_SYNC_SCHEDULE, header.getAllHeaders(), payload);
+            Log.info("Response Object:--> " + String.valueOf(responseObj));
+            if (responseObj.getStatusCode() == HttpStatus.SC_OK) {
+                NsResponseObj nsResponseObj = mapper.readValue(responseObj.getContent(), NsResponseObj.class);
+                result = nsResponseObj.isResult();
+            }
+        } catch (Exception ex) {
+            throw new RuntimeException("Error occurred while creating sync schedule" + ex);
+        }
+        return result;
+    }
+
+    /**
+     * Method to delete sync scheduler
+     *
+     * @param payload
+     * @return
+     * @throws Exception
+     */
+    public boolean deleteSyncSchedule(String payload) throws Exception {
+        boolean result = false;
+        try {
+            ResponseObj responseObj = wa.doDeleteWithBody(API_ZENDESK_CREATE_DELETE_SYNC_SCHEDULE, header.getAllHeaders(), payload);
+            Log.info("Response Object:--> " + String.valueOf(responseObj));
+            if (responseObj.getStatusCode() == HttpStatus.SC_OK) {
+                NsResponseObj nsResponseObj = mapper.readValue(responseObj.getContent(), NsResponseObj.class);
+                result = nsResponseObj.isResult();
+            }
+        } catch (Exception ex) {
+            throw new RuntimeException("Error occurred while deleting sync schedule" + ex);
         }
         return result;
     }
