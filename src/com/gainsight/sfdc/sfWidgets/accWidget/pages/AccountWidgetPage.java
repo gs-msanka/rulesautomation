@@ -26,10 +26,10 @@ public class AccountWidgetPage extends BasePage {
     private final String WIDGET_TEXT="//body[contains(.,'%s')]";
     private final String NEW_BUTTON="//a/span[text()='New']";
     private final String OVERLAY_BLOCK="//div[@class='overlayBackground jbaraDummyOverLayFormForOpp']";
-    private final String COCKPIT_SUBTAB="//a[@class='Cockpit']";
+    private final String COCKPIT_SUBTAB="//a[@title='Cockpit']";
   	private final String COCKPIT_INDICATOR="//div[@class='gs_section_title']/h1[contains(text(),'Cockpit')]";
-  	private final String FEATURES_TAB = "//a[@class='Features']";
-  	private final String SUMMARY_TAB = "//a[@class='Summary']";
+  	private final String FEATURES_TAB = "//a[@title='Features']";
+  	private final String SUMMARY_TAB = "//a[@title='Summary']";
   	
     public AccountWidgetPage() {
         //wait.waitTillElementPresent(READY_INDICATOR, MIN_TIME, MAX_TIME);
