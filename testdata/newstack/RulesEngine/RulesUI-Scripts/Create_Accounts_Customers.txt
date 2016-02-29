@@ -4,7 +4,7 @@ delete [select id from Account where name like 'RULESUI Account%'];
 //Create Accounts
 List<Account> accList = new List<Account>();
 for(integer i=1; i<10 ; i++) {
-   Account acc = new Account(Name ='RULESUI Account ' +i,Data_ExternalID__c='RULESUI Account ' +i);
+   Account acc = new Account(Name ='RULESUI Account ' +i,Data_ExternalID__c='RULESUI Account ' +i, AnnualRevenue=i*200);
    accList.add(acc);
 }
 
