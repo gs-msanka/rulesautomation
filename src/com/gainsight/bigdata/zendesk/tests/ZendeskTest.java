@@ -344,7 +344,7 @@ public class ZendeskTest extends NSTestBase {
         String payload = "{\"subdomain\":\"${SubDomain}\"}";
         StrSubstitutor sub = new StrSubstitutor(valuesMap);
         String actualPayload = sub.replace(payload);
-        System.out.println("Actual Payload is: " + actualPayload);
+        Log.info("Actual Payload is: " + actualPayload);
         boolean isSchedulerDeleted = zendeskImpl.deleteSyncSchedule(actualPayload);
         Assert.assertTrue(isSchedulerDeleted, "Sync schedule is not deleted, Check log for more details");
     }
@@ -391,8 +391,8 @@ public class ZendeskTest extends NSTestBase {
     @Test
     public void doTicketsSync() throws Exception {
         // creating lookup between sfdc accounts and zendesk organizations
+        zendeskOrgToAccountLookUp();
         try {
-            zendeskOrgToAccountLookUp();
             tenantDetails = tenantManager.getTenantDetail(sfdc.fetchSFDCinfo().getOrg(), null);
             TenantDetails.DBDetail schemaDBDetails = null;
             schemaDBDetails = mongoDBDAO.getSchemaDBDetail(tenantDetails.getTenantId());
