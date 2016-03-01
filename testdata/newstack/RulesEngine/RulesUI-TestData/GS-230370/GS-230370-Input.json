@@ -1,0 +1,169 @@
+{
+  "ruleType": "Custom",
+  "ruleName": "GS-Test",
+  "ruleDescription": "GS-Test - Desc",
+  "setupRule": {
+    "dataSource": "Native",
+    "selectObject": "C_Custom Object",
+    "calculatedFields": [
+      {
+        "fieldName": "ChildObjectCalculatedField1",
+        "calculationType": "Comparison",
+        "calculateDifferenceType": "Actual value",
+        "fieldAConfig": {
+          "calculatedFieldType": "Show field",
+          "showField": "C_Custom Object::Custom_Number3"
+        },
+        "fieldBConfig": {
+          "calculatedFieldType": "Show field",
+          "showField": "Customer Info::MRR"
+        }
+      },
+      {
+        "fieldName": "ChildObjectCalculatedField2",
+        "calculationType": "Comparison",
+        "calculateDifferenceType": "Percentage",
+        "fieldAConfig": {
+          "calculatedFieldType": "Aggregation",
+          "showField": "",
+          "aggregation": {
+            "aggregationCalculation": "MAX",
+            "sourceField":"rules_c_Number",
+            "periodType":"Past",
+            "noOfPeriods":"15",
+            "granularity":"Weeks"
+          }
+        },
+        "fieldBConfig": {
+          "calculatedFieldType": "Show field",
+          "showField": "Customer Info::MRR"
+        }
+      },
+      {
+        "fieldName": "BaseObjectCalculatedField",
+        "calculationType": "Comparison",
+        "calculateDifferenceType": "Actual value",
+        "fieldAConfig": {
+          "calculatedFieldType": "Show field",
+          "showField": "C_Custom Object::rules_c_Number"
+        },
+        "fieldBConfig": {
+          "calculatedFieldType": "Show field",
+          "showField": "C_Custom Object::Custom_Number2"
+        }
+      },
+      {
+        "fieldName": "ChildObjectCalculatedField3",
+        "calculationType": "Comparison",
+        "calculateDifferenceType": "Percentage",
+        "fieldAConfig": {
+          "calculatedFieldType": "Show field",
+          "showField": "Account::Annual Revenue"
+        },
+        "fieldBConfig": {
+          "calculatedFieldType": "Aggregation",
+          "showField": "",
+          "aggregation": {
+            "aggregationCalculation": "AVG",
+            "sourceField":"rules_c_Number",
+            "periodType":"Past",
+            "noOfPeriods":"4",
+            "granularity":"Weeks",
+            "adjustForMissingData":"true"
+          }
+        }
+      }
+    ],
+    "setupData": [
+      {
+        "sourceObject": "C_Custom Object",
+        "showFields": [
+          {
+            "fieldName": "C_lookup",
+            "showAdvancedName": ""
+          },
+          {
+            "fieldName": "rules_c_Number",
+            "showAdvancedName": ""
+          },
+          {
+            "fieldName": "Custom_Number2",
+            "showAdvancedName": ""
+          },
+          {
+            "fieldName": "Custom_Number3",
+            "showAdvancedName": ""
+          },
+          {
+            "fieldName": "C_lookup Name",
+            "showAdvancedName": ""
+          }
+        ],
+        "filterFields": []
+      },
+      {
+        "sourceObject": "Customer Info",
+        "showFields": [
+          {
+            "fieldName": "MRR",
+            "showAdvancedName": ""
+          },
+          {
+            "fieldName": "Users",
+            "showAdvancedName": ""
+          }
+        ],
+        "filterFields": []
+      },
+      {
+        "sourceObject": "Account",
+        "showFields": [
+          {
+            "fieldName": "Annual Revenue",
+            "showAdvancedName": ""
+          }
+        ],
+        "filterFields": []
+      }
+    ],
+    "advancedLogic": "",
+    "timeIdentifier": "rules_c_Date"
+  },
+  "setupActions": [
+    {
+      "actionType": "loadToSFDCObject",
+      "action": {
+        "objectName": "RulesSFDCCustom Object",
+        "operation": "Insert",
+        "fieldMappings": [
+          {
+            "sourceObject": "",
+            "sourceField": "BaseObjectCalculatedField",
+            "destination": "C_TextArea"
+          },
+          {
+            "sourceObject": "C_lookup",
+            "sourceField": "C_lookup Name",
+            "destination": "C_Text"
+          },
+          {
+            "sourceObject": "",
+            "sourceField": "ChildObjectCalculatedField1",
+            "destination": "C_Percent"
+          },
+          {
+            "sourceObject": "",
+            "sourceField": "ChildObjectCalculatedField2",
+            "destination": "AccPercentage"
+          },
+          {
+            "sourceObject": "",
+            "sourceField": "ChildObjectCalculatedField3",
+            "destination": "ActiveUsers"
+          }
+        ]
+      },
+      "criterias": []
+    }
+  ]
+}
