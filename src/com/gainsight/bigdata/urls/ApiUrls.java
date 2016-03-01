@@ -132,8 +132,7 @@ public interface ApiUrls extends NSURLs {
     String MANDRILL_ENDPOINT               = "https://mandrillapp.com/api/1.0/";
     String MANDRILL_SUBACCOUNT_INFO        = "/subaccounts/info.json";
 
-    //Zendesk
-
+    //List of Zendesk API's
     String API_ZENDESK_ORGANIZATION_LOOKUP = NS_URL + "/api/zendesk/tickets/lookup"; // Creates Zendesk Org to SFDC account lookup
     String API_ZENDESK_DELETE_ORGANIZATION_LOOKUP = NS_URL + "/api/zendesk/tickets/%s/lookup"; // Deletes Zendesk Org to SFDC account lookup
     String API_ZENDESK_ALL_IN_ONE_SFDC_PROXY = NS_URL + "/api/zendesk/sfdc/proxy"; // Common API to get data from Sfdc org
@@ -141,5 +140,6 @@ public interface ApiUrls extends NSURLs {
     String API_ZENDESK_TICKET_TO_SFDC_CTA = NS_URL + "/api/zendesk/tickets/%s/ctas"; // Link Zendesk ticket to SFDC CTA
     String API_ZENDESK_UNLINK_CTA = NS_URL + "/api/zendesk/tickets/2006/ctas"; // UnLink Zendesk ticket to SFDC CTA
     String API_ZENDESK_CREATE_DELETE_SYNC_SCHEDULE = NS_URL + "/api/zendesk/tickets/sync/schedule"; // creates/delete sync schedule
+    String API_ZENDESK_SYNC = NS_URL + "/api/zendesk/tickets/sync/%s"; // Does tickets Sync
 
 }

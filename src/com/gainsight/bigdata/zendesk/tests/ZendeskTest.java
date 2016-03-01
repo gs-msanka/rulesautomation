@@ -3,6 +3,7 @@ package com.gainsight.bigdata.zendesk.tests;
 import com.gainsight.bigdata.NSTestBase;
 import com.gainsight.bigdata.pojo.NsResponseObj;
 import com.gainsight.bigdata.rulesengine.RulesUtil;
+import com.gainsight.bigdata.tenantManagement.pojos.TenantDetails;
 import com.gainsight.bigdata.zendesk.apiImpl.ZendeskImpl;
 import com.gainsight.bigdata.zendesk.pojos.TicketLookup;
 import com.gainsight.bigdata.zendesk.pojos.TicketSyncSchedule;
@@ -11,19 +12,27 @@ import com.gainsight.sfdc.util.datagen.DataETL;
 import com.gainsight.sfdc.util.datagen.JobInfo;
 import com.gainsight.testdriver.Application;
 import com.gainsight.testdriver.Log;
+import com.gainsight.util.MongoDBDAO;
+import com.gainsight.utils.MongoUtil;
 import com.gainsight.utils.annotations.TestInfo;
+import com.mongodb.client.FindIterable;
 import com.sforce.soap.partner.sobject.SObject;
+import net.javacrumbs.jsonunit.core.Option;
 import net.javacrumbs.jsonunit.fluent.JsonFluentAssert;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.text.StrSubstitutor;
+import org.bson.Document;
 import org.codehaus.jackson.JsonNode;
 import org.testng.Assert;
+import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 import java.io.File;
 import java.io.FileReader;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -36,6 +45,8 @@ public class ZendeskTest extends NSTestBase {
     DataETL dataETL = new DataETL();
     ZendeskImpl zendeskImpl;
     RulesUtil rulesUtil;
+    TenantDetails tenantDetails = null;
+    MongoDBDAO mongoDBDAO = null;
 
 
     @BeforeClass
@@ -48,6 +59,7 @@ public class ZendeskTest extends NSTestBase {
         sfdc.runApexCode(getNameSpaceResolvedFileContents(CREATE_ACCOUNTS_CUSTOMERS));
         JobInfo jobInfo = mapper.readValue((new FileReader(LOAD_ACCOUNTS)), JobInfo.class);
         dataETL.execute(jobInfo);
+        mongoDBDAO = new MongoDBDAO(nsConfig.getGlobalDBHost(), Integer.valueOf(nsConfig.getGlobalDBPort()), nsConfig.getGlobalDBUserName(), nsConfig.getGlobalDBPassword(), nsConfig.getGlobalDBDatabase());
     }
 
     @Test()
@@ -312,7 +324,7 @@ public class ZendeskTest extends NSTestBase {
     }
 
     @Test
-    public void createSyncSchedule() throws Exception {
+    public void createTicketSyncScheduler() throws Exception {
         TicketSyncSchedule schedule = mapper.readValue(new File(Application.basedir + "/testdata/newstack/Zendesk/data/CreateSyncSchedule.txt"), TicketSyncSchedule.class);
         schedule.setSubdomain(env.getProperty("zendesk.subdomain"));
         // creating sync schedule for the cron expression give in testdata
@@ -321,7 +333,7 @@ public class ZendeskTest extends NSTestBase {
     }
 
     @Test
-    public void deleteSyncSchedule() throws Exception {
+    public void deleteTicketSyncScheduler() throws Exception {
         // creating a sync scheduler before deleting
         TicketSyncSchedule schedule = mapper.readValue(new File(Application.basedir + "/testdata/newstack/Zendesk/data/CreateSyncSchedule.txt"), TicketSyncSchedule.class);
         schedule.setSubdomain(env.getProperty("zendesk.subdomain"));
@@ -331,8 +343,9 @@ public class ZendeskTest extends NSTestBase {
         valuesMap.put("SubDomain", env.getProperty("zendesk.subdomain"));
         String payload = "{\"subdomain\":\"${SubDomain}\"}";
         StrSubstitutor sub = new StrSubstitutor(valuesMap);
-        String actualPayload3 = sub.replace(payload);
-        boolean isSchedulerDeleted = zendeskImpl.deleteSyncSchedule(actualPayload3);
+        String actualPayload = sub.replace(payload);
+        System.out.println("Actual Payload is: " + actualPayload);
+        boolean isSchedulerDeleted = zendeskImpl.deleteSyncSchedule(actualPayload);
         Assert.assertTrue(isSchedulerDeleted, "Sync schedule is not deleted, Check log for more details");
     }
 
@@ -364,7 +377,7 @@ public class ZendeskTest extends NSTestBase {
         StrSubstitutor sub = new StrSubstitutor(valuesMap);
         String expectedResponse2 = sub.replace(expectedResponse);
         Log.info("Expected usage data results are: " + expectedResponse2);
-        String payload="{\"params\":\"{\\\"action\\\":\\\"adoptionAnalytics.getTrendData\\\",\\\"data\\\":{\\\"measures\\\":\\\"[{\\\\\\\"label\\\\\\\":\\\\\\\"Page Visits\\\\\\\",\\\\\\\"fieldName\\\\\\\":\\\\\\\"Page_Visits__c\\\\\\\",\\\\\\\"sysName\\\\\\\":\\\\\\\"Page Visits\\\\\\\",\\\\\\\"color\\\\\\\":\\\\\\\"#c3ed87\\\\\\\",\\\\\\\"shortName\\\\\\\":\\\\\\\"Page Visits\\\\\\\"}]\\\",\\\"selWeek\\\":null,\\\"selMonth\\\":${CurrentMonth},\\\"selYear\\\":${CurrentYear},\\\"numOfPeriods\\\":6,\\\"isWeeklyAdoption\\\":false,\\\"aggregationLevel\\\":\\\"ACCOUNTLEVEL\\\",\\\"selCustomer\\\":\\\"${AccountID}\\\",\\\"aggType\\\":\\\"ACCOUNTLEVEL\\\"}}\",\"actionType\":\"\",\"sectionName\":\"BULK\"}";
+        String payload = "{\"params\":\"{\\\"action\\\":\\\"adoptionAnalytics.getTrendData\\\",\\\"data\\\":{\\\"measures\\\":\\\"[{\\\\\\\"label\\\\\\\":\\\\\\\"Page Visits\\\\\\\",\\\\\\\"fieldName\\\\\\\":\\\\\\\"Page_Visits__c\\\\\\\",\\\\\\\"sysName\\\\\\\":\\\\\\\"Page Visits\\\\\\\",\\\\\\\"color\\\\\\\":\\\\\\\"#c3ed87\\\\\\\",\\\\\\\"shortName\\\\\\\":\\\\\\\"Page Visits\\\\\\\"}]\\\",\\\"selWeek\\\":null,\\\"selMonth\\\":${CurrentMonth},\\\"selYear\\\":${CurrentYear},\\\"numOfPeriods\\\":6,\\\"isWeeklyAdoption\\\":false,\\\"aggregationLevel\\\":\\\"ACCOUNTLEVEL\\\",\\\"selCustomer\\\":\\\"${AccountID}\\\",\\\"aggType\\\":\\\"ACCOUNTLEVEL\\\"}}\",\"actionType\":\"\",\"sectionName\":\"BULK\"}";
         String actualPayload = sub.replace(payload);
 
         NsResponseObj result = zendeskImpl.zendeskSfdcProxy(actualPayload);
@@ -373,5 +386,62 @@ public class ZendeskTest extends NSTestBase {
         JsonNode array = data.get("dataObj").findValue("usageData");
         Log.info("Actual usage data is: " + array);
         JsonFluentAssert.assertThatJson(array.toString()).isEqualTo(expectedResponse2);
+    }
+
+    @Test
+    public void doTicketsSync() throws Exception {
+        // creating lookup between sfdc accounts and zendesk organizations
+        try {
+            zendeskOrgToAccountLookUp();
+            tenantDetails = tenantManager.getTenantDetail(sfdc.fetchSFDCinfo().getOrg(), null);
+            TenantDetails.DBDetail schemaDBDetails = null;
+            schemaDBDetails = mongoDBDAO.getSchemaDBDetail(tenantDetails.getTenantId());
+            // Connecting to tenant schema Db
+            mongoDBDAO = new MongoDBDAO(schemaDBDetails.getDbServerDetails().get(0).getHost().split(":")[0], 27017, schemaDBDetails.getDbServerDetails().get(0).getUserName(), schemaDBDetails.getDbServerDetails().get(0).getPassword(), schemaDBDetails.getDbName());
+            String dbCollectionName = mongoDBDAO.getDbCollectionName(tenantDetails.getTenantId(), "Zendesk Tickets");
+            // Creating mongoUtil instance
+            MongoUtil mongoUtil = new MongoUtil(schemaDBDetails.getDbServerDetails().get(0).getHost().split(":")[0], 27017, schemaDBDetails.getDbServerDetails().get(0).getUserName(), schemaDBDetails.getDbServerDetails().get(0).getPassword(), schemaDBDetails.getDbName());
+            Document document = new Document();
+            // Deleting previously existing records in the collections
+            mongoUtil.removeMany(dbCollectionName, document);
+            List<String> includeFields = new ArrayList<>();
+            includeFields.add("subject");
+            includeFields.add("organizationName");
+            includeFields.add("accountName");
+            includeFields.add("description");
+            includeFields.add("status");
+            includeFields.add("url");
+            includeFields.add("satisfactionScore");
+            includeFields.add("priority");
+            List<String> excludeFields = new ArrayList<>();
+            excludeFields.add("_id");
+            // Doing sync here
+            NsResponseObj res = zendeskImpl.doSync(env.getProperty("zendesk.syncStartTime"));
+            Assert.assertTrue(res.isResult(), "Please check !!!");
+            // Updating reords in mongo collection is taking time so adding sleep, no other alternative
+            Thread.sleep(10000);
+            // Getting required fields
+            FindIterable<Document> iterable = mongoUtil.executeAndGetDocuments(dbCollectionName, document, includeFields, excludeFields);
+            List l = new ArrayList();
+            for (Document doc : iterable) {
+                String serverData = mapper.writeValueAsString(doc);
+                l.add(serverData);
+            }
+            Log.info("Actual Json is: " + l.toString());
+            String expectedData = FileUtils.readFileToString(new File(Application.basedir + "/testdata/newstack/Zendesk/ExpectedData/TicketsSync.txt"));
+            Log.info("Expected Json is: " + expectedData);
+            //Asserting all 2000+ documents via json comparison
+            JsonFluentAssert.assertThatJson(l.toString()).when(Option.IGNORING_ARRAY_ORDER).isEqualTo(expectedData);
+        } finally {
+            // Deleting lookup
+            deleteZendeskOrganizationLookup();
+        }
+    }
+
+    @AfterClass
+    private void tearDown() {
+        if (mongoDBDAO != null) {
+            mongoDBDAO.mongoUtil.closeConnection();
+        }
     }
 }

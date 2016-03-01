@@ -6,7 +6,6 @@ import com.gainsight.bigdata.zendesk.pojos.TicketLookup;
 import com.gainsight.http.Header;
 import com.gainsight.http.ResponseObj;
 import com.gainsight.http.WebAction;
-import com.gainsight.http.WebAction.HttpDeleteWithBody;
 import com.gainsight.testdriver.Log;
 
 import org.apache.http.HttpStatus;
@@ -215,4 +214,24 @@ public class ZendeskImpl {
         return result;
     }
 
+    /**
+     * Method to do zendesk tickets Sync based on sync time provided
+     *
+     * @param syncTime
+     * @return
+     * @throws Exception
+     */
+    public NsResponseObj doSync(String syncTime) throws Exception {
+        NsResponseObj nsResponseObj = null;
+        try {
+            ResponseObj responseObj = wa.doGet(String.format(API_ZENDESK_SYNC, syncTime), header.getAllHeaders());
+            Log.info("HttpResponse Object:--> " + String.valueOf(responseObj));
+            if (responseObj.getStatusCode() == HttpStatus.SC_OK) {
+                nsResponseObj = mapper.readValue(responseObj.getContent(), NsResponseObj.class);
+            }
+        } catch (Exception ex) {
+            throw new RuntimeException("Error occurred while Doing Sync " + ex);
+        }
+        return nsResponseObj;
+    }
 }
