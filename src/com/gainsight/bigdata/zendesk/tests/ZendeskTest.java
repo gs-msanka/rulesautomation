@@ -202,8 +202,16 @@ public class ZendeskTest extends NSTestBase {
     public void getSummaryWidgetConfig() throws Exception {
         sfdc.runApexCode(getNameSpaceResolvedFileContents(Application.basedir + "/testdata/newstack/Zendesk/scripts/CreateWidgets.txt"));
         SObject[] customerID = sfdc.getRecords((resolveStrNameSpace("SELECT Id,JBCXM__CustomerName__c FROM JBCXM__CustomerInfo__c where JBCXM__CustomerName__c='Zendesk Account 1' and isDeleted=false limit 1")));
+        SObject[] openCasesWidgetID = sfdc.getRecords((resolveStrNameSpace("SELECT Id,JBCXM__SystemName__c FROM JBCXM__Widgets__c where JBCXM__SystemName__c='OPENCASES' and isDeleted=false limit 1")));
+        SObject[] openCtaWidgetID = sfdc.getRecords((resolveStrNameSpace("SELECT Id,JBCXM__SystemName__c FROM JBCXM__Widgets__c  where JBCXM__SystemName__c='OCTA' and isDeleted=false limit 1")));
+        SObject[] engagementWidgetID = sfdc.getRecords((resolveStrNameSpace("SELECT Id,JBCXM__SystemName__c FROM JBCXM__Widgets__c  where JBCXM__SystemName__c='ENGAGEMENT' and isDeleted=false limit 1")));
+        SObject[] healthScoreWidgetID = sfdc.getRecords((resolveStrNameSpace("SELECT Id,JBCXM__SystemName__c FROM JBCXM__Widgets__c  where JBCXM__SystemName__c='HEALTHSCORE' and isDeleted=false limit 1")));
         Map<String, String> valuesMap = new HashMap<String, String>();
         valuesMap.put("CustomerID", customerID[0].getId());
+        valuesMap.put("OPENCASES-WidgetID", openCasesWidgetID[0].getId());
+        valuesMap.put("Open Calls To Action-WidgetID", openCtaWidgetID[0].getId());
+        valuesMap.put("ENGAGEMENT-WidgetID", engagementWidgetID[0].getId());
+        valuesMap.put("HEALTHSCORE-WidgetID", healthScoreWidgetID[0].getId());
         String payload = "{\"params\":\"{\\\"action\\\":\\\"summary.getsummaryconfig\\\",\\\"custInfo\\\":{\\\"customerId\\\":\\\"${CustomerID}\\\",\\\"section\\\":{\\\"label\\\":\\\"Summary\\\",\\\"msg\\\":\\\"\\\",\\\"name\\\":\\\"Summary\\\",\\\"type\\\":\\\"Standard\\\"},\\\"sections\\\":[{\\\"label\\\":\\\"Summary\\\",\\\"msg\\\":\\\"\\\",\\\"name\\\":\\\"Summary\\\",\\\"type\\\":\\\"Standard\\\"}]}}\",\"actionType\":\"\"}";
         StrSubstitutor sub = new StrSubstitutor(valuesMap);
         String actualPayload = sub.replace(payload);
@@ -214,7 +222,7 @@ public class ZendeskTest extends NSTestBase {
         String actualSummaryWidgetConfig = data.get("dataObj").findValue(resolveStrNameSpace("JBCXM__CustomConfig__c")).asText();
         Log.info("Summary Widget Config for customer is " + actualSummaryWidgetConfig);
 
-        String expectedSummaryWidgetConfig = FileUtils.readFileToString(new File(Application.basedir + "/testdata/newstack/Zendesk/ExpectedData/GS-6195-WidgetConfig.txt"));
+        String expectedSummaryWidgetConfig = sub.replace(FileUtils.readFileToString(new File(Application.basedir + "/testdata/newstack/Zendesk/ExpectedData/GS-6195-WidgetConfig.txt")));
         //Asserting Summary Widget Configuration for this account with actual and expected json's
         JsonFluentAssert.assertThatJson(actualSummaryWidgetConfig).isEqualTo(expectedSummaryWidgetConfig);
     }
