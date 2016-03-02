@@ -66,7 +66,7 @@ public class ZendeskImpl {
      * @return -  true if deletion successful else false
      * @throws Exception
      */
-    public boolean deleteLookup(String organizationId) throws Exception {
+    public boolean deleteOrganizationLookup(String organizationId) throws Exception {
         boolean result = false;
         try {
             ResponseObj responseObj = wa.doDelete(String.format(API_ZENDESK_DELETE_ORGANIZATION_LOOKUP, organizationId), header.getAllHeaders());

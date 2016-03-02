@@ -74,15 +74,15 @@ public class ZendeskTest extends NSTestBase {
         ticketLookup.setAccountName(account[0].getField("Name").toString());
         Log.info("Updated payload is: " + mapper.writeValueAsString(ticketLookup));
         boolean result = zendeskImpl.createLookup(ticketLookup);
-        Assert.assertTrue(result, "lookup is not created, please check");
+        Assert.assertTrue(result, "lookup is not created, Please check response for more details");
     }
 
     @Test()
     @TestInfo(testCaseIds = {"GS-6191"})
     public void deleteZendeskOrganizationLookup() throws Exception {
         String organizationID = env.getProperty("zendesk.organization");
-        boolean result = zendeskImpl.deleteLookup(organizationID);
-        Assert.assertTrue(result, "deletion between Zendesk Org to SFDC account lookup is not successful, please check");
+        boolean result = zendeskImpl.deleteOrganizationLookup(organizationID);
+        Assert.assertTrue(result, "Deletion between Zendesk Org to SFDC account lookup is not successful, please check");
     }
 
     @Test
@@ -120,7 +120,6 @@ public class ZendeskTest extends NSTestBase {
         // Linking Zendesk ticket to SFDC CTA
         boolean result = zendeskImpl.linkTicketToCTA("", env.getProperty("zendesk.zendeskTicketID"), ctaID);
         Assert.assertTrue(result, "Link between Zendesk ticket and SFDC CTA is not successful !!");
-
         // Getting  associated CTA linked to a Zendesk ticket
         String actualCtaID = zendeskImpl.getCtaByZendeskTicket(env.getProperty("zendesk.zendeskTicketID"));
         Assert.assertEquals(actualCtaID, ctaID, "Cta's are not matching");
@@ -129,39 +128,8 @@ public class ZendeskTest extends NSTestBase {
     @Test
     @TestInfo(testCaseIds = {"GS-6199", "GS-6200"})
     public void createAndUnlinkCTA() throws Exception {
-        sfdc.runApexCode("Delete [SELECT Id,Name FROM JBCXM__CTA__c where name='Test CTA - Created from Zendesk'];");
-        SObject[] account = sfdc.getRecords(("SELECT ID,Name FROM Account where name='Zendesk Account 1' and isDeleted=false"));
-        Map<String, String> valuesMap = new HashMap<String, String>();
-        valuesMap.put("Account", account[0].getId());
-        valuesMap.put("Name", "Test CTA - Created from Zendesk");
-        valuesMap.put("Reason", RulesUtil.getPickListMap().get("PL." + "Product Issue"));
-        valuesMap.put("Priority", RulesUtil.getPickListMap().get("PL." + "Medium"));
-        valuesMap.put("Stage", RulesUtil.getPickListMap().get("PL." + "New"));
-        valuesMap.put("Type", RulesUtil.getCtaTypesMap().get("CT." + "Risk"));
-        valuesMap.put("DueDate", "2016-11-01");
-        valuesMap.put("OriginalDueDate", "2016-11-01");
-        valuesMap.put("Assignee__c", sfinfo.getUserId());
-        String payload = "{\"params\":\"{\\\"action\\\":\\\"workflow.updateCTAdetails\\\",\\\"data\\\":{\\\"ctaList\\\":\\\"[{\\\\\\\"JBCXM__Account__c\\\\\\\":\\\\\\\"${Account}\\\\\\\",\\\\\\\"Name\\\\\\\":\\\\\\\"${Name}\\\\\\\",\\\\\\\"JBCXM__IsRecurring__c\\\\\\\":false,\\\\\\\"JBCXM__Reason__c\\\\\\\":\\\\\\\"${Reason}\\\\\\\",\\\\\\\"JBCXM__Priority__c\\\\\\\":\\\\\\\"${Priority}\\\\\\\",\\\\\\\"JBCXM__Stage__c\\\\\\\":\\\\\\\"${Stage}\\\\\\\",\\\\\\\"JBCXM__Type__c\\\\\\\":\\\\\\\"${Type}\\\\\\\",\\\\\\\"JBCXM__DueDate__c\\\\\\\":\\\\\\\"${DueDate}\\\\\\\",\\\\\\\"JBCXM__OriginalDueDate__c\\\\\\\":\\\\\\\"${OriginalDueDate}\\\\\\\",\\\\\\\"JBCXM__Assignee__c\\\\\\\":\\\\\\\"${Assignee__c}\\\\\\\",\\\\\\\"JBCXM__Comments__c\\\\\\\":\\\\\\\"<a target=\\\\\\\\\\\\\\\"_blank\\\\\\\\\\\\\\\" href=\\\\\\\\\\\\\\\"https://gainsighttest.zendesk.com/agent/tickets/2006\\\\\\\\\\\\\\\">Zendesk Ticket 2006</a>\\\\\\\"}]\\\",\\\"isSuccessPlan\\\":false,\\\"requiresIds\\\":true}}\",\"actionType\":\"\"}";
-        StrSubstitutor sub = new StrSubstitutor(valuesMap);
-        String actualPayload = sub.replace(payload);
-        // Creating CTA
-        NsResponseObj responseObj = zendeskImpl.zendeskSfdcProxy(resolveStrNameSpace(actualPayload));
-        Log.info("Data object is: " + responseObj.getData());
-        JsonNode jsonNode = mapper.readTree(responseObj.getData().toString());
-        JsonNode res = jsonNode.get("dataObj");
-        JsonNode id = res.get("ids");
-        Assert.assertNotNull(id, "CTA ID should not be null !!");
-        boolean isIdExists = id.isArray();
-        String ctaID = null;
-        if (isIdExists) {
-            ctaID = id.get(0).asText();
-            Log.info("CTA ID is " + ctaID);
-        }
-        Assert.assertTrue(res.get("success").asBoolean(), "Result is not true, please check");
-        // Linking Zendesk ticket to SFDC CTA
-        boolean result = zendeskImpl.linkTicketToCTA("", env.getProperty("zendesk.zendeskTicketID"), ctaID);
-        Assert.assertTrue(result, "Link between Zendesk ticket and SFDC CTA is not successful !!");
-
+        // Linking a CTA before UnLinking it to make the testcase independant
+        createAndlinkCTA();
         // UnLinking the CTA made with a Zendesk ticket
         boolean isSuccess = zendeskImpl.unLinkTicketToCTA(env.getProperty("zendesk.zendeskTicketID"));
         Assert.assertTrue(isSuccess, "Unlink is not successful !!");
@@ -221,7 +189,6 @@ public class ZendeskTest extends NSTestBase {
         JsonNode data = mapper.readTree(response.getData().toString());
         String actualSummaryWidgetConfig = data.get("dataObj").findValue(resolveStrNameSpace("JBCXM__CustomConfig__c")).asText();
         Log.info("Summary Widget Config for customer is " + actualSummaryWidgetConfig);
-
         String expectedSummaryWidgetConfig = sub.replace(FileUtils.readFileToString(new File(Application.basedir + "/testdata/newstack/Zendesk/ExpectedData/GS-6195-WidgetConfig.txt")));
         //Asserting Summary Widget Configuration for this account with actual and expected json's
         JsonFluentAssert.assertThatJson(actualSummaryWidgetConfig).isEqualTo(expectedSummaryWidgetConfig);
@@ -244,7 +211,6 @@ public class ZendeskTest extends NSTestBase {
         Assert.assertTrue(data.get("success").asBoolean(), "Data is not success, please check response for more details");
         JsonNode actualData = data.get("dataObj");
         Log.info("DataObject is " + actualData);
-
         String expectedAttributesData = FileUtils.readFileToString(new File(Application.basedir + "/testdata/newstack/Zendesk/ExpectedData/GS-6195.txt"));
         //Asserting all left panel widget details for this account via actual and expected jsonNodes
         JsonFluentAssert.assertThatJson(actualData).isEqualTo(expectedAttributesData);
@@ -284,7 +250,6 @@ public class ZendeskTest extends NSTestBase {
         Assert.assertTrue(response2.isResult(), "Result is not correct, please check response for more details");
         JsonNode data2 = mapper.readTree(response2.getData().toString());
         Assert.assertTrue(data2.get("success").asBoolean(), "Data is not success, please check response for more details");
-
         int riskCTA = data2.get("dataObj").get("Risk").findValue("Value").asInt();
         int opportunityCTA = data2.get("dataObj").get("Opportunity").findValue("Value").asInt();
         int eventCTA = data2.get("dataObj").get("Event").findValue("Value").asInt();
@@ -292,7 +257,7 @@ public class ZendeskTest extends NSTestBase {
         Assert.assertEquals(opportunityCTA, sfdc.getRecordCount(resolveStrNameSpace("SELECT Id,JBCXM__ClosedDate__c,JBCXM__TypeName__c,JBCXM__Account__r.Name FROM JBCXM__CTA__c where JBCXM__TypeName__c='Opportunity' and JBCXM__Account__r.Name='Zendesk Account 1' and JBCXM__ClosedDate__c=null and isDeleted=false")), "Opportunity CTA's in widget are not matching");
         Assert.assertEquals(eventCTA, sfdc.getRecordCount(resolveStrNameSpace("SELECT Id,JBCXM__ClosedDate__c,JBCXM__TypeName__c,JBCXM__Account__r.Name FROM JBCXM__CTA__c where JBCXM__TypeName__c='Event' and JBCXM__Account__r.Name='Zendesk Account 1' and JBCXM__ClosedDate__c=null and isDeleted=false")), "Event CTA's in widget are not matching");
 
-        // Validating ENGAGEMENT count in Summary Widget
+        // Validating ENGAGEMENT count in Summary Widget and also creating map object since its easy to debug the code in future
         Map<String, String> valuesMap3 = new HashMap<String, String>();
         valuesMap3.put("AccountID", account[0].getId());
         SObject[] engagementWidgetID = sfdc.getRecords((resolveStrNameSpace("SELECT Id,JBCXM__SystemName__c FROM JBCXM__Widgets__c  where JBCXM__SystemName__c='ENGAGEMENT' and isDeleted=false limit 1")));
@@ -304,10 +269,8 @@ public class ZendeskTest extends NSTestBase {
         Assert.assertTrue(response3.isResult(), "Result is not correct, please check response for more details");
         JsonNode data3 = mapper.readTree(response3.getData().toString());
         Assert.assertTrue(data3.get("success").asBoolean(), "Data is not success, please check response for more details");
-
         int actualUsers = data3.get("dataObj").get("userCount").asInt();
         Assert.assertEquals(actualUsers, 0, "Users count is not matching");
-
         // Validating Health Score shown in summary widget for the customer
         sfdc.runApexCode(getNameSpaceResolvedFileContents(Application.basedir + "/apex_scripts/scorecard/Scorecard_CleanUp.txt"));
         sfdc.runApexCode(getNameSpaceResolvedFileContents(Application.basedir + "/testdata/newstack/CoPilot/ApexScripts/Scorecard_Enable.apex"));
@@ -319,7 +282,6 @@ public class ZendeskTest extends NSTestBase {
                 "JBCXM__CustomerInfo__c customer = [select Id,JBCXM__CurScoreId__c,JBCXM__CustomerName__c from JBCXM__CustomerInfo__c where JBCXM__CustomerName__c='Zendesk Account 1' and isDeleted=false limit 1];\n" +
                 "customer.JBCXM__CurScoreId__c=scheme.Id;\n" +
                 "update customer;"));
-
         Map<String, String> valuesMap4 = new HashMap<String, String>();
         valuesMap4.put("AccountID", account[0].getId());
         String payload4 = "{\"params\":\"{\\\"action\\\":\\\"scorecard.getData\\\",\\\"data\\\":{\\\"accountId\\\":\\\"${AccountID}\\\"}}\",\"actionType\":\"\"}";
@@ -332,21 +294,20 @@ public class ZendeskTest extends NSTestBase {
     }
 
     @Test
+    @TestInfo(testCaseIds = {"GS-6203"})
     public void createTicketSyncScheduler() throws Exception {
         TicketSyncSchedule schedule = mapper.readValue(new File(Application.basedir + "/testdata/newstack/Zendesk/data/CreateSyncSchedule.txt"), TicketSyncSchedule.class);
         schedule.setSubdomain(env.getProperty("zendesk.subdomain"));
         // creating sync schedule for the cron expression give in testdata
         boolean result = zendeskImpl.createSyncSchedule(mapper.writeValueAsString(schedule));
-        Assert.assertTrue(result, "Schedule is not created, Check log for more details");
+        Assert.assertTrue(result, "Sync Schedule is not created, Check response for more details");
     }
 
     @Test
+    @TestInfo(testCaseIds = {"GS-6204"})
     public void deleteTicketSyncScheduler() throws Exception {
         // creating a sync scheduler before deleting
-        TicketSyncSchedule schedule = mapper.readValue(new File(Application.basedir + "/testdata/newstack/Zendesk/data/CreateSyncSchedule.txt"), TicketSyncSchedule.class);
-        schedule.setSubdomain(env.getProperty("zendesk.subdomain"));
-        boolean result = zendeskImpl.createSyncSchedule(mapper.writeValueAsString(schedule));
-        Assert.assertTrue(result, "Schedule is not created, Check log for more details");
+        createTicketSyncScheduler();
         Map<String, String> valuesMap = new HashMap<String, String>();
         valuesMap.put("SubDomain", env.getProperty("zendesk.subdomain"));
         String payload = "{\"subdomain\":\"${SubDomain}\"}";
@@ -354,10 +315,11 @@ public class ZendeskTest extends NSTestBase {
         String actualPayload = sub.replace(payload);
         Log.info("Actual Payload is: " + actualPayload);
         boolean isSchedulerDeleted = zendeskImpl.deleteSyncSchedule(actualPayload);
-        Assert.assertTrue(isSchedulerDeleted, "Sync schedule is not deleted, Check log for more details");
+        Assert.assertTrue(isSchedulerDeleted, "Sync schedule is not Deleted, Check response in log for more details");
     }
 
     @Test
+    @TestInfo(testCaseIds = {"GS-6197"})
     public void getUsageDataDetails() throws Exception {
         metaUtil.createFieldsOnUsageData(sfdc);
         sfdc.runApexCode(resolveStrNameSpace("Delete [SELECT Id FROM JBCXM__UsageData__c];"));
@@ -397,6 +359,7 @@ public class ZendeskTest extends NSTestBase {
     }
 
     @Test
+    @TestInfo(testCaseIds = {"GS-6204"})
     public void doTicketsSync() throws Exception {
         // creating lookup between sfdc accounts and zendesk organizations
         zendeskOrgToAccountLookUp();
@@ -425,9 +388,9 @@ public class ZendeskTest extends NSTestBase {
             excludeFields.add("_id");
             // Doing sync here
             NsResponseObj res = zendeskImpl.doSync(env.getProperty("zendesk.syncStartTime"));
-            Assert.assertTrue(res.isResult(), "Please check !!!");
-            // Updating reords in mongo collection is taking time so adding sleep, no other alternative
-            Thread.sleep(10000);
+            Assert.assertTrue(res.isResult(), "Result is not true, Please check response printed for more detaails !!!");
+            // Updating records in mongo collection is taking time so adding sleep, no other alternative
+            Thread.sleep(15000);
             // Getting required fields
             FindIterable<Document> iterable = mongoUtil.executeAndGetDocuments(dbCollectionName, document, includeFields, excludeFields);
             List l = new ArrayList();
@@ -438,7 +401,7 @@ public class ZendeskTest extends NSTestBase {
             Log.info("Actual Json is: " + l.toString());
             String expectedData = FileUtils.readFileToString(new File(Application.basedir + "/testdata/newstack/Zendesk/ExpectedData/TicketsSync.txt"));
             Log.info("Expected Json is: " + expectedData);
-            //Asserting all 2000+ documents via json comparison
+            //Asserting all 2000+ documents synced via json comparison
             JsonFluentAssert.assertThatJson(l.toString()).when(Option.IGNORING_ARRAY_ORDER).isEqualTo(expectedData);
         } finally {
             // Deleting lookup
