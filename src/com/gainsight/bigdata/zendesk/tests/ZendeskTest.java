@@ -1,5 +1,6 @@
 package com.gainsight.bigdata.zendesk.tests;
 
+import au.com.bytecode.opencsv.CSVReader;
 import com.gainsight.bigdata.NSTestBase;
 import com.gainsight.bigdata.pojo.NsResponseObj;
 import com.gainsight.bigdata.rulesengine.RulesUtil;
@@ -12,6 +13,7 @@ import com.gainsight.sfdc.util.datagen.DataETL;
 import com.gainsight.sfdc.util.datagen.JobInfo;
 import com.gainsight.testdriver.Application;
 import com.gainsight.testdriver.Log;
+import com.gainsight.util.Comparator;
 import com.gainsight.util.MongoDBDAO;
 import com.gainsight.utils.MongoUtil;
 import com.gainsight.utils.annotations.TestInfo;
@@ -23,6 +25,7 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.text.StrSubstitutor;
 import org.bson.Document;
 import org.codehaus.jackson.JsonNode;
+import org.codehaus.jackson.type.TypeReference;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
@@ -358,7 +361,7 @@ public class ZendeskTest extends NSTestBase {
         JsonFluentAssert.assertThatJson(array.toString()).isEqualTo(expectedResponse2);
     }
 
-    @Test
+    @Test(description = "Does Zendesk tickets sync, This testcases needs to be changed in future, since Dev is changing the code")
     @TestInfo(testCaseIds = {"GS-6204"})
     public void doTicketsSync() throws Exception {
         // creating lookup between sfdc accounts and zendesk organizations
@@ -389,8 +392,9 @@ public class ZendeskTest extends NSTestBase {
             // Doing sync here
             NsResponseObj res = zendeskImpl.doSync(env.getProperty("zendesk.syncStartTime"));
             Assert.assertTrue(res.isResult(), "Result is not true, Please check response printed for more detaails !!!");
-            // Updating records in mongo collection is taking time so adding sleep, no other alternative
-            Thread.sleep(15000);
+            // Updating records in mongo collection is taking time so adding sleep, no other alternative, had same with Sunand
+            // Also this testcase needs to be changed in future, since Dev is changing the code
+            Thread.sleep(20000);
             // Getting required fields
             FindIterable<Document> iterable = mongoUtil.executeAndGetDocuments(dbCollectionName, document, includeFields, excludeFields);
             List l = new ArrayList();
@@ -407,6 +411,24 @@ public class ZendeskTest extends NSTestBase {
             // Deleting lookup
             deleteZendeskOrganizationLookup();
         }
+    }
+
+    @Test
+    @TestInfo(testCaseIds = {"GS-6191"})
+    public void doAccountsLookupSearch() throws Exception {
+        String payload = "{\"params\":\"{\\\"data\\\":{\\\"filterText\\\":\\\"zendesk\\\",\\\"status\\\":\\\"ALL\\\",\\\"compareOper\\\":\\\"s\\\"},\\\"action\\\":\\\"customers.customerSearch\\\"}\",\"actionType\":\"\"}";
+        NsResponseObj response = zendeskImpl.zendeskSfdcProxy(payload);
+        Assert.assertTrue(response.isResult(), "Result is not true, Please check response log for more details");
+        JsonNode data = mapper.readTree(response.getData().toString()).get("dataObj");
+        List<Map<String, String>> actualData = mapper.readValue(mapper.writeValueAsString(data), new TypeReference<List<Map<String, String>>>() {
+        });
+        dataETL.execute(mapper.readValue(getNameSpaceResolvedFileContents(Application.basedir + "/testdata/newstack/Zendesk/Jobs/ExtractCustomers.txt"), JobInfo.class));
+        List<Map<String, String>> expectedData = Comparator.getParsedCsvData(new CSVReader(new FileReader(Application.basedir + "/testdata/newstack/Zendesk/ExpectedData/Accounts-Actual.csv")));
+        List<Map<String, String>> differenceData = Comparator.compareListData(expectedData, actualData);
+        Log.info("Actual : " + mapper.writerWithDefaultPrettyPrinter().writeValueAsString(actualData));
+        Log.info("Expected : " + mapper.writerWithDefaultPrettyPrinter().writeValueAsString(expectedData));
+        Log.info("Difference is : " + mapper.writerWithDefaultPrettyPrinter().writeValueAsString(differenceData));
+        Assert.assertEquals(differenceData.size(), 0, "Customer search results are not matching, Please check Diff above for more details");
     }
 
     @AfterClass
