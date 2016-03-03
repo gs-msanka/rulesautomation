@@ -34,6 +34,7 @@ public class EmailTemplate {
     private HashMap<String,TokenMetaData> tokens;
     List<EmailEmbeddedReport> reports;
 
+
     public Attachment[] getAttachments() {
         return attachments;
     }
@@ -214,7 +215,15 @@ public class EmailTemplate {
         private String displayName;
         private String defaultValue;
         private String tokenType;
+        public int getDecimalPlaces() {
+            return decimalPlaces;
+        }
 
+        public void setDecimalPlaces(int decimalPlaces) {
+            this.decimalPlaces = decimalPlaces;
+        }
+
+        int decimalPlaces;
         public String getDisplayName() {
             return displayName;
         }

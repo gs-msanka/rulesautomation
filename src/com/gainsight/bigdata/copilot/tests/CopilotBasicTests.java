@@ -34,12 +34,12 @@ public class CopilotBasicTests extends CopilotTestUtils {
         copilotAPI = new CopilotAPIImpl(header);
         gsDataAPI = new GSDataImpl(header);
         tenantInfo = gsDataAPI.getTenantInfo(sfinfo.getOrg());
-
+/*
         if (true) {
             createCustomFields();
             cleanAndGenerateData();
         }
-
+*/
     }
 
     @Test
