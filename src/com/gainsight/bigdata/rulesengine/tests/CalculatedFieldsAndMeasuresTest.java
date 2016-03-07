@@ -308,4 +308,24 @@ public class CalculatedFieldsAndMeasuresTest extends BaseTest {
 		Log.info("Difference is : " + mapper.writeValueAsString(differenceData));
 		Assert.assertEquals(differenceData.size(), 0, "Check the Diff above for which the aggregated data is not matching");
 	}
+	@TestInfo(testCaseIds = {"GS-230383"})
+	@Test(description = "Testcase to verify if user is able to create calculated fields for following: 1.fieldA - COUNT_DISTINCT(Months), fieldB- show field; 2. fieldA - Show field , fieldB - AVG(Years); 3. fieldA - SUM(Days), fieldB - AVG(Months)")
+	public void testCalculatedFields11() throws Exception {
+		RulesPojo rulesPojo = mapper.readValue(new File(Application.basedir + "/testdata/newstack/RulesEngine/RulesUI-TestData/GS-230383/GS-230383-Input.json"), RulesPojo.class);
+		rulesManagerPage.openRulesManagerPage(rulesManagerPageUrl);
+		rulesManagerPage.clickOnAddRule();
+		rulesEngineUtil.createRuleFromUi(rulesPojo);
+		Assert.assertTrue(rulesUtil.runRule(rulesPojo.getRuleName()), "Check whether Rule ran successfully or not !");
+
+		//Verifying  expected data and actual aggregated data
+		dataETL.execute(mapper.readValue(resolveNameSpace(Application.basedir+ "/testdata/newstack/RulesEngine/RulesUI-TestData/GS-230383/GS-230383-ExpectedJob.txt"), JobInfo.class));
+		List<Map<String, String>> expectedData = Comparator.getParsedCsvData(new CSVReader(new FileReader(Application.basedir+ "/testdata/newstack/RulesEngine/RulesUI-TestData/GS-230383/ExpectedData.csv")));
+		List<Map<String, String>> actualData = Comparator.getParsedCsvData(new CSVReader(new FileReader(Application.basedir+ "/testdata/newstack/RulesEngine/RulesUI-TestData/GS-230383/ActualData.csv")));
+		List<Map<String, String>> differenceData = Comparator.compareListData(expectedData, actualData);
+		Log.info("Actual : " + mapper.writeValueAsString(actualData));
+		Log.info("Expected : " + mapper.writeValueAsString(expectedData));
+		Log.info("Difference is : " + mapper.writeValueAsString(differenceData));
+		Assert.assertEquals(differenceData.size(), 0, "Check the Diff above for which the aggregated data is not matching");
+	}
+
 }
