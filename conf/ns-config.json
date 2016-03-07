@@ -178,7 +178,7 @@
     "ruleqa02": {
       "ns_sfdc_username": "ruleqa02@gainsight.com",
       "ns_sfdc_password": "gainsight.12345",
-      "ns_sfdc_stoken": "4eOsfnWYp473XR8BdVzvbT5D",
+      "ns_sfdc_stoken": "xbFczW2hbxwMlHO0RS0qWQkx",
       "ns_appUrl": "https://ruleqa02-api-router.herokuapp.com",
       "ns_adminUrl": "https://ruleqa02-api-router.herokuapp.com",
       "ns_version": "v1.0",
