@@ -198,7 +198,7 @@
     "rawqa01": {
       "ns_sfdc_username": "rawqa01@gainsight.com",
       "ns_sfdc_password": "gainsight12345",
-      "ns_sfdc_stoken": "ECA11cqhfp7wZX2v876Lxx2t",
+      "ns_sfdc_stoken": "rEC5NL2vqZ5K1worBdZEklnjN",
       "ns_appUrl": "https://rawqa01-api-router.herokuapp.com",
       "ns_adminUrl": "https://rawqa01-api-router.herokuapp.com",
       "ns_version": "v1.0",

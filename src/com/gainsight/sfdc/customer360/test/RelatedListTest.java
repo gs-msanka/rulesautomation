@@ -214,6 +214,8 @@ public class RelatedListTest extends BaseTest {
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "RL_360_5")
     public void caseobjSfdcDataVerification(HashMap<String, String> testData) throws Exception {
+        sfdc.runApexCode(getNameSpaceResolvedFileContents(ACCOUNT_CREATE_FILE));
+        sfdc.runApexCode(getNameSpaceResolvedFileContents(REPORTING_ACCOUNTS));
         sfdc.runApexCode(getNameSpaceResolvedFileContents(CASEOBJ_SFDC_REPORT_BUILDER));
         sfdc.runApexCode(getNameSpaceResolvedFileContents(CASEOBJ_RL_CS360Section_SFDC_CONFIGURATION));
         String sfdcrelatedlistname = testData.get("Section");

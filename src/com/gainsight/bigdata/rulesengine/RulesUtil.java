@@ -152,10 +152,8 @@
 		 */
 		public void populateObjMaps() {
 			featuresMap = getMapFromObject("JBCXM__Features__c","JBCXM__Feature__c","FT");
-			ctaTypesMap = getMapFromObject("JBCXM__CTATypes__c", "Name",
-					"CT");
-			PickListMap = getMapFromObject("JBCXM__PickList__c",
-					"JBCXM__SystemName__c", "PL");
+			setCtaTypesMap(getMapFromObject("JBCXM__CTATypes__c", "Name", "CT"));
+			setPickListMap(getMapFromObject("JBCXM__PickList__c", "JBCXM__SystemName__c", "PL"));
 			emailTemplateMap = getMapFromObject("EmailTemplate", "Name", "EML");
 			playbookMap=getMapFromObject("JBCXM__Playbook__c","Name","PB");
 			milestoneMap=getMapFromObjectUsingFilter("JBCXM__PickList__c", "Name", "ML", "JBCXM__Category__c", "Milestones");
@@ -171,7 +169,7 @@
 							replaceSystemNameInRule(
 									replaceSystemNameInRule(replaceSystemNameInRule(string,
 											emailTemplateMap), featuresMap),
-									ctaTypesMap), PickListMap), playbookMap), milestoneMap);
+									getCtaTypesMap()), getPickListMap()), playbookMap), milestoneMap);
 			return string;
 		}
 
@@ -209,19 +207,19 @@
 					.getRecords(resolveStrNameSpace("Select JBCXM__Priority__c,JBCXM__Stage__c,JBCXM__Assignee__c,JBCXM__Type__c,JBCXM__Comments__c,JBCXM__Reason__c,JBCXM__Playbook__c from JBCXM__CTA__c where Name = '"
 							+ RuleName + "'"));
 			for (SObject obj : CTA_created) {
-				if (!PickListMap.get("PL." + priorityValue).equalsIgnoreCase(
+				if (!getPickListMap().get("PL." + priorityValue).equalsIgnoreCase(
 						obj.getChild(resolveStrNameSpace("JBCXM__Priority__c")).getValue().toString())) {
 					Log.error("Priority did not match!!");
 					check = false;
 				}
-				if (!PickListMap.get("PL." + statusValue).equalsIgnoreCase(
+				if (!getPickListMap().get("PL." + statusValue).equalsIgnoreCase(
 						obj.getChild(resolveStrNameSpace("JBCXM__Stage__c")).getValue().toString())) {
 					Log.error("Status did not match!!");
 					check = false;
 				}
 				if(!Assignee.equalsIgnoreCase(obj.getChild("JBCXM__Assignee__c").getValue().toString()))
 				{ Log.error("Assignee did not match!!"); check=false; }
-				if (!ctaTypesMap.get("CT." + typeValue).equalsIgnoreCase(
+				if (!getCtaTypesMap().get("CT." + typeValue).equalsIgnoreCase(
 						obj.getChild(resolveStrNameSpace("JBCXM__Type__c")).getValue().toString())) {
 					Log.error("Type did not match!!");
 					check = false;
@@ -234,7 +232,7 @@
 					Log.error("Comments did not match!!");
 					check = false;
 				}
-				if (!PickListMap.get("PL." + reasonValue).equalsIgnoreCase(
+				if (!getPickListMap().get("PL." + reasonValue).equalsIgnoreCase(
 						obj.getChild(resolveStrNameSpace("JBCXM__Reason__c")).getValue().toString())) {
 					Log.error("Reason did not match!!");
 					check = false;
@@ -587,13 +585,13 @@
 					.getRecords(resolveStrNameSpace("Select JBCXM__Priority__c,JBCXM__Stage__c,JBCXM__Assignee__c,JBCXM__Type__c,JBCXM__Comments__c,JBCXM__Reason__c,JBCXM__Playbook__c from JBCXM__CTA__c where Name = '"
 							+ ruleName + "'"));
 			for (SObject obj : ctaRecords) {
-				if (!PickListMap.get("PL." + priorityValue).equalsIgnoreCase(
+				if (!getPickListMap().get("PL." + priorityValue).equalsIgnoreCase(
 						obj.getChild(resolveStrNameSpace("JBCXM__Priority__c"))
 								.getValue().toString())) {
 					Log.error("Priority did not match!!");
 					check = false;
 				}
-				if (!PickListMap.get("PL." + statusValue).equalsIgnoreCase(
+				if (!getPickListMap().get("PL." + statusValue).equalsIgnoreCase(
 						obj.getChild(resolveStrNameSpace("JBCXM__Stage__c"))
 								.getValue().toString())) {
 					Log.error("Status did not match!!");
@@ -604,13 +602,13 @@
 					Log.error("Assignee did not match!!");
 					check = false;
 				}
-				if (!ctaTypesMap.get("CT." + typeValue).equalsIgnoreCase(
+				if (!getCtaTypesMap().get("CT." + typeValue).equalsIgnoreCase(
 						obj.getChild(resolveStrNameSpace("JBCXM__Type__c"))
 								.getValue().toString())) {
 					Log.error("Type did not match!!");
 					check = false;
 				}
-				if (!PickListMap.get("PL." + reasonValue).equalsIgnoreCase(
+				if (!getPickListMap().get("PL." + reasonValue).equalsIgnoreCase(
 						obj.getChild(resolveStrNameSpace("JBCXM__Reason__c"))
 								.getValue().toString())) {
 					Log.error("Reason did not match!!");
@@ -822,7 +820,7 @@
 			Verifier verifier = new Verifier();
 			for (SObject obj : closedCtaRecords) {
 				verifier.verifyEquals(
-						ctaTypesMap.get("CT." + closeCtaAction.getType()),
+						getCtaTypesMap().get("CT." + closeCtaAction.getType()),
 						obj.getChild(resolveStrNameSpace("JBCXM__Type__c"))
 								.getValue().toString(),
 						"Type is not matching for CTA - +" + " "
@@ -830,7 +828,7 @@
 				{
 				}
 				verifier.verifyEquals(
-						PickListMap.get("PL." + closeCtaAction.getReason()),
+						getPickListMap().get("PL." + closeCtaAction.getReason()),
 						obj.getChild(resolveStrNameSpace("JBCXM__Reason__c"))
 								.getValue().toString(),
 						"Reason is not matching for CTA - +" + " "
@@ -838,7 +836,7 @@
 				{
 				}
 				verifier.verifyEquals(
-						PickListMap.get("PL." + closeCtaAction.getSetCtaStatusTo()),
+						getPickListMap().get("PL." + closeCtaAction.getSetCtaStatusTo()),
 						obj.getChild(resolveStrNameSpace("JBCXM__Stage__c"))
 								.getValue().toString(),
 						"Stage/status is not matching for CTA - +" + " "
@@ -997,5 +995,33 @@
 				list.add(map);
 			}
 			return list;
+		}
+
+		/**
+		 * @return the ctaTypesMap
+		 */
+		public static HashMap<String, String> getCtaTypesMap() {
+			return ctaTypesMap;
+		}
+
+		/**
+		 * @param ctaTypesMap the ctaTypesMap to set
+		 */
+		public static void setCtaTypesMap(HashMap<String, String> ctaTypesMap) {
+			RulesUtil.ctaTypesMap = ctaTypesMap;
+		}
+
+		/**
+		 * @return the pickListMap
+		 */
+		public static HashMap<String, String> getPickListMap() {
+			return PickListMap;
+		}
+
+		/**
+		 * @param pickListMap the pickListMap to set
+		 */
+		public static void setPickListMap(HashMap<String, String> pickListMap) {
+			PickListMap = pickListMap;
 		}
 	}
