@@ -112,7 +112,8 @@ public class DataLoadConfigAggTest extends NSTestBase {
      */
     @TestInfo(testCaseIds = {"GS-3886"})
     @Test
-    public void accountIdDateMappedAndMeasureAsSum() throws IOException {
+    @Parameters("dbStoreType")
+    public void accountIdDateMappedAndMeasureAsSum(@Optional String dbStoreType) throws IOException {
         CollectionInfo collectionInfo = mapper.readValue(new File(COLLECTION_MASTER_SCHEMA), CollectionInfo.class);
         collectionInfo.getCollectionDetails().setCollectionName("GS_DATA_T1_" + date.getTime());
 
@@ -162,7 +163,8 @@ public class DataLoadConfigAggTest extends NSTestBase {
      */
     @TestInfo(testCaseIds = {"GS-3887"})
     @Test
-    public void accountIdDateMappedAndMeasureAsAvg() throws IOException {
+    @Parameters("dbStoreType")
+    public void accountIdDateMappedAndMeasureAsAvg(@Optional String dbStoreType) throws IOException {
         CollectionInfo collectionInfo = mapper.readValue(new File(COLLECTION_MASTER_SCHEMA), CollectionInfo.class);
         collectionInfo.getCollectionDetails().setCollectionName("GS_DATA_T2_" + date.getTime());
 
@@ -212,7 +214,8 @@ public class DataLoadConfigAggTest extends NSTestBase {
      */
     @TestInfo(testCaseIds = {"GS-3888"})
     @Test
-    public void accountIdDateMappedAndMeasureAsCount() throws IOException {
+    @Parameters("dbStoreType")
+    public void accountIdDateMappedAndMeasureAsCount(@Optional String dbStoreType) throws IOException {
         CollectionInfo collectionInfo = mapper.readValue(new File(COLLECTION_MASTER_SCHEMA), CollectionInfo.class);
         collectionInfo.getCollectionDetails().setCollectionName("GS_DATA_T3_" + date.getTime());
 
@@ -263,7 +266,8 @@ public class DataLoadConfigAggTest extends NSTestBase {
      */
     @TestInfo(testCaseIds = {"GS-3889"})
     @Test
-    public void accountIdContactIdDateMappedAndMeasuresAsSumAndAvg() throws IOException {
+    @Parameters("dbStoreType")
+    public void accountIdContactIdDateMappedAndMeasuresAsSumAndAvg(@Optional String dbStoreType) throws IOException {
         CollectionInfo collectionInfo = mapper.readValue(new File(COLLECTION_MASTER_SCHEMA), CollectionInfo.class);
         collectionInfo.getCollectionDetails().setCollectionName("GS_DATA_T4_" + date.getTime());
 
@@ -315,7 +319,8 @@ public class DataLoadConfigAggTest extends NSTestBase {
      */
     @TestInfo(testCaseIds = {"GS-3891"})
     @Test
-    public void accountExtIdContactExtIdDateMappedAndMeasuresAsSumAndAvg() throws IOException {
+    @Parameters("dbStoreType")
+    public void accountExtIdContactExtIdDateMappedAndMeasuresAsSumAndAvg(@Optional String dbStoreType) throws IOException {
         CollectionInfo collectionInfo = mapper.readValue(new File(COLLECTION_MASTER_SCHEMA), CollectionInfo.class);
         collectionInfo.getCollectionDetails().setCollectionName("GS_DATA_T5_" + date.getTime());
 
@@ -366,7 +371,8 @@ public class DataLoadConfigAggTest extends NSTestBase {
      */
     @TestInfo(testCaseIds = {"GS-3899"})
     @Test
-    public void accIdTimeStampEventMeasureSum() throws IOException {
+    @Parameters("dbStoreType")
+    public void accIdTimeStampEventMeasureSum(@Optional String dbStoreType) throws IOException {
         CollectionInfo collectionInfo = mapper.readValue(new File(COLLECTION_MASTER_SCHEMA), CollectionInfo.class);
         collectionInfo.getCollectionDetails().setCollectionName("GS_DATA_T6_" + date.getTime());
 
@@ -418,7 +424,8 @@ public class DataLoadConfigAggTest extends NSTestBase {
      */
     @TestInfo(testCaseIds = {"GS-3900"})
     @Test
-    public void accNameTimeStampEventMeasureAvg() throws IOException {
+    @Parameters("dbStoreType")
+    public void accNameTimeStampEventMeasureAvg(@Optional String dbStoreType) throws IOException {
         CollectionInfo collectionInfo = mapper.readValue(new File(COLLECTION_MASTER_SCHEMA), CollectionInfo.class);
         collectionInfo.getCollectionDetails().setCollectionName("GS_DATA_T7_" + date.getTime());
 
@@ -470,7 +477,8 @@ public class DataLoadConfigAggTest extends NSTestBase {
      */
     @TestInfo(testCaseIds = {"GS-3901"})
     @Test
-    public void accExternalIdTimeStampEventMeasureCount() throws IOException {
+    @Parameters("dbStoreType")
+    public void accExternalIdTimeStampEventMeasureCount(@Optional String dbStoreType) throws IOException {
         CollectionInfo collectionInfo = mapper.readValue(new File(COLLECTION_MASTER_SCHEMA), CollectionInfo.class);
         collectionInfo.getCollectionDetails().setCollectionName("GS_DATA_T8_" + date.getTime());
 
@@ -523,7 +531,8 @@ public class DataLoadConfigAggTest extends NSTestBase {
      */
     @TestInfo(testCaseIds = {"GS-3903"})
     @Test
-    public void accIdContactIdTimeStampEventMeasuresWithSumAvgCountMinMax() throws IOException {
+    @Parameters("dbStoreType")
+    public void accIdContactIdTimeStampEventMeasuresWithSumAvgCountMinMax(@Optional String dbStoreType) throws IOException {
         CollectionInfo collectionInfo = mapper.readValue(new File(COLLECTION_MASTER_SCHEMA), CollectionInfo.class);
         collectionInfo.getCollectionDetails().setCollectionName("GS_DATA_T9_" + date.getTime());
 
@@ -577,7 +586,8 @@ public class DataLoadConfigAggTest extends NSTestBase {
      */
     @TestInfo(testCaseIds = {"GS-3905"})
     @Test
-    public void accExtIdContactExtIdTimeStampEventMeasureSumAvg() throws IOException {
+    @Parameters("dbStoreType")
+    public void accExtIdContactExtIdTimeStampEventMeasureSumAvg(@Optional String dbStoreType) throws IOException {
         CollectionInfo collectionInfo = mapper.readValue(new File(COLLECTION_MASTER_SCHEMA), CollectionInfo.class);
         collectionInfo.getCollectionDetails().setCollectionName("GS_DATA_T10_" + date.getTime());
 
@@ -629,7 +639,8 @@ public class DataLoadConfigAggTest extends NSTestBase {
      */
     @TestInfo(testCaseIds = {"GS-3909"})
     @Test
-    public void accountIdTimeStampMappedAndMeasureAsSum() throws IOException {
+    @Parameters("dbStoreType")
+    public void accountIdTimeStampMappedAndMeasureAsSum(@Optional String dbStoreType) throws IOException {
         CollectionInfo collectionInfo = mapper.readValue(new File(COLLECTION_MASTER_SCHEMA), CollectionInfo.class);
         collectionInfo.getCollectionDetails().setCollectionName("GS_DATA_T11_" + date.getTime());
 
@@ -680,7 +691,8 @@ public class DataLoadConfigAggTest extends NSTestBase {
      */
     @TestInfo(testCaseIds = {"GS-3910"})
     @Test
-    public void accountIdContactIdTimeStampMeasureSum() throws IOException {
+    @Parameters("dbStoreType")
+    public void accountIdContactIdTimeStampMeasureSum(@Optional String dbStoreType) throws IOException {
         CollectionInfo collectionInfo = mapper.readValue(new File(COLLECTION_MASTER_SCHEMA), CollectionInfo.class);
         collectionInfo.getCollectionDetails().setCollectionName("GS_DATA_T12_" + date.getTime());
 
@@ -732,7 +744,8 @@ public class DataLoadConfigAggTest extends NSTestBase {
      */
     @TestInfo(testCaseIds = {"GS-3892"})
     @Test
-    public void contactIDHasAccountAndUserIdentifierMeasureSumAvgCount() throws IOException {
+    @Parameters("dbStoreType")
+    public void contactIDHasAccountAndUserIdentifierMeasureSumAvgCount(@Optional String dbStoreType) throws IOException {
         CollectionInfo collectionInfo = mapper.readValue(new File(COLLECTION_MASTER_SCHEMA), CollectionInfo.class);
         collectionInfo.getCollectionDetails().setCollectionName("GS_DATA_T13_" + date.getTime());
 
@@ -784,7 +797,8 @@ public class DataLoadConfigAggTest extends NSTestBase {
      */
     @TestInfo(testCaseIds = {"GS-3893"})
     @Test
-    public void contactEmailHasAccountAndUserIdentifierMeasureAvgCountMinMax() throws IOException {
+    @Parameters("dbStoreType")
+    public void contactEmailHasAccountAndUserIdentifierMeasureAvgCountMinMax(@Optional String dbStoreType) throws IOException {
         CollectionInfo collectionInfo = mapper.readValue(new File(COLLECTION_MASTER_SCHEMA), CollectionInfo.class);
         collectionInfo.getCollectionDetails().setCollectionName("GS_DATA_T14_" + date.getTime());
 
@@ -836,7 +850,8 @@ public class DataLoadConfigAggTest extends NSTestBase {
      */
     @TestInfo(testCaseIds = {"GS-3894"})
     @Test
-    public void contactExternalIdHasAccountAndUserIdentifierMeasureAvgCountMinMax() throws IOException {
+    @Parameters("dbStoreType")
+    public void contactExternalIdHasAccountAndUserIdentifierMeasureAvgCountMinMax(@Optional String dbStoreType) throws IOException {
         CollectionInfo collectionInfo = mapper.readValue(new File(COLLECTION_MASTER_SCHEMA), CollectionInfo.class);
         collectionInfo.getCollectionDetails().setCollectionName("GS_DATA_T15_" + date.getTime());
 
@@ -889,7 +904,8 @@ public class DataLoadConfigAggTest extends NSTestBase {
      */
     @TestInfo(testCaseIds = {"GS-3906"})
     @Test
-    public void contactIDHasAccountAndUserIdentifierWithTimeStampEventMeasureAsSumAvgCount() throws IOException {
+    @Parameters("dbStoreType")
+    public void contactIDHasAccountAndUserIdentifierWithTimeStampEventMeasureAsSumAvgCount(@Optional String dbStoreType) throws IOException {
         CollectionInfo collectionInfo = mapper.readValue(new File(COLLECTION_MASTER_SCHEMA), CollectionInfo.class);
         collectionInfo.getCollectionDetails().setCollectionName("GS_DATA_T16_" + date.getTime());
 
@@ -943,7 +959,8 @@ public class DataLoadConfigAggTest extends NSTestBase {
      */
     @TestInfo(testCaseIds = {"GS-3907"})
     @Test
-    public void contactEmailHasAccountAndUserIdentifierTimeStampMeasureAvgCountMinMax() throws IOException {
+    @Parameters("dbStoreType")
+    public void contactEmailHasAccountAndUserIdentifierTimeStampMeasureAvgCountMinMax(@Optional String dbStoreType) throws IOException {
         CollectionInfo collectionInfo = mapper.readValue(new File(COLLECTION_MASTER_SCHEMA), CollectionInfo.class);
         collectionInfo.getCollectionDetails().setCollectionName("GS_DATA_T17_" + date.getTime());
 
@@ -997,7 +1014,8 @@ public class DataLoadConfigAggTest extends NSTestBase {
      */
     @TestInfo(testCaseIds = {"GS-3908"})
     @Test
-    public void contactExternalIdHasAccountAndUserIdentifierTimeStampMeasureAvgCountMinMax() throws IOException {
+    @Parameters("dbStoreType")
+    public void contactExternalIdHasAccountAndUserIdentifierTimeStampMeasureAvgCountMinMax(@Optional String dbStoreType) throws IOException {
         CollectionInfo collectionInfo = mapper.readValue(new File(COLLECTION_MASTER_SCHEMA), CollectionInfo.class);
         collectionInfo.getCollectionDetails().setCollectionName("GS_DATA_T18_" + date.getTime());
 
@@ -1052,7 +1070,8 @@ public class DataLoadConfigAggTest extends NSTestBase {
      */
     @TestInfo(testCaseIds = {"GS-3896", "GS-3897", "GS-3898"})
     @Test
-    public void accountAndContactExternalIDWithCustomFieldsAndMeasuresWithAllAggregationTypes() throws IOException {
+    @Parameters("dbStoreType")
+    public void accountAndContactExternalIDWithCustomFieldsAndMeasuresWithAllAggregationTypes(@Optional String dbStoreType) throws IOException {
 
         CollectionInfo collectionInfo = mapper.readValue(new File(COLLECTION_MASTER_SCHEMA), CollectionInfo.class);
         collectionInfo.getCollectionDetails().setCollectionName("GS_DATA_T19_" + date.getTime());
@@ -1131,7 +1150,7 @@ public class DataLoadConfigAggTest extends NSTestBase {
     }
 
 
-    //@AfterClass
+    @AfterClass
     public void tearDown() {
         if(accountIdsToDelete.size() > 0) {
             Log.info("Deleting Accounts...");

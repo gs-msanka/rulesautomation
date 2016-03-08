@@ -96,7 +96,8 @@ public class DataLoadAggTest extends NSTestBase {
      */
     @TestInfo(testCaseIds = {"GS-6008"})
     @Test
-    public void duplicateAccountIdentifierAndAccIdentifierDoesNotExists() throws Exception {
+    @Parameters("dbStoreType")
+    public void duplicateAccountIdentifierAndAccIdentifierDoesNotExists(@Optional String dbStoreType) throws Exception {
         sfdc.runApexCode(resolveStrNameSpace(FileUtil.getFileContents(testDataFiles+"/tests/t20/DataSetup.apex")));
         CollectionInfo collectionInfo = mapper.readValue(new File(COLLECTION_MASTER_SCHEMA), CollectionInfo.class);
         collectionInfo.getCollectionDetails().setCollectionName("GS_DATA_T20_" + date.getTime());
@@ -155,7 +156,8 @@ public class DataLoadAggTest extends NSTestBase {
      */
     @TestInfo(testCaseIds = {"GS-6008"})
     @Test
-    public void duplicateContactIdentifier() throws IOException {
+    @Parameters("dbStoreType")
+    public void duplicateContactIdentifier(@Optional String dbStoreType) throws IOException {
         sfdc.runApexCode(resolveStrNameSpace(FileUtil.getFileContents(testDataFiles+"/tests/t21/DataSetup.apex")));
         JobInfo jobInfo = mapper.readValue(new File(testDataFiles+"/tests/t21/Contacts.json"), JobInfo.class);
         dataETL.execute(jobInfo);  //Loading the contacts.
@@ -225,7 +227,8 @@ public class DataLoadAggTest extends NSTestBase {
 
     @TestInfo(testCaseIds = {"GS-6008"})
     @Test
-    public void accountAndUserIdentifierWith15To18DigitConversion() throws IOException {
+    @Parameters("dbStoreType")
+    public void accountAndUserIdentifierWith15To18DigitConversion(@Optional String dbStoreType) throws IOException {
         sfdc.runApexCode(resolveStrNameSpace(FileUtil.getFileContents(new File(testDataFiles+"/tests/t22/T22DataSetup.apex"))));
 
         CollectionInfo collectionInfo = mapper.readValue(new File(COLLECTION_MASTER_SCHEMA), CollectionInfo.class);
