@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<suite name="Zendesk API Automation Project" preserve-order="true">
+    <listeners>
+        <listener class-name="com.gainsight.utils.AutTestListener"/>
+        <listener class-name="com.gainsight.utils.testlink.TestLinkListener"/>
+    </listeners>
+    <test verbose="3" name="RulesEngine UI Automation Tests Using Native Data" preserve-order="true">
+        <classes>
+            <class name="com.gainsight.bigdata.zendesk.tests.ZendeskTest"/>
+        </classes>
+    </test>
+</suite>
