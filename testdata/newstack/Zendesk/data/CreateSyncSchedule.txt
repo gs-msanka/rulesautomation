@@ -1,5 +1,0 @@
-{
-  "subdomain": "",
-  "startTime": 1446316200000,
-  "cronExpression": "0 10 10 1/1 * ? *"
-}

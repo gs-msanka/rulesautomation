@@ -663,29 +663,4 @@ public class DateUtil {
         return tempCal;
     }
 
-    /**
-     * Method to get Month as Int based on  the month argument passed to method
-     *
-     * @param amount
-     * @return
-     */
-    public static int getMonth(int amount, String timeZone) {
-        Calendar cal = Calendar.getInstance(TimeZone.getTimeZone(timeZone));
-        cal.add(Calendar.MONTH, amount); // Beware that month is zero based so when you do the getMonth you will need to add 1.For Example Jan is "0" not "1"
-        int month = cal.get(Calendar.MONTH) + 1;
-        return month;
-    }
-
-    /**
-     * Method to get Year as Int based on month argument passed to method
-     *
-     * @param amount
-     * @return
-     */
-    public static int getYear(int amount, String timeZone) {
-        Calendar cal = Calendar.getInstance(TimeZone.getTimeZone(timeZone));
-        cal.add(Calendar.MONTH, amount); // beware of month indexing from zero
-        int year = cal.get(Calendar.YEAR);
-        return year;
-    }
 }
