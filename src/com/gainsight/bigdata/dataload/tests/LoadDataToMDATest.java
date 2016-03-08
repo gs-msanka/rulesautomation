@@ -14,6 +14,7 @@ import com.gainsight.bigdata.pojo.CollectionInfo;
 import com.gainsight.bigdata.pojo.NsResponseObj;
 import com.gainsight.bigdata.pojo.TenantInfo;
 import com.gainsight.bigdata.reportBuilder.reportApiImpl.ReportManager;
+import com.gainsight.bigdata.tenantManagement.apiImpl.TenantManager;
 import com.gainsight.bigdata.tenantManagement.enums.MDAErrorCodes;
 import com.gainsight.bigdata.tenantManagement.pojos.TenantDetails;
 import com.gainsight.bigdata.util.CollectionUtil;
@@ -65,6 +66,7 @@ public class LoadDataToMDATest extends NSTestBase {
     @BeforeClass
     @Parameters({"dbStoreType", "useDBName"})
     public void setup(@Optional String dbStoreType, @Optional String useDBName) throws Exception {
+        tenantManager = new TenantManager();
         dataBaseType = (dbStoreType==null || dbStoreType.isEmpty()) ? dataBaseType : DBStoreType.valueOf(dbStoreType);
         this.useDBName = (useDBName == null ? false : Boolean.valueOf(useDBName));
         Assert.assertTrue(tenantAutoProvision(), "Tenant Auto-Provisioning..."); //Tenant Provision is mandatory step for data load progress.
@@ -99,7 +101,8 @@ public class LoadDataToMDATest extends NSTestBase {
             }
             Log.info("Connecting to schema db....");
             mongoDBDAO = new MongoDBDAO(schemaDBDetails.getDbServerDetails().get(0).getHost().split(":")[0],
-                    27017, schemaDBDetails.getDbServerDetails().get(0).getUserName(), schemaDBDetails.getDbServerDetails().get(0).getPassword(),
+                    schemaDBDetails.getDbServerDetails().get(0).getHost().split(":").length >1 ? Integer.valueOf(schemaDBDetails.getDbServerDetails().get(0).getHost().split(":")[1]) : 27017,
+                    schemaDBDetails.getDbServerDetails().get(0).getUserName(), schemaDBDetails.getDbServerDetails().get(0).getPassword(),
                     schemaDBDetails.getDbName());
         }
     }

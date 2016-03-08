@@ -15,6 +15,7 @@ import com.gainsight.bigdata.pojo.MDADateProcessor;
 import com.gainsight.bigdata.pojo.NsResponseObj;
 import com.gainsight.bigdata.pojo.TenantInfo;
 import com.gainsight.bigdata.reportBuilder.reportApiImpl.ReportManager;
+import com.gainsight.bigdata.tenantManagement.apiImpl.TenantManager;
 import com.gainsight.bigdata.tenantManagement.pojos.TenantDetails;
 import com.gainsight.bigdata.util.CollectionUtil;
 import com.gainsight.sfdc.util.DateUtil;
@@ -56,12 +57,13 @@ public class DataLoadConfigAggTest extends NSTestBase {
     private String testDataFiles = testDataBasePath+"/connectors/dataApi";
     GSDataImpl gsDataImpl;
     JobInfo eventsJobInfo;
-    private static DBStoreType dataBaseType = DBStoreType.MONGO;
+    private static DBStoreType dataBaseType = DBStoreType.REDSHIFT;
 
 
     @BeforeClass
     @Parameters("dbStoreType")
     public void setup(@Optional String dbStoreType) throws Exception {
+        tenantManager = new TenantManager();
         dataBaseType = (dbStoreType==null || dbStoreType.isEmpty()) ? dataBaseType : DBStoreType.valueOf(dbStoreType);
         Assert.assertTrue(tenantAutoProvision(), "Tenant Auto-Provisioning..."); //Tenant Provision is mandatory step for data load progress.
         gsDataImpl = new GSDataImpl(header);
@@ -1129,7 +1131,7 @@ public class DataLoadConfigAggTest extends NSTestBase {
     }
 
 
-    @AfterClass
+    //@AfterClass
     public void tearDown() {
         if(accountIdsToDelete.size() > 0) {
             Log.info("Deleting Accounts...");

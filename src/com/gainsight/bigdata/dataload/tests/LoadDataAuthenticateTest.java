@@ -26,6 +26,7 @@ public class LoadDataAuthenticateTest extends NSTestBase {
 
     @BeforeClass
     public void setup() {
+        tenantManager = new TenantManager();
         Assert.assertTrue(tenantAutoProvision(), "Tenant Auto-Provisioning..."); //Tenant Provision is mandatory step for data load progress.
         tenantDetails = tenantManager.getTenantDetail(sfinfo.getOrg(), null);
         dataLoadManager = new DataLoadManager(sfinfo, getDataLoadAccessKey());
