@@ -32,9 +32,9 @@
       "mandrill_webhook_secret"    : "E5IF6xyhxG9rTT-lBol62Q"
     },
     "test1" : {
-      "ns_sfdc_username"  : "test1admin@gainsighttest.com",
-      "ns_sfdc_password"  : "jbara@123",
-      "ns_sfdc_stoken"    : "NHQeOPESfpKst0YZeB026fhI",
+      "ns_sfdc_username"  : "snasika@ns.com",
+      "ns_sfdc_password"  : "gainsight.12345",
+      "ns_sfdc_stoken"    : "es2P6GD8qSOXGZ1zL0HVH45E6",
       "ns_appUrl"         : "https://test1-api-router.herokuapp.com",
       "ns_adminUrl"       : "https://test1-api-router.herokuapp.com",
       "ns_version"        : "v1.0",
@@ -234,6 +234,26 @@
       "mongo_scheduler_username": "devuser",
       "mongo_scheduler_password": "FC235761-DDE2-41B9-A33E-210F783A21C1",
       "mongo_scheduler_ssl_enable": "false"
+    },
+    "incqa01" : {
+      "ns_sfdc_username" : "incqa01@gainsight.com",
+      "ns_sfdc_password" : "12345678jbr",
+      "ns_sfdc_stoken" : "yTbIri9QOV0vzQC9uMIPtxNZL",
+      "ns_appUrl" : "https://incqa01-api-router.herokuapp.com",
+      "ns_adminUrl" : "https://incqa01-api-router.herokuapp.com",
+      "ns_version" : "v1.0",
+      "mongo_global_host" : "54.165.93.124",
+      "mongo_global_port" : "27017",
+      "mongo_global_db" : "qa_incredebles_db1",
+      "mongo_global_username" : "qauser",
+      "mongo_global_password" : "A23A673B-14A1-467B-BFC3-5AC87F4007BF",
+      "mongo_global_ssl_enable" : "false",
+      "mongo_scheduler_host" : "54.165.93.124",
+      "mongo_scheduler_port" : "27017",
+      "mongo_scheduler_db" : "qa_incredebles_db1",
+      "mongo_scheduler_username" : "qauser",
+      "mongo_scheduler_password" : "A23A673B-14A1-467B-BFC3-5AC87F4007BF",
+      "mongo_scheduler_ssl_enable" : "false"
     }
   }
 }
