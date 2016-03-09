@@ -1,5 +1,7 @@
 package com.gainsight.bigdata.rulesengine.bean.RuleSetup;
 
+import org.codehaus.jackson.annotate.JsonIgnore;
+import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.codehaus.jackson.annotate.JsonProperty;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 
@@ -7,6 +9,8 @@ import org.codehaus.jackson.map.annotate.JsonSerialize;
  * Created by Giribabu on 03/12/15.
  */
 @JsonSerialize(include = JsonSerialize.Inclusion.NON_DEFAULT)
+@JsonIgnoreProperties(ignoreUnknown = true)
+
 public class Field {
 
     private String type;
