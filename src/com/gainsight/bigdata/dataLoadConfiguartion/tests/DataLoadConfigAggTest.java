@@ -26,6 +26,7 @@ import com.gainsight.testdriver.Application;
 import com.gainsight.testdriver.Log;
 import com.gainsight.util.Comparator;
 import com.gainsight.util.DBStoreType;
+import com.gainsight.util.MongoDBDAO;
 import com.gainsight.utils.annotations.TestInfo;
 import org.codehaus.jackson.type.TypeReference;
 import org.testng.Assert;
@@ -76,7 +77,13 @@ public class DataLoadConfigAggTest extends NSTestBase {
 
         if(dataBaseType == DBStoreType.MONGO) {
             if(tenantDetails.isRedshiftEnabled()) {
-                assertTrue(tenantManager.disableRedShift(tenantDetails));
+                MongoDBDAO globalMongo = new  MongoDBDAO(nsConfig.getGlobalDBHost(), Integer.valueOf(nsConfig.getGlobalDBPort()),
+                        nsConfig.getGlobalDBUserName(), nsConfig.getGlobalDBPassword(), nsConfig.getGlobalDBDatabase());
+                try {
+                    assertTrue(globalMongo.disableRedshift(tenantInfo.getTenantId()));
+                } finally {
+                    globalMongo.mongoUtil.closeConnection();
+                }
             }
         } else if(dataBaseType == DBStoreType.REDSHIFT) {
             if(!tenantDetails.isRedshiftEnabled()) {

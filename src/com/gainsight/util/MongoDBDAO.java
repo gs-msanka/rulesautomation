@@ -33,10 +33,16 @@ public class MongoDBDAO  {
 
     //Just in case to test locally.
     public static void main(String[] args) {
-        MongoDBDAO mongoDBDAO = new  MongoDBDAO("54.204.251.136", 27017, "mdaqa02", "fgFByS5D", "test_gsglobaldb");
-        //MongoDBDAO mongoDBDAO = new  MongoDBDAO("52.0.148.18", 27017, "gsuser", "T4Fa36Hr", "gsglobaldb");
-        //MongoDBDAO mongoDBDAO = new  MongoDBDAO("52.0.148.18", 27017, "gsuser", "T4Fa36Hr", "gsglobaldb");
-        //mongoDBDAO.updateCollectionDBStoreType("e5a05708-4337-4d04-821e-82f454b1a746", "99281caf-e4cd-4a85-b2f0-4b07a9a49e9b", DBStoreType.POSTGRES);
+        //MongoDBDAO mongoDBDAO = new  MongoDBDAO("54.204.251.136", 27017, "mdaqa02", "fgFByS5D", "test_gsglobaldb");
+        //MongoDBDAO mongoDBDAO = new MongoDBDAO("candidate.17.mongolayer.com ", 11120, "testenv", "l3t5w0rk","gscsdata-elastic");
+
+        MongoDBDAO mongoDBDAO1 = new MongoDBDAO("54.165.93.124",27017, "qauser", "A23A673B-14A1-467B-BFC3-5AC87F4007BF", "qa_automation_db1");
+        System.out.println(mongoDBDAO1.disableRedshift("6d86a386-8b9e-4f39-8f03-03bfebb3b2a2"));
+
+        //TenantDetails tenantDetails = mongoDBDAO.getAllDBDetails("d52ca3e9-5d89-4baa-92bc-78a7de1ae7f7");
+
+        //System.out.println("**************************");
+        mongoDBDAO1.mongoUtil.closeConnection();
     }
     
     
@@ -297,5 +303,12 @@ public class MongoDBDAO  {
             break;
         }
         return dbCollectionName;
+    }
+
+    public boolean disableRedshift(String tenantId) {
+        Document document = mongoUtil.getFirstRecord(TENANT_MASTER, new Document("TenantId", tenantId));
+        Document updateDocument = new Document();
+        updateDocument.append("$set", new Document().append("redshiftEnabled", false));
+        return mongoUtil.updateSingleRecord(TENANT_MASTER, document, updateDocument);
     }
 }

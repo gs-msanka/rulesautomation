@@ -28,6 +28,7 @@ import com.gainsight.util.Comparator;
 import static org.testng.Assert.*;
 
 import com.gainsight.util.DBStoreType;
+import com.gainsight.util.MongoDBDAO;
 import com.gainsight.utils.annotations.TestInfo;
 import org.testng.annotations.Optional;
 import org.testng.annotations.*;
@@ -71,9 +72,16 @@ public class DataLoadAggTest extends NSTestBase {
         reportManager       = new ReportManager();
         dataLoadAggConfigManager = new DataLoadAggConfigManager(header);
 
+
         if(dataBaseType == DBStoreType.MONGO) {
             if(tenantDetails.isRedshiftEnabled()) {
-                assertTrue(tenantManager.disableRedShift(tenantDetails));
+                MongoDBDAO globalMongo = new  MongoDBDAO(nsConfig.getGlobalDBHost(), Integer.valueOf(nsConfig.getGlobalDBPort()),
+                        nsConfig.getGlobalDBUserName(), nsConfig.getGlobalDBPassword(), nsConfig.getGlobalDBDatabase());
+                try {
+                    assertTrue(globalMongo.disableRedshift(tenantInfo.getTenantId()));
+                } finally {
+                    globalMongo.mongoUtil.closeConnection();
+                }
             }
         } else if(dataBaseType == DBStoreType.REDSHIFT) {
             if(!tenantDetails.isRedshiftEnabled()) {

@@ -73,36 +73,34 @@ public class LoadDataToMDATest extends NSTestBase {
         TenantInfo tenantInfo = gsDataImpl.getTenantInfo(sfinfo.getOrg());
         tenantDetails =tenantManager.getTenantDetail(null, tenantInfo.getTenantId());
         dataLoadManager = new DataLoadManager(sfinfo, getDataLoadAccessKey());
-        if(dataBaseType == DBStoreType.MONGO) {
-            if(tenantDetails.isRedshiftEnabled()) {
-                Assert.assertTrue(tenantManager.disableRedShift(tenantDetails));
+        MongoDBDAO globalMongo = new  MongoDBDAO(nsConfig.getGlobalDBHost(), Integer.valueOf(nsConfig.getGlobalDBPort()),
+                nsConfig.getGlobalDBUserName(), nsConfig.getGlobalDBPassword(), nsConfig.getGlobalDBDatabase());
+
+        try {
+            if(dataBaseType == DBStoreType.MONGO) {
+                if(tenantDetails.isRedshiftEnabled()) {
+                    Assert.assertTrue(globalMongo.disableRedshift(tenantInfo.getTenantId()));
+                }
+            } else if(dataBaseType == DBStoreType.REDSHIFT) {
+                if(!tenantDetails.isRedshiftEnabled()) {
+                    Assert.assertTrue(tenantManager.enabledRedShiftWithDBDetails(tenantDetails));
+                }
+            } else if(dataBaseType == DBStoreType.POSTGRES) { //This will help to run the same suite for multiple data bases.
+                //Please make sure your global db/schema db details are correct.
+                Log.info("Connecting to global db...");
+                TenantDetails.DBDetail schemaDBDetails = globalMongo.getSchemaDBDetail(tenantInfo.getTenantId());
+                if(schemaDBDetails == null || schemaDBDetails.getDbServerDetails() == null ||
+                        schemaDBDetails.getDbServerDetails().get(0) == null) {
+                    throw new RuntimeException("Some thing is not write with schema db details fetched, please check it.");
+                }
+                Log.info("Connecting to schema db....");
+                mongoDBDAO = new MongoDBDAO(schemaDBDetails.getDbServerDetails().get(0).getHost().split(":")[0],
+                        schemaDBDetails.getDbServerDetails().get(0).getHost().split(":").length >1 ? Integer.valueOf(schemaDBDetails.getDbServerDetails().get(0).getHost().split(":")[1]) : 27017,
+                        schemaDBDetails.getDbServerDetails().get(0).getUserName(), schemaDBDetails.getDbServerDetails().get(0).getPassword(),
+                        schemaDBDetails.getDbName());
             }
-        } else if(dataBaseType == DBStoreType.REDSHIFT) {
-            if(!tenantDetails.isRedshiftEnabled()) {
-                Assert.assertTrue(tenantManager.enabledRedShiftWithDBDetails(tenantDetails));
-            }
-        }
-        //This will help to run the same suite for multiple data bases.
-        //Please make sure your global db/schema db details are correct.
-        if(dataBaseType == DBStoreType.POSTGRES) {
-            Log.info("Connecting to global db...");
-            mongoDBDAO = new  MongoDBDAO(nsConfig.getGlobalDBHost(), Integer.valueOf(nsConfig.getGlobalDBPort()),
-                    nsConfig.getGlobalDBUserName(), nsConfig.getGlobalDBPassword(), nsConfig.getGlobalDBDatabase());
-            TenantDetails.DBDetail schemaDBDetails =null;
-            try {
-                schemaDBDetails = mongoDBDAO.getSchemaDBDetail(tenantInfo.getTenantId());
-            }  finally {
-                mongoDBDAO.mongoUtil.closeConnection();
-            }
-            if(schemaDBDetails == null || schemaDBDetails.getDbServerDetails() == null ||
-                    schemaDBDetails.getDbServerDetails().get(0) == null) {
-                throw new RuntimeException("Some thing is not write with schema db details fetched, please check it.");
-            }
-            Log.info("Connecting to schema db....");
-            mongoDBDAO = new MongoDBDAO(schemaDBDetails.getDbServerDetails().get(0).getHost().split(":")[0],
-                    schemaDBDetails.getDbServerDetails().get(0).getHost().split(":").length >1 ? Integer.valueOf(schemaDBDetails.getDbServerDetails().get(0).getHost().split(":")[1]) : 27017,
-                    schemaDBDetails.getDbServerDetails().get(0).getUserName(), schemaDBDetails.getDbServerDetails().get(0).getPassword(),
-                    schemaDBDetails.getDbName());
+        } finally {
+            globalMongo.mongoUtil.closeConnection();
         }
     }
 
