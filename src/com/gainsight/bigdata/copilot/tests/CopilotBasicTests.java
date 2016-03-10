@@ -66,11 +66,11 @@ public class CopilotBasicTests extends CopilotTestUtils {
         //Create out reach & verify the same.
         OutReach actualOutReach = createAndTriggerOutreach(mapper.readValue(new File(testDataDir + "test/Basic_cases/T1_OutReach.json"), OutReach.class), actualSmartList, actualEmailTemplate);
         verifyOutReachExecutionHistory(actualOutReach.getStatusId(), 2, 0);
-        Assert.assertEquals(actualOutReach.getLastRunStatus(), "SUCCESS");
+        Assert.assertEquals(actualOutReach.getLastRunStatus(), "SUCCESS", "Outreach Run Status Failed");
 
         //Re-Trigger out reach, wait for outreach process, verify the execution history of out reach.
         actualOutReach = triggerOutreach(actualOutReach);
-        Assert.assertEquals(actualOutReach.getLastRunStatus(), "FAILURE");
+        Assert.assertEquals(actualOutReach.getLastRunStatus(), "FAILURE", "Outreach Run Status Failed");
         verifyOutReachExecutionHistory(actualOutReach.getStatusId(), 0, 2);
 
         //Update outreach -- Re-Trigger out reach, wait for outreach process, verify the execution history of out reach.
@@ -79,7 +79,7 @@ public class CopilotBasicTests extends CopilotTestUtils {
         actualOutReach = copilotAPI.updateOutReach(mapper.writeValueAsString(actualOutReach));
 
         actualOutReach = triggerOutreach(actualOutReach);//should inform the assertion msg to this method
-        Assert.assertEquals(actualOutReach.getLastRunStatus(), "SUCCESS");
+        Assert.assertEquals(actualOutReach.getLastRunStatus(), "SUCCESS", "Outreach Run Status Failed");
         verifyOutReachExecutionHistory(actualOutReach.getStatusId(), 2, 0);
 
         //Get the email template references in outreaches & verify the template use in outreach.
@@ -129,11 +129,11 @@ public class CopilotBasicTests extends CopilotTestUtils {
         //Create out reach & verify the same.
         OutReach actualOutReach = createAndTriggerOutreach(mapper.readValue(new File(testDataDir + "test/Basic_cases/T2_OutReach.json"), OutReach.class), actualSmartList, actualEmailTemplate);
         verifyOutReachExecutionHistory(actualOutReach.getStatusId(), 2, 0);
-        Assert.assertEquals(actualOutReach.getLastRunStatus(), "SUCCESS");
+        Assert.assertEquals(actualOutReach.getLastRunStatus(), "SUCCESS", "Outreach Run Status Failed");
 
         //Re-Trigger out reach, wait for outreach process, verify the execution history of out reach.
         actualOutReach = triggerOutreach(actualOutReach);
-        Assert.assertEquals(actualOutReach.getLastRunStatus(), "FAILURE");
+        Assert.assertEquals(actualOutReach.getLastRunStatus(), "FAILURE", "Outreach Run Status Failed");
         verifyOutReachExecutionHistory(actualOutReach.getStatusId(), 0, 2);
 
         //Update outreach -- Re-Trigger out reach, wait for outreach process, verify the execution history of out reach.
@@ -142,7 +142,7 @@ public class CopilotBasicTests extends CopilotTestUtils {
         actualOutReach = copilotAPI.updateOutReach(mapper.writeValueAsString(actualOutReach));
 
         actualOutReach = triggerOutreach(actualOutReach);//should inform the assertion msg to this method
-        Assert.assertEquals(actualOutReach.getLastRunStatus(), "SUCCESS");
+        Assert.assertEquals(actualOutReach.getLastRunStatus(), "SUCCESS", "Outreach Run Status Failed");
         verifyOutReachExecutionHistory(actualOutReach.getStatusId(), 2, 0);
 
         //Get the email template references in outreaches & verify the template use in outreach.
@@ -192,11 +192,11 @@ public class CopilotBasicTests extends CopilotTestUtils {
         //Create out reach & verify the same.
         OutReach actualOutReach = createAndTriggerOutreach(mapper.readValue(new File(testDataDir + "test/Basic_cases/T3_Outreach.json"), OutReach.class), actualSmartList, actualEmailTemplate);
         verifyOutReachExecutionHistory(actualOutReach.getStatusId(), 45, 0);
-        Assert.assertEquals(actualOutReach.getLastRunStatus(), "SUCCESS");
+        Assert.assertEquals(actualOutReach.getLastRunStatus(), "SUCCESS", "Outreach Run Status Failed");
 
         //Re-Trigger out reach, wait for outreach process, verify the execution history of out reach.
         actualOutReach = triggerOutreach(actualOutReach);
-        Assert.assertEquals(actualOutReach.getLastRunStatus(), "FAILURE");
+        Assert.assertEquals(actualOutReach.getLastRunStatus(), "FAILURE", "Outreach Run Status Failed");
         verifyOutReachExecutionHistory(actualOutReach.getStatusId(), 0, 45);
 
         //Update outreach -- Re-Trigger out reach, wait for outreach process, verify the execution history of out reach.
@@ -205,7 +205,7 @@ public class CopilotBasicTests extends CopilotTestUtils {
         actualOutReach = copilotAPI.updateOutReach(mapper.writeValueAsString(actualOutReach));
 
         actualOutReach = triggerOutreach(actualOutReach);//should inform the assertion msg to this method
-        Assert.assertEquals(actualOutReach.getLastRunStatus(), "SUCCESS");
+        Assert.assertEquals(actualOutReach.getLastRunStatus(), "SUCCESS", "Outreach Run Status Failed");
         verifyOutReachExecutionHistory(actualOutReach.getStatusId(), 45, 0);
 
         //Get the email template references in outreaches & verify the template use in outreach.
@@ -253,11 +253,11 @@ public class CopilotBasicTests extends CopilotTestUtils {
         //Create out reach & verify the same.
         OutReach actualOutReach = createAndTriggerOutreach(mapper.readValue(new File(testDataDir + "test/Basic_cases/T4_OutReach.json"), OutReach.class), actualSmartList, actualEmailTemplate);
         verifyOutReachExecutionHistory(actualOutReach.getStatusId(), 2, 0);
-        Assert.assertEquals(actualOutReach.getLastRunStatus(), "SUCCESS");
+        Assert.assertEquals(actualOutReach.getLastRunStatus(), "SUCCESS", "Outreach Run Status Failed");
 
         //Re-Trigger out reach, wait for outreach process, verify the execution history of out reach.
         actualOutReach = triggerOutreach(actualOutReach);
-        Assert.assertEquals(actualOutReach.getLastRunStatus(), "FAILURE");
+        Assert.assertEquals(actualOutReach.getLastRunStatus(), "FAILURE", "Outreach Run Status Failed");
         verifyOutReachExecutionHistory(actualOutReach.getStatusId(), 0, 2);
 
         //Update outreach -- Re-Trigger out reach, wait for outreach process, verify the execution history of out reach.
@@ -266,7 +266,7 @@ public class CopilotBasicTests extends CopilotTestUtils {
         actualOutReach = copilotAPI.updateOutReach(mapper.writeValueAsString(actualOutReach));
 
         actualOutReach = triggerOutreach(actualOutReach);//should inform the assertion msg to this method
-        Assert.assertEquals(actualOutReach.getLastRunStatus(), "SUCCESS");
+        Assert.assertEquals(actualOutReach.getLastRunStatus(), "SUCCESS", "Outreach Run Status Failed");
         verifyOutReachExecutionHistory(actualOutReach.getStatusId(), 2, 0);
 
         //Get the email template references in outreaches & verify the template use in outreach.
@@ -315,11 +315,11 @@ public class CopilotBasicTests extends CopilotTestUtils {
         //Create out reach & verify the same.
         OutReach actualOutReach = createAndTriggerOutreach(mapper.readValue(new File(testDataDir + "test/Basic_cases/T5_OutReach.json"), OutReach.class), actualSmartList, actualEmailTemplate);
         verifyOutReachExecutionHistory(actualOutReach.getStatusId(), 2, 0);
-        Assert.assertEquals(actualOutReach.getLastRunStatus(), "SUCCESS");
+        Assert.assertEquals(actualOutReach.getLastRunStatus(), "SUCCESS", "Outreach Run Status Failed");
 
         //Re-Trigger out reach, wait for outreach process, verify the execution history of out reach.
         actualOutReach = triggerOutreach(actualOutReach);
-        Assert.assertEquals(actualOutReach.getLastRunStatus(), "FAILURE");
+        Assert.assertEquals(actualOutReach.getLastRunStatus(), "FAILURE", "Outreach Run Status Failed");
         verifyOutReachExecutionHistory(actualOutReach.getStatusId(), 0, 2);
 
         //Update outreach -- Re-Trigger out reach, wait for outreach process, verify the execution history of out reach.
@@ -328,7 +328,7 @@ public class CopilotBasicTests extends CopilotTestUtils {
         actualOutReach = copilotAPI.updateOutReach(mapper.writeValueAsString(actualOutReach));
 
         actualOutReach = triggerOutreach(actualOutReach);//should inform the assertion msg to this method
-        Assert.assertEquals(actualOutReach.getLastRunStatus(), "SUCCESS");
+        Assert.assertEquals(actualOutReach.getLastRunStatus(), "SUCCESS", "Outreach Run Status Failed");
         verifyOutReachExecutionHistory(actualOutReach.getStatusId(), 2, 0);
         //Get the email template references in outreaches & verify the template use in outreach.
         verifyTemplateUsedInOutreach(actualEmailTemplate, actualOutReach);
