@@ -1,17 +1,15 @@
 package com.gainsight.sfdc.customer360.test;
 
-import java.util.HashMap;
-
-import org.testng.Assert;
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.Test;
-
 import com.gainsight.pageobject.core.Element;
 import com.gainsight.sfdc.customer360.pages.Customer360Page;
 import com.gainsight.sfdc.tests.BaseTest;
 import com.gainsight.testdriver.Log;
 import com.gainsight.utils.DataProviderArguments;
 import com.gainsight.utils.annotations.TestInfo;
+import org.testng.Assert;
+import org.testng.annotations.BeforeClass;
+import org.testng.annotations.Test;
+import java.util.HashMap;
 
 /**
  * Created by gainsight on 08/01/14.
@@ -57,7 +55,7 @@ public class EmbeddedPageTest extends BaseTest {
 
         sfdc.runApexCode(getNameSpaceResolvedFileContents(EMBEDDED_360_PAGESOURCE_SEC_ENABLE_FILE));
         String embeddedListName = testData.get("Section");
-        String embiframeurl = visualForcePageUrl + testData.get("URL");
+        String embiframeurl = visualForcePageUrl + resolveStrNameSpace(testData.get("URL"));
         Customer360Page c360Page = basepage.clickOnC360Tab().searchCustomer(testData.get("Customer"), false, false);
         c360Page.clickOnEmbededPage(embeddedListName);
         element.switchToFrame("//iframe[contains(@src,'" + embiframeurl + "')]");
