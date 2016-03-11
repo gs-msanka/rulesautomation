@@ -1,0 +1,15 @@
+{
+  "jobName": "Load Accounts Data For Zendesk",
+  "jobType": "AccountUpsert",
+  "namespacePrefix": "JBCXM",
+  "useNameSpace": false,
+  "load": {
+    "target": "sfdc",
+    "sObject": "Account",
+    "operation": "upsert",
+    "contentType": "CSV",
+    "externalIDField": "Data_ExternalId__c",
+    "cleanUp": false,
+    "file": "/testdata/newstack/Zendesk/data/Load_Accounts.csv"
+  }
+}
