@@ -348,8 +348,8 @@ public class CopilotTestUtils extends NSTestBase {
      */
     public void createCustomFields() throws Exception {
 
-        metadataClient.createCustomObject("C_ContactObject");
-        metadataClient.createCustomObject("C_ContactObject2");
+        metadataClient.createCustomObject("Copilot_Contact_Obj1");
+        metadataClient.createCustomObject("Copilot_Contact_Obj2");
 
         ObjectFields objField_account,objField_contact,objField_case,objField_cusObj,objField_CusInfo,objField_ContactObj2;
         MetaDataUtil md=new MetaDataUtil();
@@ -359,8 +359,8 @@ public class CopilotTestUtils extends NSTestBase {
         objField_CusInfo=mapper.readValue(new File(testDataDir + "jsons/Customer_Fields.json"), ObjectFields.class);
         md.createFieldsOnObject(sfdc, "JBCXM__CustomerInfo__c", objField_CusInfo);
 
-        objField_cusObj=mapper.readValue(new File(testDataDir + "jsons/Cust_Fields.json"), ObjectFields.class);
-        md.createFieldsOnObject(sfdc, "C_ContactObject__c", objField_cusObj);
+        objField_cusObj=mapper.readValue(new File(testDataDir + "jsons/Custom_Fields.json"), ObjectFields.class);
+        md.createFieldsOnObject(sfdc, "Copilot_Contact_Obj1__c", objField_cusObj);
 
         objField_contact= mapper.readValue(new File(testDataDir + "jsons/Contact_Fields.json"), ObjectFields.class);
         md.createFieldsOnObject(sfdc, "Contact", objField_contact);
@@ -369,8 +369,8 @@ public class CopilotTestUtils extends NSTestBase {
         md.createFieldsOnObject(sfdc, "Case", objField_case);
 
         //Create Only ExternalID for "C_ContactObject2__c"
-        objField_ContactObj2=mapper.readValue("{\"externalID_Text\":[\"p_c_ExternalID\"]}x`", ObjectFields.class);
-        md.createFieldsOnObject(sfdc, "C_ContactObject2__c", objField_ContactObj2);
+        objField_ContactObj2=mapper.readValue("{\"externalID_Text\":[\"Copilot_Contact_Obj2_ExternalID\"]}x`", ObjectFields.class);
+        md.createFieldsOnObject(sfdc, "Copilot_Contact_Obj2__c", objField_ContactObj2);
     }
 
     /**
@@ -387,7 +387,8 @@ public class CopilotTestUtils extends NSTestBase {
                 "delete [select id from C_ContactObject2__c];"+
                 "delete [select id from Account];");
         dataETL = new DataETL();
-        loadToObject(dataETL, testDataDir + "/Job/job_C_ContactObject2.txt");
+        //Loading data in Copilot_Contact_Obj2
+        loadToObject(dataETL, testDataDir + "/Job/job_Copilot_Contact_Obj2.txt");
         //Initializing Account,Customer Info,Case,Contact
         loadToObject(dataETL, testDataDir + "/Job/job_Account-Init.txt");
         loadToObject(dataETL, testDataDir + "/Job/job_CustomerInfo-Init.txt");
@@ -398,7 +399,7 @@ public class CopilotTestUtils extends NSTestBase {
         loadToObject(dataETL, testDataDir + "/Job/job_CustomerInfo.txt");
         loadToObject(dataETL, testDataDir + "/Job/job_Contact.txt");
         loadToObject(dataETL, testDataDir + "/Job/job_Case.txt");
-        loadToObject(dataETL, testDataDir + "/Job/job_C_ContactObject1.txt");
+        loadToObject(dataETL, testDataDir + "/Job/job_Copilot_Contact_Obj1.txt");
     }
 
     /**

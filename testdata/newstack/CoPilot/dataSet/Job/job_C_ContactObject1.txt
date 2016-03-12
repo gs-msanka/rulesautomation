@@ -1,32 +1,32 @@
 {
-    "jobName": "Load Datas to C_ContactObject1",
+    "jobName": "Load Datas to Copilot_Contact_Obj1__c",
     "namespacePrefix": "JBCXM",
     "useNameSpace": false,
     "dateProcess": {
-        "inputFile": "/testdata/newstack/CoPilot/Data/Input/C_ContactObject1.csv",
-        "outputFile": "/testdata/newstack/CoPilot/Data/Output/C_ContactObject1-output.csv",
+        "inputFile": "/testdata/newstack/CoPilot/Data/Input/Copilot_Contact_Obj1.csv",
+        "outputFile": "/testdata/newstack/CoPilot/Data/Output/Copilot_Contact_Obj1-output.csv",
         "fields": [
             {
                 "weekly": false,
                 "daily": true,
                 "dateTime": false,
-                "fieldName": "P_C_DATE__C"
+                "fieldName": "Copilot_Contact_Obj1_DATE__C"
             },
             {
                 "weekly": true,
                 "daily": false,
                 "dateTime": true,
-                "fieldName": "P_C_DATETIME__C"
+                "fieldName": "Copilot_Contact_Obj1_DATETIME__C"
             }
         ]
     },
     "load": {
         "target": "sfdc",
-        "sObject": "C_ContactObject__c",
+        "sObject": "Copilot_Contact_Obj1__c",
         "operation": "upsert",
         "contentType": "CSV",
         "cleanUp": true,
-        "externalIDField": "p_c_ExternalID__c",
-        "file": "/testdata/newstack/CoPilot/Data/Output/C_ContactObject1-output.csv"
+        "externalIDField": "Copilot_Contact_Obj1_ExternalID__c",
+        "file": "/testdata/newstack/CoPilot/Data/Output/Copilot_Contact_Obj1-output.csv"
     }
 }

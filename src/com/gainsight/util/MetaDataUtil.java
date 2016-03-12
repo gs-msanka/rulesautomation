@@ -141,13 +141,6 @@ public class MetaDataUtil {
 				 permFieldsList.add(hm.get("Name"));
 			 }
 		 }
-		 if(objF.getFormulaFieldsList().size() > 0){
-			 metadataClient.createFormulaFields(resolveStrNameSpace(Object), objF.getFormulaFieldsList());
-			 
-			 for (HashMap<String,String> hm : objF.getFormulaFieldsList()){
-				 permFieldsList.add(hm.get("FieldName"));
-			 }
-		 }
 		 if(objF.getTextFields().size() > 0){
 			 metadataClient.createTextFields(resolveStrNameSpace(Object), objF.getTextFields().toArray(new String[objF.getTextFields().size()]), false, false, true, false, false);
 			 permFieldsList.addAll(objF.getTextFields());
@@ -228,6 +221,13 @@ public class MetaDataUtil {
 		 if(objF.getURLs().size() > 0){
 			 metadataClient.createFields(resolveStrNameSpace(Object), objF.getURLs().toArray(new String[objF.getURLs().size()]), false, false, true);
 			 permFieldsList.addAll(objF.getURLs());
+		 }
+		 if(objF.getFormulaFieldsList().size() > 0){
+			 metadataClient.createFormulaFields(resolveStrNameSpace(Object), objF.getFormulaFieldsList());
+
+			 for (HashMap<String,String> hm : objF.getFormulaFieldsList()){
+				 permFieldsList.add(hm.get("FieldName"));
+			 }
 		 }
 		 addFieldPermissionsToUsers(resolveStrNameSpace(Object), convertFieldNameToAPIName(permFieldsList.toArray(new String[permFieldsList.size()])), sfdc.fetchSFDCinfo(), true);
 	 }
