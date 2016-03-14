@@ -36,6 +36,7 @@ import com.gainsight.util.Comparator;
 import com.gainsight.util.DBStoreType;
 import com.gainsight.util.MongoDBDAO;
 import com.gainsight.utils.annotations.TestInfo;
+import org.apache.commons.lang3.StringUtils;
 import org.codehaus.jackson.JsonNode;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.testng.Assert;
@@ -93,12 +94,8 @@ public class CallToActionWithRelationshipsTest extends BaseTest {
         gsDataImpl = new GSDataImpl(NSTestBase.header);
         tenantManager = new TenantManager();
         tenantDetails = tenantManager.getTenantDetail(null, tenantManager.getTenantDetail(NSTestBase.sfdc.fetchSFDCinfo().getOrg(), null).getTenantId());
-        if (dbStoreType != null && dbStoreType.equalsIgnoreCase(DBStoreType.MONGO.name())) {
-            Assert.assertTrue(tenantManager.disableRedShift(tenantDetails));
-        } else if (dbStoreType != null && dbStoreType.equalsIgnoreCase(DBStoreType.REDSHIFT.name())) {
-            Assert.assertTrue(tenantManager.enabledRedShiftWithDBDetails(tenantDetails));
-        } else if (dbStoreType != null && dbStoreType.equalsIgnoreCase(DBStoreType.POSTGRES.name())) {
-            dataBaseType = DBStoreType.valueOf(dbStoreType);
+        if (StringUtils.isNotBlank(dbStoreType)) {
+            //dataBaseType = DBStoreType.valueOf(dbStoreType);
             mongoDBDAO = new MongoDBDAO(NSTestBase.nsConfig.getGlobalDBHost(), Integer.valueOf(NSTestBase.nsConfig.getGlobalDBPort()), NSTestBase.nsConfig.getGlobalDBUserName(), NSTestBase.nsConfig.getGlobalDBPassword(), NSTestBase.nsConfig.getGlobalDBDatabase());
             TenantDetails.DBDetail schemaDBDetails = null;
             schemaDBDetails = mongoDBDAO.getSchemaDBDetail(tenantDetails.getTenantId());
@@ -116,9 +113,9 @@ public class CallToActionWithRelationshipsTest extends BaseTest {
             collectionInfo.getCollectionDetails().setCollectionName(dbStoreType + date.getTime());
             String collectionId = gsDataImpl.createCustomObject(collectionInfo);
             Assert.assertNotNull(collectionId, "Collection ID should not be null.");
-            // Updating DB storage type to postgres from back end.
-            if (dbStoreType != null && dbStoreType.equalsIgnoreCase(DBStoreType.POSTGRES.name())) {
-                Assert.assertTrue(mongoDBDAO.updateCollectionDBStoreType(tenantDetails.getTenantId(), collectionId, DBStoreType.POSTGRES), "Failed while updating the DB store type to postgres");
+            // Updating DB storage type to Mpngo/postgres from back end.
+            if (StringUtils.isNotBlank(dbStoreType)) {
+                Assert.assertTrue(mongoDBDAO.updateCollectionDBStoreType(tenantDetails.getTenantId(), collectionId, DBStoreType.valueOf(StringUtils.upperCase(dbStoreType))), "Failed while updating the DB store type to "+dbStoreType);
             }
             CollectionInfo actualCollectionInfo = gsDataImpl.getCollectionMaster(collectionId);
             collectionName = actualCollectionInfo.getCollectionDetails().getCollectionName();

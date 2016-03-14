@@ -74,9 +74,10 @@ public class CalculatedFieldsAndMeasuresTestUsingRedShiftAsSourceData extends Ba
 		nsTestBase.init();
 		tenantManager = new TenantManager();
 		tenantDetails = tenantManager.getTenantDetail(null, tenantManager.getTenantDetail(sfdc.fetchSFDCinfo().getOrg(), null).getTenantId());
-		if (dbStoreType != null && dbStoreType.equalsIgnoreCase(DBStoreType.REDSHIFT.name())) {
+		//Commenting this code as we store every collection by default in Redshift database only, no longer needed.
+		/*if (dbStoreType != null && dbStoreType.equalsIgnoreCase(DBStoreType.REDSHIFT.name())) {
 			Assert.assertTrue(tenantManager.enabledRedShiftWithDBDetails(tenantDetails), "Error while enabling redshift plese check credentials");
-		}
+		}*/
 		rulesManagerPageUrl = visualForcePageUrl + "Rulesmanager";
 		rulesManagerPage = new RulesManagerPage();
 		gsDataImpl = new GSDataImpl(NSTestBase.header);
