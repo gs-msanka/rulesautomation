@@ -7,6 +7,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang3.StringUtils;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
@@ -75,7 +76,14 @@ public class CalculatedFieldsAndMeasuresTestUsingMongoAsSourceData extends BaseT
 		tenantManager = new TenantManager();
 		tenantDetails = tenantManager.getTenantDetail(null, tenantManager.getTenantDetail(sfdc.fetchSFDCinfo().getOrg(), null).getTenantId());
 		if (dbStoreType != null && dbStoreType.equalsIgnoreCase(DBStoreType.MONGO.name())) {
-			Assert.assertTrue(tenantManager.disableRedShift(tenantDetails), "Redshift is not disbaled, kindly check credentials");
+			mongoDBDAO = new MongoDBDAO(nsConfig.getGlobalDBHost(), Integer.valueOf(nsConfig.getGlobalDBPort()), nsConfig.getGlobalDBUserName(), nsConfig.getGlobalDBPassword(), nsConfig.getGlobalDBDatabase());
+			TenantDetails.DBDetail schemaDBDetails = null;
+			schemaDBDetails = mongoDBDAO.getSchemaDBDetail(tenantDetails.getTenantId());
+			if (schemaDBDetails == null || schemaDBDetails.getDbServerDetails() == null || schemaDBDetails.getDbServerDetails().get(0) == null) {
+				throw new RuntimeException("DB details are not correct, please check it.");
+			}
+			Log.info("Connecting to schema db....");
+			mongoDBDAO = new MongoDBDAO(schemaDBDetails.getDbServerDetails().get(0).getHost().split(":")[0], 27017, schemaDBDetails.getDbServerDetails().get(0).getUserName(), schemaDBDetails.getDbServerDetails().get(0).getPassword(), schemaDBDetails.getDbName());
 		}
 		rulesManagerPageUrl = visualForcePageUrl + "Rulesmanager";
 		rulesManagerPage = new RulesManagerPage();
@@ -88,6 +96,9 @@ public class CalculatedFieldsAndMeasuresTestUsingMongoAsSourceData extends BaseT
 			collectionInfo.getCollectionDetails().setCollectionName(dbStoreType + date.getTime());
 			String collectionId = gsDataImpl.createCustomObject(collectionInfo);
 			Assert.assertNotNull(collectionId, "Collection ID should not be null.");
+			if (dbStoreType != null && dbStoreType.equalsIgnoreCase(DBStoreType.MONGO.name())) {
+				Assert.assertTrue(mongoDBDAO.updateCollectionDBStoreType(tenantDetails.getTenantId(), collectionId, DBStoreType.MONGO), "Failed while updating the DB store type to Mongo");
+			}
 
 			CollectionInfo actualCollectionInfo = gsDataImpl.getCollectionMaster(collectionId);
 			collectionName = actualCollectionInfo.getCollectionDetails().getCollectionName();
