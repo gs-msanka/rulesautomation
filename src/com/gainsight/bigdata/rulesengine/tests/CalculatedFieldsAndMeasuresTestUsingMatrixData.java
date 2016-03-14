@@ -65,7 +65,7 @@ public class CalculatedFieldsAndMeasuresTestUsingMatrixData extends BaseTest{
 	private TenantManager tenantManager;
 	private final String CUSTOM_OBJECT_CLEANUP = "Delete [SELECT Id FROM RulesSFDCCustom__c];";
 	MongoDBDAO mongoDBDAO = null;
-	private static DBStoreType dataBaseType;
+	
 	String collectionName;
 	
 	@BeforeClass
@@ -77,7 +77,6 @@ public class CalculatedFieldsAndMeasuresTestUsingMatrixData extends BaseTest{
 		tenantManager = new TenantManager();
 		tenantDetails = tenantManager.getTenantDetail(null, tenantManager.getTenantDetail(sfdc.fetchSFDCinfo().getOrg(), null).getTenantId());
 		if (StringUtils.isNotBlank(dbStoreType)) {
-			dataBaseType = DBStoreType.valueOf(dbStoreType);
 			mongoDBDAO = new MongoDBDAO(nsConfig.getGlobalDBHost(),Integer.valueOf(nsConfig.getGlobalDBPort()),nsConfig.getGlobalDBUserName(),nsConfig.getGlobalDBPassword(),nsConfig.getGlobalDBDatabase());
 			TenantDetails.DBDetail schemaDBDetails = null;
 			schemaDBDetails = mongoDBDAO.getSchemaDBDetail(tenantDetails.getTenantId());		 
