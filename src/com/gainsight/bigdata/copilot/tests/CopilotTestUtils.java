@@ -383,9 +383,10 @@ public class CopilotTestUtils extends NSTestBase {
                 "delete [select id from Opportunity];"+
                 "delete [select id from Case];"+
                 "delete [select id from contact];"+
-                "delete [select id from C_ContactObject__c];"+
-                "delete [select id from C_ContactObject2__c];"+
-                "delete [select id from Account];");
+                "delete [select id from Copilot_Contact_Obj2__c];"+
+                "delete [select id from Copilot_Contact_Obj1__c];"+
+                "delete [select id from Account];"
+        );
         dataETL = new DataETL();
         //Loading data in Copilot_Contact_Obj2
         loadToObject(dataETL, testDataDir + "/Job/job_Copilot_Contact_Obj2.txt");
