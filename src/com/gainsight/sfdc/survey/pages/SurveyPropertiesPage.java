@@ -6,9 +6,11 @@
 package com.gainsight.sfdc.survey.pages;
 
 import com.gainsight.pageobject.util.Timer;
+import com.gainsight.testdriver.Application;
 import com.gainsight.testdriver.Log;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebElement;
 
 import com.gainsight.sfdc.survey.pojo.SurveyProperties;
@@ -98,8 +100,9 @@ public class SurveyPropertiesPage extends SurveyPage {
         }
         item.clearAndSetText(FOOTER_MSG_INPUT, surveyProp.getFooterMsg());
         item.clearAndSetText(SURVEY_TITLE_INPUT, surveyProp.getSurveyTitle());
-        item.click(String.format(BG_COLOR_RADIO, surveyProp.getBgColor()));
-        item.click(SURVEY_SAVE_BUTTON);
+        JavascriptExecutor executor = (JavascriptExecutor)Application.getDriver();
+        executor.executeScript("arguments[0].click();", element.getElement(String.format(BG_COLOR_RADIO, surveyProp.getBgColor())));
+        executor.executeScript("arguments[0].click();", element.getElement(SURVEY_SAVE_BUTTON));
         waitTillNoLoadingIcon();
         return this;
     }
