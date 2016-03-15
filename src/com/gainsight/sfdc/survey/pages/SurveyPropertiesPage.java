@@ -99,10 +99,14 @@ public class SurveyPropertiesPage extends SurveyPage {
             }
         }
         item.clearAndSetText(FOOTER_MSG_INPUT, surveyProp.getFooterMsg());
+        item.mouseOver(SURVEY_TITLE_INPUT);
         item.clearAndSetText(SURVEY_TITLE_INPUT, surveyProp.getSurveyTitle());
         JavascriptExecutor executor = (JavascriptExecutor)Application.getDriver();
         executor.executeScript("arguments[0].click();", element.getElement(String.format(BG_COLOR_RADIO, surveyProp.getBgColor())));
         executor.executeScript("arguments[0].click();", element.getElement(SURVEY_SAVE_BUTTON));
+        /*item.mouseOverAndClickOnIdentifier(String.format(BG_COLOR_RADIO, surveyProp.getBgColor()));
+        item.mouseOverAndClickOnIdentifier(SURVEY_SAVE_BUTTON);
+        */
         waitTillNoLoadingIcon();
         return this;
     }
