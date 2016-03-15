@@ -102,7 +102,7 @@ public class BasePage extends WebPage implements Constants {
 
 	public BasePage logout() {
 		element.switchToMainWindow();
-        wait.waitTillElementDisplayed("userNavButton", MIN_TIME, MAX_TIME);
+        wait.waitTillElementPresent("userNavButton", MIN_TIME, MAX_TIME);
 		item.click("userNavButton");
 		item.click("//a[text()='Logout']");
 		return this;
