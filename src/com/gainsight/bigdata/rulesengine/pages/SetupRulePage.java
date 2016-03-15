@@ -147,8 +147,9 @@ public class SetupRulePage extends BasePage {
 	}
 	
 	public SetupRulePage selectTimeIdentifier(String timeIdentifier){
-		item.click(TIMEIDENTIFIER);
-		selectValueInDropDown(timeIdentifier);
+        element.mouseOverAndClickOnIdentifier(TIMEIDENTIFIER);
+        Log.info("MouseOver and clicked on element " + TIMEIDENTIFIER);
+        selectValueInDropDown(timeIdentifier);
 		return this;
 	} 
 
