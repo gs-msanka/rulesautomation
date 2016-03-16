@@ -72,7 +72,8 @@ public class SurveyPage extends SurveyBasePage {
     }
 	
 	public SurveyAnalyzePage clickOnAnalyze() {
-    	item.click(ANALYZE_SECTION_LINK);
+        JavascriptExecutor executor = (JavascriptExecutor) Application.getDriver();
+        executor.executeScript("arguments[0].click();", element.getElement(ANALYZE_SECTION_LINK));
         return new SurveyAnalyzePage();
     }
 
