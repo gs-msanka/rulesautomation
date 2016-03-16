@@ -21,11 +21,9 @@ public class TriggerCriteria {
     private List<Criteria> criteria;
     private int preventDuplicateDays;
     private boolean isRequired;
-
-    /*
     private List<String> list = null;
     private String mapName;
-*/
+
 
     public boolean isRequired() {
         return isRequired;
@@ -34,7 +32,7 @@ public class TriggerCriteria {
     public void setRequired(boolean required) {
         isRequired = required;
     }
-/*
+
     public String mapName() {
         return mapName;
     }
@@ -50,7 +48,7 @@ public class TriggerCriteria {
     public void setReferenceList(List<String> list) {
         this.list = list;
     }
-*/
+
     public int getPreventDuplicateDays() {
         return preventDuplicateDays;
     }
