@@ -9,7 +9,9 @@ package com.gainsight.sfdc.survey.pages;
 
 import com.gainsight.pageobject.util.Timer;
 import com.gainsight.sfdc.survey.pojo.SurveyProperties;
+import com.gainsight.testdriver.Application;
 import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.Select;
 
@@ -63,7 +65,9 @@ public class SurveyPage extends SurveyBasePage {
     }
 	
 	public SurveyDistributePage clickOnDistribute(SurveyProperties surveyProp) {
-    	item.click(DISTRIBUTE_SECTION_LINK);
+        JavascriptExecutor executor = (JavascriptExecutor) Application.getDriver();
+        executor.executeScript("arguments[0].click();", element.getElement(DISTRIBUTE_SECTION_LINK));
+     //   item.mouseOverAndClickOnIdentifier(DISTRIBUTE_SECTION_LINK);
         return new SurveyDistributePage(surveyProp.getSurveyName());
     }
 	

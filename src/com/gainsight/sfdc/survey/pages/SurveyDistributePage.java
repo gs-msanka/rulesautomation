@@ -1,10 +1,12 @@
 package com.gainsight.sfdc.survey.pages;
 
+import com.gainsight.testdriver.Application;
 import org.openqa.selenium.By;
 
 import com.gainsight.pageobject.util.Timer;
 import com.gainsight.sfdc.survey.pojo.SurveyDistribution;
 import com.gainsight.testdriver.Log;
+import org.openqa.selenium.JavascriptExecutor;
 
 import java.util.Date;
 import java.text.DateFormat;
@@ -69,10 +71,13 @@ public class SurveyDistributePage extends SurveyBasePage{
 	}
 	
 	public void clickingToBeContacted() {
-		item.click(CLICKON_TOBECONTACTED_CIRCLE);
+		JavascriptExecutor executor = (JavascriptExecutor) Application.getDriver();
+		executor.executeScript("arguments[0].click();", element.getElement(CLICKON_TOBECONTACTED_CIRCLE));
+		//item.mouseOverAndClickOnIdentifier(CLICKON_TOBECONTACTED_CIRCLE);
 		wait.waitTillElementDisplayed(CLICKON_TOBECONTACTED_CIRCLE, MIN_TIME, MAX_TIME);
 		wait.waitTillElementPresent(SELECT_CONTACTS_CHECKBOX, MIN_TIME, MAX_TIME);
-		item.click(SELECT_CONTACTS_CHECKBOX);
+		executor.executeScript("arguments[0].click();", element.getElement(SELECT_CONTACTS_CHECKBOX));
+		//item.mouseOverAndClickOnIdentifier(SELECT_CONTACTS_CHECKBOX);
 	}
 
 	public int getContactsCount() {
