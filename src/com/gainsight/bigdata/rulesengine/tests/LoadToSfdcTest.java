@@ -82,7 +82,7 @@ public class LoadToSfdcTest extends BaseTest {
 		nsTestBase.init();
 		tenantManager = new TenantManager();
 		tenantDetails = tenantManager.getTenantDetail(null, tenantManager.getTenantDetail(sfdc.fetchSFDCinfo().getOrg(), null).getTenantId());
-		if (StringUtils.isNotBlank(dbStoreType)) {
+		if (StringUtils.isNotBlank(dbStoreType) && !dbStoreType.equalsIgnoreCase("Redshift")) {
 			this.dbStoreType = dbStoreType;
 			mongoDBDAO = new MongoDBDAO(NSTestBase.nsConfig.getGlobalDBHost(), Integer.valueOf(NSTestBase.nsConfig.getGlobalDBPort()), NSTestBase.nsConfig.getGlobalDBUserName(), NSTestBase.nsConfig.getGlobalDBPassword(), NSTestBase.nsConfig.getGlobalDBDatabase());
 			TenantDetails.DBDetail schemaDBDetails = null;
@@ -120,7 +120,7 @@ public class LoadToSfdcTest extends BaseTest {
 		collectionInfo.getCollectionDetails().setCollectionName("LoadToSfdc-MDA" + date.getTime());
 		String collectionId = gsDataImpl.createCustomObject(collectionInfo);
 		Assert.assertNotNull(collectionId, "Collection ID should not be null.");
-		if (StringUtils.isNotBlank(this.dbStoreType)) {
+		if (StringUtils.isNotBlank(this.dbStoreType) && !dbStoreType.equalsIgnoreCase("Redshift")) {
 			Assert.assertTrue(mongoDBDAO.updateCollectionDBStoreType(tenantDetails.getTenantId(), collectionId, DBStoreType.valueOf(StringUtils.upperCase(this.dbStoreType))), "Failed while updating the DB store type to "+this.dbStoreType);
 		}
 		CollectionInfo actualCollectionInfo = gsDataImpl.getCollectionMaster(collectionId);
@@ -165,7 +165,7 @@ public class LoadToSfdcTest extends BaseTest {
 		collectionInfo1.getCollectionDetails().setCollectionName("GS-3965-Collection2" + date.getTime());
 		String collectionId1 = gsDataImpl.createCustomObject(collectionInfo1);
 		Assert.assertNotNull(collectionId1, "Collection ID should not be null.");
-		if (StringUtils.isNotBlank(this.dbStoreType)) {
+		if (StringUtils.isNotBlank(this.dbStoreType) && !dbStoreType.equalsIgnoreCase("Redshift")) {
 			Assert.assertTrue(mongoDBDAO.updateCollectionDBStoreType(tenantDetails.getTenantId(), collectionId1, DBStoreType.valueOf(StringUtils.upperCase(this.dbStoreType))), "Failed while updating the DB store type to "+this.dbStoreType);
 		}
 		CollectionInfo actualCollectionInfo1 = gsDataImpl.getCollectionMaster(collectionId1);
@@ -212,7 +212,7 @@ public class LoadToSfdcTest extends BaseTest {
 		collectionInfo.getCollectionDetails().setCollectionName("LoadToSfdc-MDA-Upsert" + date.getTime());
 		String collectionId = gsDataImpl.createCustomObject(collectionInfo);
 		Assert.assertNotNull(collectionId, "Collection ID should not be null.");
-		if (StringUtils.isNotBlank(this.dbStoreType)) {
+		if (StringUtils.isNotBlank(this.dbStoreType) && !dbStoreType.equalsIgnoreCase("Redshift")) {
 			Assert.assertTrue(mongoDBDAO.updateCollectionDBStoreType(tenantDetails.getTenantId(), collectionId, DBStoreType.valueOf(StringUtils.upperCase(this.dbStoreType))), "Failed while updating the DB store type to "+this.dbStoreType);
 		}
 		CollectionInfo actualCollectionInfo = gsDataImpl.getCollectionMaster(collectionId);
@@ -258,7 +258,7 @@ public class LoadToSfdcTest extends BaseTest {
 		collectionInfo1.getCollectionDetails().setCollectionName("GS-3965-Collection2-Upsert" + date.getTime());
 		String collectionId1 = gsDataImpl.createCustomObject(collectionInfo1);
 		Assert.assertNotNull(collectionId1, "Collection ID should not be null.");
-		if (StringUtils.isNotBlank(this.dbStoreType)) {
+		if (StringUtils.isNotBlank(this.dbStoreType) && !dbStoreType.equalsIgnoreCase("Redshift")) {
 			Assert.assertTrue(mongoDBDAO.updateCollectionDBStoreType(tenantDetails.getTenantId(), collectionId1, DBStoreType.valueOf(StringUtils.upperCase(this.dbStoreType))), "Failed while updating the DB store type to "+this.dbStoreType);
 		}
 		CollectionInfo actualCollectionInfo1 = gsDataImpl.getCollectionMaster(collectionId1);
