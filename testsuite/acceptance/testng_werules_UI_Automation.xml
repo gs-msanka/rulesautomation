@@ -27,6 +27,8 @@
         <parameter name="dbStoreType" value="Mongo"/>
         <classes>
             <class name="com.gainsight.bigdata.rulesengine.tests.LoadToMdaTest"/>
+            <class name="com.gainsight.bigdata.rulesengine.tests.LoadToCustomersTestUsingMongoAsSourceData"/>
+            <class name="com.gainsight.bigdata.rulesengine.tests.LoadToCustomersTestUsingMatrixData"/>
             <class name="com.gainsight.bigdata.rulesengine.tests.CalculatedFieldsAndMeasuresTestUsingMatrixData"/>
             <class name="com.gainsight.bigdata.rulesengine.tests.CalculatedFieldsAndMeasuresTestUsingMongoAsSourceData"/>
             <class name="com.gainsight.bigdata.rulesengine.tests.CallToActionWithRelationshipsTest">
@@ -41,6 +43,8 @@
         <classes>
             <class name="com.gainsight.bigdata.rulesengine.tests.LoadToMdaTest"/>
             <class name="com.gainsight.bigdata.rulesengine.tests.LoadToSfdcTest"/>
+            <class name="com.gainsight.bigdata.rulesengine.tests.LoadToCustomersTestUsingMatrixData"/>
+            <class name="com.gainsight.bigdata.rulesengine.tests.LoadToCustomersTestUsingRedshiftAsSourceData"/>
             <class name="com.gainsight.bigdata.rulesengine.tests.CalculatedFieldsAndMeasuresTestUsingMatrixData"/>
             <class name="com.gainsight.bigdata.rulesengine.tests.CalculatedFieldsAndMeasuresTestUsingRedShiftAsSourceData"/>
         </classes>
@@ -49,6 +53,7 @@
         <parameter name="dbStoreType" value="POSTGRES"/>
         <classes>
             <class name="com.gainsight.bigdata.rulesengine.tests.CalculatedFieldsAndMeasuresTestUsingMatrixData"/>
+            <class name="com.gainsight.bigdata.rulesengine.tests.LoadToCustomersTestUsingMatrixData"/>
         </classes>
     </test>
 </suite>

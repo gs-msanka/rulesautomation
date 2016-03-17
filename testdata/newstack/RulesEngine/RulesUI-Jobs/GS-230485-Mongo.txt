@@ -1,0 +1,19 @@
+{
+  "jobName": "Pull CustomerInfo Records",
+  "jobType": "Pull CustomerInfo Records",
+  "namespacePrefix": "JBCXM",
+  "useNameSpace": true,
+  "extract": {
+    "useRestApi": true,
+    "source": "sfdc",
+    "connection": "conf/application.conf",
+    "table": "JBCXM__CustomerInfo__c",
+    "fields": [
+      "JBCXM__CustomerName__c",
+      "JBCXM__ASV__c",
+      "JBCXM__Users__c",
+      "JBCXM__OneTimeRevenue__c"
+    ],
+    "output": "/testdata/newstack/RulesEngine/RulesUI-TestData/GS-230485/GS-230485-ActualData.csv"
+  }
+}

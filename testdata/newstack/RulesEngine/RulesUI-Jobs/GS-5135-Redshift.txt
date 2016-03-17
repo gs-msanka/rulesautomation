@@ -1,0 +1,77 @@
+{
+  "jobName": "Pull CustomerInfo Records",
+  "jobType": "Pull CustomerInfo Records",
+  "namespacePrefix": "JBCXM",
+  "useNameSpace": true,
+  "extract": {
+    "useRestApi": true,
+    "source": "sfdc",
+    "connection": "conf/application.conf",
+    "table": "JBCXM__CustomerInfo__c",
+    "fields": [
+      "JBCXM__ASV__c",
+      "JBCXM__CustomerName__c",
+      "JBCXM__OneTimeRevenue__c",
+      "JBCXM__OriginalContractDate__c",
+      "JBCXM__Users__c"
+    ],
+    "output": "/testdata/newstack/RulesEngine/RulesUI-TestData/GS-5135/GS-5135-ActualData.csv"
+  },
+  "dateProcess": {
+      "inputFile": "/testdata/newstack/RulesEngine/RulesUI-TestData/GS-5135/GS-5135-Redshift-Date.csv",
+      "outputFile": "/testdata/newstack/RulesEngine/RulesUI-TestData/GS-5135/GS-5135-Redshift-ExpectedData-Date.csv",
+      "fields": [
+        {
+          "weekly": true,
+          "daily": false,
+          "dateTime": false,
+          "dateFormat": "yyyy-MM-dd",
+          "fieldName": "JBCXM__OriginalContractDate__c",
+          "timeZone": "America/Los_Angeles"
+        }
+      ]
+    },
+  "transform": {
+    "query": "",
+    "useQuery": false,
+    "tableInfo": [
+      {
+        "file": "/testdata/newstack/RulesEngine/RulesUI-TestData/GS-5135/GS-5135-Redshift-ExpectedData-temp.csv",
+        "table": "account",
+        "joinColumnName": "JBCXM__CustomerName__c",
+        "columns": [
+          {
+            "name": "JBCXM__CustomerName__c",
+            "alias": "JBCXM__CustomerName__c"
+          },
+          {
+            "name": "JBCXM__Users__c",
+            "alias": "JBCXM__Users__c"
+          },
+          {
+            "name": "JBCXM__ASV__c",
+            "alias": "JBCXM__ASV__c"
+          },
+          {
+            "name": "JBCXM__OneTimeRevenue__c",
+            "alias": "JBCXM__OneTimeRevenue__c"
+          }
+        ]
+      },
+      {
+        "file": "/testdata/newstack/RulesEngine/RulesUI-TestData/GS-5135/GS-5135-Redshift-ExpectedData-Date.csv",
+        "table": "accounts",
+        "joinColumnName": "JBCXM__CustomerName__c",
+        "columns": [
+          {
+            "name": "JBCXM__OriginalContractDate__c",
+            "alias": "JBCXM__OriginalContractDate__c"
+          }
+        ]
+      }
+    ],
+    "join": true,
+    "picklist": false,
+    "output": "/testdata/newstack/RulesEngine/RulesUI-TestData/GS-5135/GS-5135-Redshift-ExpectedData.csv"
+  }
+}

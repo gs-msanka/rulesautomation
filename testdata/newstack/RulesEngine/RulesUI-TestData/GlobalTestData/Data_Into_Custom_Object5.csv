@@ -1,0 +1,10 @@
+AccountName,CustomDate1,CustomNumber1,CustomNumber2,CustomNumberWithDecimals1,CustomNumberWithDecimals2
+RULESUI Account 1,-4,599,360,200,200
+RULESUI Account 2,-2,678,201,876,123
+RULESUI Account 3,-6,597,303,400,400
+RULESUI Account 4,-44,559,341,500,500
+RULESUI Account 5,-45,558,342,100,100
+RULESUI Account 6,-46,557,343,100,100
+RULESUI Account 7,-47,556,344,,100
+RULESUI Account 8,-48,555,345,300,200
+RULESUI Account 9,-49,554,346,400,300
