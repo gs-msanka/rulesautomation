@@ -1,0 +1,29 @@
+[{
+  "name": "Feed Back",
+  "description": "Measure Updated Successfully",
+  "entityType": "RELATIONSHIP",
+  "levelType": "MEASURE",
+  "inputType": "MANUAL",
+  "displayOrder": 0
+}, {
+  "name": "Growth",
+  "description": "New Measure is added successfully",
+  "entityType": "RELATIONSHIP",
+  "levelType": "MEASURE",
+  "inputType": "MANUAL",
+  "displayOrder": 0
+}, {
+  "name": "NPS",
+  "description": "New Measure is added successfully",
+  "entityType": "RELATIONSHIP",
+  "levelType": "MEASURE",
+  "inputType": "MANUAL",
+  "displayOrder": 0
+}, {
+  "name": "Usage Data",
+  "description": "New Measure is added successfully",
+  "entityType": "RELATIONSHIP",
+  "levelType": "MEASURE",
+  "inputType": "MANUAL",
+  "displayOrder": 0
+}]
