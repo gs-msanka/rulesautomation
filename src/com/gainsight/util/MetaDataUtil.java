@@ -134,7 +134,7 @@ public class MetaDataUtil {
 			 metadataClient.createTextFields(resolveStrNameSpace(Object), objF.getExternalID_Text().toArray(new String[objF.getExternalID_Text().size()]), true, true, true, false, false);
 			 permFieldsList.addAll(objF.getExternalID_Text());
 		 }
-	    
+
 		 if(objF.getLookups().size() > 0){
 			 for (HashMap<String,String> hm : objF.getLookups()){
 				 metadataClient.createLookupField(resolveStrNameSpace(Object), new String[]{hm.get("Name")}, new String[]{hm.get("ReferenceTo"),hm.get("relationshipName")});
@@ -224,8 +224,10 @@ public class MetaDataUtil {
 		 }
 		 if(objF.getFormulaFieldsList().size() > 0){
 			 metadataClient.createFormulaFields(resolveStrNameSpace(Object), objF.getFormulaFieldsList());
-
 			 for (HashMap<String,String> hm : objF.getFormulaFieldsList()){
+				 if (hm.get("FieldName")==null){
+					 throw new RuntimeException("FieldName, Key not found");
+				 }
 				 permFieldsList.add(hm.get("FieldName"));
 			 }
 		 }
