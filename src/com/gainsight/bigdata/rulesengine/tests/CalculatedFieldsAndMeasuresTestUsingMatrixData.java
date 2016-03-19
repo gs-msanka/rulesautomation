@@ -7,6 +7,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang3.StringUtils;
 import org.codehaus.jackson.JsonNode;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.testng.Assert;
@@ -64,7 +65,7 @@ public class CalculatedFieldsAndMeasuresTestUsingMatrixData extends BaseTest{
 	private TenantManager tenantManager;
 	private final String CUSTOM_OBJECT_CLEANUP = "Delete [SELECT Id FROM RulesSFDCCustom__c];";
 	MongoDBDAO mongoDBDAO = null;
-	private static DBStoreType dataBaseType;
+	
 	String collectionName;
 	
 	@BeforeClass
@@ -75,12 +76,7 @@ public class CalculatedFieldsAndMeasuresTestUsingMatrixData extends BaseTest{
 		nsTestBase.init();
 		tenantManager = new TenantManager();
 		tenantDetails = tenantManager.getTenantDetail(null, tenantManager.getTenantDetail(sfdc.fetchSFDCinfo().getOrg(), null).getTenantId());
-		if (dbStoreType != null && dbStoreType.equalsIgnoreCase(DBStoreType.MONGO.name())) {
-			Assert.assertTrue(tenantManager.disableRedShift(tenantDetails));
-		} else if (dbStoreType != null && dbStoreType.equalsIgnoreCase(DBStoreType.REDSHIFT.name())) {
-			Assert.assertTrue(tenantManager.enabledRedShiftWithDBDetails(tenantDetails));
-		} else if (dbStoreType != null && dbStoreType.equalsIgnoreCase(DBStoreType.POSTGRES.name())) {
-			dataBaseType = DBStoreType.valueOf(dbStoreType);
+		if (StringUtils.isNotBlank(dbStoreType) && !dbStoreType.equalsIgnoreCase("Redshift")) {
 			mongoDBDAO = new MongoDBDAO(nsConfig.getGlobalDBHost(),Integer.valueOf(nsConfig.getGlobalDBPort()),nsConfig.getGlobalDBUserName(),nsConfig.getGlobalDBPassword(),nsConfig.getGlobalDBDatabase());
 			TenantDetails.DBDetail schemaDBDetails = null;
 			schemaDBDetails = mongoDBDAO.getSchemaDBDetail(tenantDetails.getTenantId());		 
@@ -104,8 +100,8 @@ public class CalculatedFieldsAndMeasuresTestUsingMatrixData extends BaseTest{
 			String collectionId = gsDataImpl.createCustomObject(collectionInfo);
 			Assert.assertNotNull(collectionId, "Collection ID should not be null.");
 			// Updating DB storage type to postgres from back end.
-			if (dbStoreType != null && dbStoreType.equalsIgnoreCase(DBStoreType.POSTGRES.name())) {
-				Assert.assertTrue(mongoDBDAO.updateCollectionDBStoreType(tenantDetails.getTenantId(), collectionId,DBStoreType.POSTGRES), "Failed while updating the DB store type to postgres");
+			if (StringUtils.isNotBlank(dbStoreType) && !dbStoreType.equalsIgnoreCase("Redshift")) {
+				Assert.assertTrue(mongoDBDAO.updateCollectionDBStoreType(tenantDetails.getTenantId(), collectionId, DBStoreType.valueOf(StringUtils.upperCase(dbStoreType))), "Failed while updating the DB store type to "+dbStoreType);
 			}	
 			CollectionInfo actualCollectionInfo = gsDataImpl.getCollectionMaster(collectionId);
 			collectionName = actualCollectionInfo.getCollectionDetails().getCollectionName();

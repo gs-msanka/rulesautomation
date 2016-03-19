@@ -1,5 +1,6 @@
 package com.gainsight.bigdata.rulesengine.bean.RuleSetup;
 
+import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 
 import java.util.List;
@@ -8,6 +9,7 @@ import java.util.List;
  * Created by Giribabu on 04/12/15.
  */
 @JsonSerialize(include = JsonSerialize.Inclusion.NON_DEFAULT)
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class TriggerCriteria {
 
     private String whereLogic;
@@ -18,6 +20,34 @@ public class TriggerCriteria {
     private String collectionId;
     private List<Criteria> criteria;
     private int preventDuplicateDays;
+    private boolean isRequired;
+    private List<String> list = null;
+    private String mapName;
+
+
+    public boolean isRequired() {
+        return isRequired;
+    }
+
+    public void setRequired(boolean required) {
+        isRequired = required;
+    }
+
+    public String mapName() {
+        return mapName;
+    }
+
+    public void setMapName(String mapName) {
+        this.mapName = mapName;
+    }
+
+    public List<String> getreferenceList() {
+        return list;
+    }
+
+    public void setReferenceList(List<String> list) {
+        this.list = list;
+    }
 
     public int getPreventDuplicateDays() {
         return preventDuplicateDays;

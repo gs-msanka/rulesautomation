@@ -1,0 +1,28 @@
+{
+  "name" : "No Strategy - Contact Base Object",
+  "description": "",
+  "status" : "ACTIVE",
+  "stats" : {
+    "contactCount" : 30,
+    "customerCount" : 1
+  },
+  "automatedRule" : {
+    "relatedId" : "",
+    "ruleType" : "ENGAGEMENT",
+    "description" : "",
+    "triggerCriteria" : "[{\"whereLogic\":\"A AND B\",\"refField\":\"AccountId\",\"timeIdentifier\":null,\"select\":[{\"type\":\"field\",\"field\":\"AccountId\",\"fieldName\":\"AccountId\",\"entity\":\"Contact\",\"valueType\":\"STRING\",\"dataType\":\"string\",\"referenceTo\":\"Account\",\"fieldType\":\"REFERENCE\",\"groupable\":true,\"objectName\":\"Contact\",\"label\":\"Account ID\",\"alias\":\"\",\"aggregation\":\"\",\"properties\":{\"SFDC\":{\"keys\":[\"SFDC_ACCOUNT\"]}},\"meta\":{\"isAccessible\":true,\"isFilterable\":true,\"isSortable\":true,\"isGroupable\":true,\"originalDataType\":\"REFERENCE\",\"isCreateable\":true,\"precision\":0,\"decimalPlaces\":\"0\",\"relationshipName\":\"Account\",\"isFormulaField\":false,\"isUpdateable\":true,\"isRichText\":false,\"isRequired\":false,\"referenceTo\":\"Account\",\"referenceList\":[\"Account\"],\"mapName\":\"AccountId\"},\"isAccountIdRelatedField\":true},{\"type\":\"field\",\"field\":\"Account.Name\",\"fieldName\":\"Account.Name\",\"entity\":\"Contact\",\"valueType\":\"STRING\",\"dataType\":\"STRING\",\"fieldType\":\"TEXT\",\"groupable\":true,\"objectName\":\"Contact\",\"label\":\"Account ID Name\",\"alias\":\"\",\"aggregation\":\"\",\"properties\":{\"SFDC\":{\"keys\":[\"SFDC_ACCOUNT_NAME\"]}},\"meta\":{\"isAccessible\":true,\"isFilterable\":true,\"isSortable\":true,\"isGroupable\":true,\"originalDataType\":\"TEXT\",\"isCreateable\":false,\"precision\":0,\"decimalPlaces\":\"0\",\"relationshipName\":\"\",\"isFormulaField\":false,\"isUpdateable\":false,\"isRichText\":false,\"isRequired\":true}},{\"type\":\"field\",\"field\":\"Email\",\"fieldName\":\"Email\",\"entity\":\"Contact\",\"valueType\":\"STRING\",\"dataType\":\"STRING\",\"fieldType\":\"EMAIL\",\"groupable\":true,\"objectName\":\"Contact\",\"label\":\"Email\",\"alias\":\"\",\"aggregation\":\"\",\"properties\":{\"SFDC\":{\"keys\":[\"SFDC_USER_EMAIL\"]}},\"meta\":{\"isAccessible\":true,\"isFilterable\":true,\"isSortable\":true,\"isGroupable\":true,\"originalDataType\":\"EMAIL\",\"isCreateable\":true,\"precision\":0,\"decimalPlaces\":\"0\",\"relationshipName\":\"\",\"isFormulaField\":false,\"isUpdateable\":true,\"isRichText\":false,\"isRequired\":false}},{\"type\":\"field\",\"field\":\"Name\",\"fieldName\":\"Name\",\"entity\":\"Contact\",\"valueType\":\"STRING\",\"dataType\":\"STRING\",\"fieldType\":\"STRING\",\"groupable\":true,\"objectName\":\"Contact\",\"label\":\"Full Name\",\"alias\":\"\",\"aggregation\":\"\",\"properties\":{\"SFDC\":{\"keys\":[\"SFDC_USER_NAME\"]}},\"meta\":{\"isAccessible\":true,\"isFilterable\":true,\"isSortable\":true,\"isGroupable\":true,\"originalDataType\":\"STRING\",\"isCreateable\":false,\"precision\":0,\"decimalPlaces\":\"0\",\"relationshipName\":\"\",\"isFormulaField\":false,\"isUpdateable\":false,\"isRichText\":false,\"isRequired\":true}},{\"type\":\"field\",\"field\":\"Id\",\"fieldName\":\"Id\",\"entity\":\"Contact\",\"valueType\":\"STRING\",\"dataType\":\"STRING\",\"fieldType\":\"ID\",\"groupable\":true,\"objectName\":\"Contact\",\"label\":\"Id\",\"alias\":\"\",\"aggregation\":\"\",\"properties\":{\"SFDC\":{\"keys\":[\"SFDC_USER\"]}},\"meta\":{\"isAccessible\":true,\"isFilterable\":true,\"isSortable\":true,\"isGroupable\":true,\"originalDataType\":\"ID\",\"isCreateable\":false,\"precision\":0,\"decimalPlaces\":\"0\",\"relationshipName\":\"\",\"isFormulaField\":false,\"isUpdateable\":false,\"isRichText\":false,\"isRequired\":true}}],\"calculatedFields\":[],\"criteria\":[{\"alias\":\"A\",\"left\":{\"keys\":[],\"type\":\"field\",\"valueType\":\"STRING\",\"entity\":\"Contact\",\"field\":\"Account.Name\",\"fieldName\":\"Account.Name\",\"objectName\":\"Contact\",\"fieldType\":\"TEXT\",\"label\":\"Account ID Name\",\"isExternalCriteria\":false},\"operator\":\"contains\",\"right\":{\"keys\":[],\"type\":\"value\",\"valueType\":\"STRING\",\"isNull\":false,\"value\":\"Galbreath Co\"}},{\"alias\":\"B\",\"left\":{\"keys\":[],\"type\":\"field\",\"valueType\":\"STRING\",\"entity\":\"Contact\",\"field\":\"Email\",\"fieldName\":\"Email\",\"objectName\":\"Contact\",\"fieldType\":\"EMAIL\",\"label\":\"Email\",\"isExternalCriteria\":false},\"operator\":\"contains\",\"right\":{\"keys\":[],\"type\":\"value\",\"valueType\":\"STRING\",\"isNull\":false,\"value\":\"@automation.gainsighttest.com\"}},{\"isGainSightCustomer\":true,\"left\":{\"type\":\"field\",\"valueType\":\"STRING\",\"entity\":\"Contact\",\"field\":\"Account.JBCXM__CustomerInfo__c\"},\"operator\":\"ne\",\"right\":{\"type\":\"value\",\"valueType\":\"STRING\",\"value\":null}}]}]",
+    "sourceType" : "Usage",
+    "actionDetails" : [
+      {
+        "actionType": "SMARTLIST",
+        "recipientStrategy": "NO_STRATEGY",
+        "identifierType": "CONTACT_MAPPING",
+        "recipientFieldName": "Email",
+        "actionInfo": "{\"params\":{\"areaName\":\"SMARTLIST\"},\"actionType\":\"SMARTLIST\",\"recipientStrategy\":\"NO_STRATEGY\",\"identifierType\":\"CONTACT_MAPPING\",\"recipientFieldName\":\"Email\"}"
+      }
+    ],
+    "triggerUsageOn" : "ACCOUNTLEVEL"
+  },
+  "refreshList" : false,
+  "dataSourceType" : "FORCE"
+}

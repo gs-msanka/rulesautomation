@@ -118,8 +118,8 @@ public class Customer360Scorecard extends Customer360Page  {
                         .build().perform();
             }
         }
-        Timer.sleep(2);
-        item.click(SAVE_OVERALL_SCORE);
+        wait.waitTillElementDisplayed(SAVE_OVERALL_SCORE, MIN_TIME, MAX_TIME);
+        ((JavascriptExecutor) getDriver()).executeScript("arguments[0].click();", element.getElement(SAVE_OVERALL_SCORE));
         waitForLoadingImagesNotPresent();
         return this;
     }

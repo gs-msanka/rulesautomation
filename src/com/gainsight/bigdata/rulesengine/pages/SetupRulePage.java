@@ -147,8 +147,9 @@ public class SetupRulePage extends BasePage {
 	}
 	
 	public SetupRulePage selectTimeIdentifier(String timeIdentifier){
-		item.click(TIMEIDENTIFIER);
-		selectValueInDropDown(timeIdentifier);
+        element.mouseOverAndClickOnIdentifier(TIMEIDENTIFIER);
+        Log.info("MouseOver and clicked on element " + TIMEIDENTIFIER);
+        selectValueInDropDown(timeIdentifier);
 		return this;
 	} 
 
@@ -171,7 +172,7 @@ public class SetupRulePage extends BasePage {
         sourceXpath = sourceXpath + String.format(DRAG_INPUT2, fields);
         element.dragAndDrop(sourceXpath, ACTION_FIELDS_DIV);     
 		String filterOperator = String.format(ACTION_FILTER_OPERATOR, object+ "::" + fields);
-		item.click(filterOperator);
+		item.mouseOverAndClickOnIdentifier(filterOperator);
 		selectValueInDropDown(operator, true);
 		if (value.startsWith("select_")) {
 			value = value.substring(7);
