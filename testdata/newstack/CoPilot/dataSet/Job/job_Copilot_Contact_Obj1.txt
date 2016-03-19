@@ -1,0 +1,32 @@
+{
+    "jobName": "Load Datas to Copilot_Contact_Obj1__c",
+    "namespacePrefix": "JBCXM",
+    "useNameSpace": false,
+    "dateProcess": {
+        "inputFile": "/testdata/newstack/CoPilot/Data/Input/Copilot_Contact_Obj1.csv",
+        "outputFile": "/testdata/newstack/CoPilot/Data/Output/Copilot_Contact_Obj1-output.csv",
+        "fields": [
+            {
+                "weekly": false,
+                "daily": true,
+                "dateTime": false,
+                "fieldName": "Copilot_Contact_Obj1_DATE__C"
+            },
+            {
+                "weekly": true,
+                "daily": false,
+                "dateTime": true,
+                "fieldName": "Copilot_Contact_Obj1_DATETIME__C"
+            }
+        ]
+    },
+    "load": {
+        "target": "sfdc",
+        "sObject": "Copilot_Contact_Obj1__c",
+        "operation": "upsert",
+        "contentType": "CSV",
+        "cleanUp": true,
+        "externalIDField": "Copilot_Contact_Obj1_ExternalID__c",
+        "file": "/testdata/newstack/CoPilot/Data/Output/Copilot_Contact_Obj1-output.csv"
+    }
+}
