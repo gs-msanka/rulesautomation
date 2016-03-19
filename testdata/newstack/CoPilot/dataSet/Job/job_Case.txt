@@ -10,13 +10,13 @@
                 "weekly": false,
                 "daily": true,
                 "dateTime": false,
-                "fieldName": "P_C_DATE__C"
+                "fieldName": "Copilot_Case_DATE__C"
             },
             {
                 "weekly": true,
                 "daily": false,
                 "dateTime": true,
-                "fieldName": "P_C_DATETIME__C"
+                "fieldName": "Copilot_Case_DATETIME__C"
             }
         ]
     },
@@ -26,7 +26,7 @@
         "operation": "upsert",
         "contentType": "CSV",
         "cleanUp": true,
-        "externalIDField": "p_c_ExternalID__c",
+        "externalIDField": "Copilot_Case_ExternalID__c",
         "file": "/testdata/newstack/CoPilot/Data/Output/Case-output.csv"
     }
 }
