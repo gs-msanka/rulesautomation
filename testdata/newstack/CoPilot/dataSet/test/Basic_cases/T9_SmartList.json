@@ -1,0 +1,26 @@
+{
+  "name": "Email Strategy - CustomerInfo Base Object",
+  "description": "",
+  "status": "ACTIVE",
+  "stats": {
+    "contactCount": 19,
+    "customerCount": 19
+  },
+  "automatedRule": {
+    "relatedId": "",
+    "ruleType": "CONDITIONAL",
+    "description": "",
+    "status": true,
+    "triggerCriteria": "[{\"whereLogic\":\"A\",\"refField\":\"JBCXM__Account__c\",\"timeIdentifier\":null,\"select\":[{\"type\":\"field\",\"field\":\"JBCXM__Account__c\",\"fieldName\":\"JBCXM__Account__c\",\"entity\":\"JBCXM__CustomerInfo__c\",\"valueType\":\"STRING\",\"dataType\":\"string\",\"referenceTo\":\"Account\",\"fieldType\":\"REFERENCE\",\"groupable\":true,\"objectName\":\"JBCXM__CustomerInfo__c\",\"label\":\"Account\",\"alias\":\"\",\"aggregation\":\"\",\"properties\":{\"SFDC\":{\"keys\":[\"SFDC_ACCOUNT\"]}},\"meta\":{\"isAccessible\":true,\"isFilterable\":true,\"isSortable\":true,\"isGroupable\":true,\"originalDataType\":\"REFERENCE\",\"isCreateable\":true,\"precision\":0,\"decimalPlaces\":\"0\",\"relationshipName\":\"JBCXM__Account__r\",\"isFormulaField\":false,\"isUpdateable\":false,\"isRichText\":false,\"isRequired\":true,\"referenceTo\":\"Account\",\"referenceList\":[\"Account\"],\"mapName\":\"JBCXM__Account__c\"},\"isAccountIdRelatedField\":true},{\"type\":\"field\",\"field\":\"JBCXM__Account__r.Name\",\"fieldName\":\"JBCXM__Account__r.Name\",\"entity\":\"JBCXM__CustomerInfo__c\",\"valueType\":\"STRING\",\"dataType\":\"STRING\",\"fieldType\":\"TEXT\",\"groupable\":true,\"objectName\":\"JBCXM__CustomerInfo__c\",\"label\":\"Account Name\",\"alias\":\"\",\"aggregation\":\"\",\"properties\":{\"SFDC\":{\"keys\":[\"SFDC_ACCOUNT_NAME\"]}},\"meta\":{\"isAccessible\":true,\"isFilterable\":true,\"isSortable\":true,\"isGroupable\":true,\"originalDataType\":\"TEXT\",\"isCreateable\":false,\"precision\":0,\"decimalPlaces\":\"0\",\"relationshipName\":\"\",\"isFormulaField\":false,\"isUpdateable\":false,\"isRichText\":false,\"isRequired\":true}},{\"type\":\"field\",\"field\":\"p_c_Email__c\",\"fieldName\":\"p_c_Email__c\",\"entity\":\"JBCXM__CustomerInfo__c\",\"valueType\":\"STRING\",\"dataType\":\"STRING\",\"fieldType\":\"EMAIL\",\"groupable\":true,\"objectName\":\"JBCXM__CustomerInfo__c\",\"label\":\"p_c_Email\",\"alias\":\"\",\"aggregation\":\"\",\"isRecipientField\":true,\"meta\":{\"isAccessible\":true,\"isFilterable\":true,\"isSortable\":true,\"isGroupable\":true,\"originalDataType\":\"EMAIL\",\"isCreateable\":true,\"precision\":0,\"decimalPlaces\":\"0\",\"relationshipName\":\"\",\"isFormulaField\":false,\"isUpdateable\":true,\"isRichText\":false,\"isRequired\":false}}],\"calculatedFields\":[],\"criteria\":[{\"alias\":\"A\",\"left\":{\"keys\":[],\"type\":\"field\",\"valueType\":\"STRING\",\"entity\":\"JBCXM__CustomerInfo__c\",\"field\":\"JBCXM__Account__r.Name\",\"fieldName\":\"JBCXM__Account__r.Name\",\"objectName\":\"JBCXM__CustomerInfo__c\",\"fieldType\":\"TEXT\",\"label\":\"Account Name\",\"isExternalCriteria\":false},\"operator\":\"startsWith\",\"right\":{\"keys\":[],\"type\":\"value\",\"valueType\":\"STRING\",\"isNull\":false,\"value\":\"galbreath\"}},{\"isGainSightCustomer\":true,\"left\":{\"type\":\"field\",\"valueType\":\"STRING\",\"entity\":\"JBCXM__CustomerInfo__c\",\"field\":\"JBCXM__Account__r.JBCXM__CustomerInfo__c\"},\"operator\":\"ne\",\"right\":{\"type\":\"value\",\"valueType\":\"STRING\",\"value\":null}}]}]",
+    "sourceType": "CONDITIONAL",
+    "actionDetails": [
+      {
+        "actionType": "SMARTLIST",
+        "actionInfo": "{\"params\":{\"areaName\":\"SMARTLIST\"},\"actionType\":\"SMARTLIST\",\"recipientStrategy\":\"SPECIFIC_EMAIL_ADDRESSES\",\"identifierType\":\"CONTACT_MAPPING\",\"recipientFieldName\":\"p_c_Email__c\",\"additionalCriteria\":[],\"whereLogic\":\"\"}"
+      }
+    ],
+    "triggerUsageOn": "ACCOUNTLEVEL"
+  },
+  "refreshList": false,
+  "dataSourceType": "FORCE"
+}

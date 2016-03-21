@@ -3,13 +3,14 @@ package com.gainsight.bigdata.copilot.bean.smartlist;
 import com.gainsight.bigdata.rulesengine.bean.RuleAction.ActionTrueCase;
 import com.gainsight.bigdata.rulesengine.bean.RuleSetup.TriggerCriteria;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
-
+import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import java.util.List;
 
 /**
  * Created by Giribabu on 04/12/15.
  */
 @JsonSerialize(include = JsonSerialize.Inclusion.NON_DEFAULT)
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class SmartListRule {
 
     private String relatedId;

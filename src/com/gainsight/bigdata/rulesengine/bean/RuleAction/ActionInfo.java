@@ -1,5 +1,6 @@
 package com.gainsight.bigdata.rulesengine.bean.RuleAction;
 
+import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 
 import java.util.List;
@@ -8,6 +9,7 @@ import java.util.List;
  * Created by Giribabu on 04/12/15.
  */
 @JsonSerialize(include = JsonSerialize.Inclusion.NON_DEFAULT)
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class ActionInfo {
     //Used in copilot out reach.
     private int order;
