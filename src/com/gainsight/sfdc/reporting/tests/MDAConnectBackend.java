@@ -144,18 +144,27 @@ public class MDAConnectBackend extends BaseTest {
 
         expectedData = MDAConnectBackend.parserJsonData(expectedData);
 
-        /*
-        As there is no way to create pojos for input json. I am just considering the input json as string.
-        While replacing the display names to db names, Below logic will take care.
-        For understanding more about the below logic, please consider input json format.
-         */
+        expectedData = convertDisplayTODBNames(expectedData, displayDBNamesMap);
+        compareGivenJSON(expectedData, actualData);
+    }
+
+    /**
+     * As there is no way to create pojos for input json. I am just considering the input json as string.
+     * While replacing the display names to db names, Below logic will take care.
+     * For understanding more about the below logic, please consider input json format.
+     *
+     * @param expectedData
+     * @param displayDBNamesMap
+     * @return
+     */
+    public static String convertDisplayTODBNames(String expectedData, HashMap<String, String> displayDBNamesMap) {
         String newString = expectedData.substring(expectedData.indexOf("{", 5) + 1, expectedData.indexOf("}"));
         String[] arrayString = newString.split(":");
         int length = arrayString.length;
         for (String field : arrayString) {
             if (length > 1) {
                 if (length == arrayString.length) {
-                    if(length>2){
+                    if (length > 2) {
                         expectedData = expectedData.replaceAll(field.substring(1, field.length() - 1) + "\"", displayDBNamesMap.get(field.substring(field.indexOf("\"") + 1, field.length() - 1)) + "\"");
                     }
                 } else {
@@ -165,8 +174,7 @@ public class MDAConnectBackend extends BaseTest {
                 length--;
             }
         }
-
-        compareGivenJSON(expectedData, actualData);
+        return expectedData;
     }
 
     /**
