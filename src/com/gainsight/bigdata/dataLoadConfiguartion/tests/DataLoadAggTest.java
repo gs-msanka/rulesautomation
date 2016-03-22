@@ -54,7 +54,7 @@ public class DataLoadAggTest extends NSTestBase {
 
     final String COLLECTION_MASTER_SCHEMA = Application.basedir+"/testdata/newstack/connectors/dataApi/data/CollectionInfo.json";
     private String testDataFiles = testDataBasePath+"/connectors/dataApi";
-    private static DBStoreType dataBaseType = DBStoreType.MONGO;
+    private static DBStoreType dataBaseType = DBStoreType.REDSHIFT;
     GSDataImpl gsDataImpl;
 
 

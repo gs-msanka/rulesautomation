@@ -55,7 +55,7 @@ public class GSDataTest extends NSTestBase {
     final String TEST_DATA_FILE = "testdata/newstack/gsData/tests/COM_Tests.xls";
 
     Date date = Calendar.getInstance().getTime();
-    private static DBStoreType dataBaseType = DBStoreType.MONGO;
+    private static DBStoreType dataBaseType = DBStoreType.REDSHIFT;
 
     ReportManager reportManager = new ReportManager();
     DataETL dataETL = new DataETL();
