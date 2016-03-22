@@ -77,8 +77,7 @@ public class DataLoadConfigAggTest extends NSTestBase {
 
         if(dataBaseType == DBStoreType.MONGO) {
             if(tenantDetails.isRedshiftEnabled()) {
-                MongoDBDAO globalMongo = new  MongoDBDAO(nsConfig.getGlobalDBHost(), Integer.valueOf(nsConfig.getGlobalDBPort()),
-                        nsConfig.getGlobalDBUserName(), nsConfig.getGlobalDBPassword(), nsConfig.getGlobalDBDatabase());
+                MongoDBDAO globalMongo = MongoDBDAO.getGlobalMongoDBDAOInstance();
                 try {
                     assertTrue(globalMongo.disableRedshift(tenantInfo.getTenantId()));
                 } finally {

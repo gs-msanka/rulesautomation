@@ -73,8 +73,7 @@ public class LoadDataToMDATest extends NSTestBase {
         TenantInfo tenantInfo = gsDataImpl.getTenantInfo(sfinfo.getOrg());
         tenantDetails =tenantManager.getTenantDetail(null, tenantInfo.getTenantId());
         dataLoadManager = new DataLoadManager(sfinfo, getDataLoadAccessKey());
-        MongoDBDAO globalMongo = new  MongoDBDAO(nsConfig.getGlobalDBHost(), Integer.valueOf(nsConfig.getGlobalDBPort()),
-                nsConfig.getGlobalDBUserName(), nsConfig.getGlobalDBPassword(), nsConfig.getGlobalDBDatabase());
+        MongoDBDAO globalMongo = MongoDBDAO.getGlobalMongoDBDAOInstance();
 
         try {
             if(dataBaseType == DBStoreType.MONGO) {
