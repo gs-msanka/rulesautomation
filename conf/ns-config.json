@@ -108,8 +108,8 @@
     },
     "autoqa01" : {
       "ns_sfdc_username"  : "athaduka@nsautoqa01.com",
-      "ns_sfdc_password"  : "Abhilash1.",
-      "ns_sfdc_stoken"    : "lo0FdILI6WkRWZaHRuDnwgnT",
+      "ns_sfdc_password"  : "1234567Gain",
+      "ns_sfdc_stoken"    : "WwXTWSRoA5sjdDhfCPUBB0FjR",
       "ns_appUrl"         : "https://autoqa01-api-router.herokuapp.com",
       "ns_adminUrl"       : "https://autoqa01-api-router.herokuapp.com",
       "ns_version"        : "v1.0",
