@@ -3,7 +3,9 @@ package com.gainsight.util;
 import com.gainsight.bigdata.tenantManagement.pojos.TenantDetails;
 import com.gainsight.testdriver.Application;
 import com.gainsight.testdriver.Log;
+import com.gainsight.util.config.NsConfig;
 import com.gainsight.utils.MongoUtil;
+import com.gainsight.utils.config.ConfigProviderFactory;
 import com.mongodb.BasicDBObject;
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
@@ -23,6 +25,7 @@ public class MongoDBDAO  {
     private static final String COLLECTION_MASTER   = "collectionmaster";
     private static final String TENANT_MASTER      = "tenantmaster";
     Application application = new Application();
+    static NsConfig nsConfig = ConfigProviderFactory.getConfig(NsConfig.class);
 
     public MongoUtil mongoUtil = new MongoUtil();
 
@@ -31,14 +34,25 @@ public class MongoDBDAO  {
         mongoUtil.createConnection(host, port, userName, password, database);
     }
 
+    public  MongoDBDAO(String host, String port, String userName, String password, String database) {
+        new MongoDBDAO(host, Integer.valueOf(port), userName, password, database);
+    }
+
     //Just in case to test locally.
     public static void main(String[] args) {
-        MongoDBDAO mongoDBDAO = new  MongoDBDAO("54.204.251.136", 27017, "mdaqa02", "fgFByS5D", "test_gsglobaldb");
-        //MongoDBDAO mongoDBDAO = new  MongoDBDAO("52.0.148.18", 27017, "gsuser", "T4Fa36Hr", "gsglobaldb");
-        //MongoDBDAO mongoDBDAO = new  MongoDBDAO("52.0.148.18", 27017, "gsuser", "T4Fa36Hr", "gsglobaldb");
-        //mongoDBDAO.updateCollectionDBStoreType("e5a05708-4337-4d04-821e-82f454b1a746", "99281caf-e4cd-4a85-b2f0-4b07a9a49e9b", DBStoreType.POSTGRES);
+
+        MongoDBDAO mongoDBDAO1 = new MongoDBDAO("54.165.93.124",27017, "qauser", "A23A673B-14A1-467B-BFC3-5AC87F4007BF", "qa_automation_db1");
+        System.out.println(mongoDBDAO1.disableRedshift("6d86a386-8b9e-4f39-8f03-03bfebb3b2a2"));
+
+        mongoDBDAO1.mongoUtil.closeConnection();
     }
-    
+
+
+    public static MongoDBDAO getGlobalMongoDBDAOInstance() {
+        MongoDBDAO mongoDBDAO =  new MongoDBDAO(nsConfig.getGlobalDBHost(), Integer.valueOf(nsConfig.getGlobalDBPort()),
+                nsConfig.getGlobalDBUserName(), nsConfig.getGlobalDBPassword(), nsConfig.getGlobalDBDatabase());
+        return mongoDBDAO;
+    }
     
 
     /**
@@ -297,5 +311,20 @@ public class MongoDBDAO  {
             break;
         }
         return dbCollectionName;
+    }
+
+    /**
+     * Mark redshift enabled has false in tenantmaster.
+     * @param tenantId - TenantId to update.
+     * @return true on successful update..
+     */
+    public boolean disableRedshift(String tenantId) {
+        Document document = mongoUtil.getFirstRecord(TENANT_MASTER, new Document("TenantId", tenantId));
+        if(document ==null) {
+            throw new RuntimeException("No Tenant Record found with Id" +tenantId);
+        }
+        Document updateDocument = new Document();
+        updateDocument.append("$set", new Document().append("redshiftEnabled", false));
+        return mongoUtil.updateSingleRecord(TENANT_MASTER, document, updateDocument);
     }
 }

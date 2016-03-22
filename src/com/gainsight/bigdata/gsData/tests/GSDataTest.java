@@ -12,6 +12,7 @@ import com.gainsight.bigdata.pojo.NsResponseObj;
 import com.gainsight.bigdata.pojo.TenantInfo;
 import com.gainsight.bigdata.reportBuilder.pojos.ReportMaster;
 import com.gainsight.bigdata.reportBuilder.reportApiImpl.ReportManager;
+import com.gainsight.bigdata.tenantManagement.apiImpl.TenantManager;
 import com.gainsight.bigdata.tenantManagement.enums.MDAErrorCodes;
 import com.gainsight.bigdata.tenantManagement.pojos.TenantDetails;
 import com.gainsight.bigdata.util.CollectionUtil;
@@ -28,7 +29,6 @@ import net.javacrumbs.jsonunit.core.Option;
 import net.javacrumbs.jsonunit.fluent.JsonFluentAssert;
 import org.apache.commons.httpclient.HttpStatus;
 import org.codehaus.jackson.JsonNode;
-import org.codehaus.jackson.JsonParseException;
 import org.codehaus.jackson.type.TypeReference;
 import org.testng.Assert;
 import org.testng.SkipException;
@@ -42,6 +42,8 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.*;
 
+import static org.testng.Assert.assertTrue;
+
 /**
  * Created by Giribabu on 17/08/15.
  */
@@ -53,7 +55,7 @@ public class GSDataTest extends NSTestBase {
     final String TEST_DATA_FILE = "testdata/newstack/gsData/tests/COM_Tests.xls";
 
     Date date = Calendar.getInstance().getTime();
-    private static DBStoreType dataBaseType = DBStoreType.MONGO;
+    private static DBStoreType dataBaseType = DBStoreType.REDSHIFT;
 
     ReportManager reportManager = new ReportManager();
     DataETL dataETL = new DataETL();
@@ -62,6 +64,7 @@ public class GSDataTest extends NSTestBase {
     @Parameters("dbStoreType")
     @BeforeClass
     public void setUp(@Optional String dbStoreType) throws Exception {
+        tenantManager = new TenantManager();
         dataBaseType = (dbStoreType==null || dbStoreType.isEmpty()) ? dataBaseType : DBStoreType.valueOf(dbStoreType);
         gsDataImpl = new GSDataImpl(header);
         Assert.assertTrue(tenantAutoProvision(), "Tenant Auto-Provisioning..."); //Tenant Provision is mandatory step for data load progress.
@@ -69,7 +72,12 @@ public class GSDataTest extends NSTestBase {
         tenantDetails  =tenantManager.getTenantDetail(null, tenantInfo.getTenantId());
         if(dataBaseType.equals(DBStoreType.MONGO)) {
             if(tenantDetails.isRedshiftEnabled()) {
-                Assert.assertTrue(tenantManager.disableRedShift(tenantDetails));
+                MongoDBDAO globalMongo = MongoDBDAO.getGlobalMongoDBDAOInstance();
+                try {
+                    assertTrue(globalMongo.disableRedshift(tenantInfo.getTenantId()));
+                } finally {
+                    globalMongo.mongoUtil.closeConnection();
+                }
             }
         } else if(dataBaseType.equals(DBStoreType.REDSHIFT)) {
             if (!tenantDetails.isRedshiftEnabled()) {
@@ -78,9 +86,10 @@ public class GSDataTest extends NSTestBase {
         }
     }
 
+    @Parameters("dbStoreType")
     @Test
     @TestInfo(testCaseIds = {"GS-8098", "GS-8099", "GS-8100"})
-    public void createCustomObject() throws Exception {
+    public void createCustomObject(@Optional String dbStoreType) throws Exception {
         CollectionInfo collectionInfo = mapper.readValue(new File(testDataFiles + "/global/CollectionInfo.json"), CollectionInfo.class);
         collectionInfo.getCollectionDetails().setCollectionName("GS_COM_1_" + date.getTime());
         String collectionId = gsDataImpl.createCustomObject(collectionInfo);
@@ -95,9 +104,11 @@ public class GSDataTest extends NSTestBase {
         Assert.assertEquals(nsResponseObj.getErrorDesc(), "Subject Area Name Already in use please use a different name.");
     }
 
+    
+    @Parameters("dbStoreType")
     @Test
     @TestInfo(testCaseIds = {"GS-7585", "GS-7587", "GS-7588", "GS-7589", "GS-7590", "GS-7586", "GS-8252"})
-    public void createFieldsOnCustomObject() throws Exception {
+    public void createFieldsOnCustomObject(@Optional String dbStoreType) throws Exception {
         CollectionInfo collectionInfo = mapper.readValue(new File(testDataFiles + "/global/CollectionInfo.json"), CollectionInfo.class);
         collectionInfo.getCollectionDetails().setCollectionName("GS_COM_2_" + date.getTime());
         String collectionId = gsDataImpl.createCustomObject(collectionInfo);
@@ -176,9 +187,10 @@ public class GSDataTest extends NSTestBase {
         Assert.assertEquals("Duplicate display name.", nsResponseObj.getErrorDesc());
     }
 
+    @Parameters("dbStoreType")
     @Test
     @TestInfo(testCaseIds = {"GS-7574", "GS-7593"})
-    public void createCustomObjectWithHiddenFields() throws Exception {
+    public void createCustomObjectWithHiddenFields(@Optional String dbStoreType) throws Exception {
         CollectionInfo collectionInfo = mapper.readValue(new File(testDataFiles + "/global/CollectionInfo.json"), CollectionInfo.class);
         collectionInfo.getCollectionDetails().setCollectionName("GS_COM_3_" + date.getTime());
         String fieldName = "Hidden_InstanceID";
@@ -208,9 +220,10 @@ public class GSDataTest extends NSTestBase {
     }
 
     //This is partially covered test i.e. SFDCMappings, formula, lookup fields will be converted separately.
+    @Parameters("dbStoreType")
     @Test
     @TestInfo(testCaseIds = {"GS-8101", "GS-7604", "GS-7605"})
-    public void createCustomObjectWithMoreThan100Fields() throws Exception {
+    public void createCustomObjectWithMoreThan100Fields(@Optional String dbStoreType) throws Exception {
         CollectionInfo collectionInfo = mapper.readValue(new File(testDataFiles + "/global/CollectionInfo.json"), CollectionInfo.class);
         collectionInfo.getCollectionDetails().setCollectionName("GS_COM_4_" + date.getTime());
         String[] stringFields = new String[]{"AccountSource", "BillingAddress", "Industry",
@@ -273,9 +286,10 @@ public class GSDataTest extends NSTestBase {
         }
     }
 
+    @Parameters("dbStoreType")
     @Test
     @TestInfo(testCaseIds = {"GS-7591", "GS-8102", "GS-7573", "GS-7578", "GS-7600"})
-    public void createFieldsWithSFDCMapping() throws Exception {
+    public void createFieldsWithSFDCMapping(@Optional String dbStoreType) throws Exception {
         CollectionInfo collectionInfo = mapper.readValue(new File(testDataFiles + "/tests/t1/T1CollectionInfo.json"), CollectionInfo.class);
         collectionInfo.getCollectionDetails().setCollectionName("GS_COM_5_" + date.getTime());
         String collectionId = gsDataImpl.createCustomObject(collectionInfo);
@@ -302,9 +316,10 @@ public class GSDataTest extends NSTestBase {
         verifier.assertVerification();
     }
 
+    @Parameters("dbStoreType")
     @Test
     @TestInfo(testCaseIds = {"GS-7594", "GS-8128", "GS-8129", "GS-8130", "GS-8131", "GS-7570"})
-    public void createFormulaFieldsOnMongo() throws Exception {
+    public void createFormulaFieldsOnMongo(@Optional String dbStoreType) throws Exception {
         if(dataBaseType != DBStoreType.MONGO) {
             throw new SkipException("This test case can only run on when MONGO is the data store.");
         }
@@ -358,9 +373,10 @@ public class GSDataTest extends NSTestBase {
 
     }
 
+    @Parameters("dbStoreType")
     @Test
     @TestInfo(testCaseIds = {"GS-7595", "GS-8113", "GS-8114", "GS-8115", "GS-8116", "GS-7620", "GS-7571", "GS-7578"})
-    public void createFormulaFieldsOnRedshift() throws Exception {
+    public void createFormulaFieldsOnRedshift(@Optional String dbStoreType) throws Exception {
         if(dataBaseType != DBStoreType.REDSHIFT) {
           throw new SkipException("This test case can only run when REDSHIFT is enabled / databaseType = RedShift.");
         }
@@ -415,9 +431,10 @@ public class GSDataTest extends NSTestBase {
         Assert.assertEquals("true", collectionDetails.get(0).get("isAllowedInMDAJoin").toString(), "MDA Joins allowed should be true.");
     }
 
+    @Parameters("dbStoreType")
     @Test
     @TestInfo(testCaseIds = {"GS-7598"})
-    public void createLookupFieldsOnRedshift() throws Exception {
+    public void createLookupFieldsOnRedshift(@Optional String dbStoreType) throws Exception {
         if(dataBaseType != DBStoreType.REDSHIFT) {
             new SkipException("Can't be executed on redshift.");
         }
@@ -483,9 +500,10 @@ public class GSDataTest extends NSTestBase {
         Assert.assertTrue(CollectionUtil.verifyCollectionInfo(actualUsageCollection, usageCollection));
     }
 
+    @Parameters("dbStoreType")
     @Test
     @TestInfo(testCaseIds = {"GS-7621"})
-    public void verifyCURL() throws Exception {
+    public void verifyCURL(@Optional String dbStoreType) throws Exception {
         CollectionInfo collectionInfo = mapper.readValue(new File(testDataFiles + "/global/CollectionInfo.json"), CollectionInfo.class);
         collectionInfo.getCollectionDetails().setCollectionName("GS_COM_8_" + date.getTime());
         //To Run on  different DB's - MONGO / REDSHIFT
@@ -502,9 +520,10 @@ public class GSDataTest extends NSTestBase {
         //TODO - Need to implement best way to assert the CURL generated.
     }
 
+    @Parameters("dbStoreType")
     @Test
     @TestInfo(testCaseIds = {"GS-7625"})
-    public void verifyDuplicateHeaderInCSVFileHeader() throws Exception {
+    public void verifyDuplicateHeaderInCSVFileHeader(@Optional String dbStoreType) throws Exception {
         CollectionInfo collectionInfo = mapper.readValue(new File(testDataFiles + "/global/CollectionInfo.json"), CollectionInfo.class);
         collectionInfo.getCollectionDetails().setCollectionName("GS_COM_9_" + date.getTime());
         //To Run on  different DB's - MONGO / REDSHIFT
@@ -521,9 +540,10 @@ public class GSDataTest extends NSTestBase {
         Assert.assertEquals("Duplicate headers are not allowed", nsResponseObj.getErrorDesc());
     }
 
+    @Parameters("dbStoreType")
     @Test
     @TestInfo(testCaseIds = {"GS-7624"})
-    public void sameCSVHeaderMappedToTwoDifferentColumns() throws Exception {
+    public void sameCSVHeaderMappedToTwoDifferentColumns(@Optional String dbStoreType) throws Exception {
         CollectionInfo collectionInfo = mapper.readValue(new File(testDataFiles + "/global/CollectionInfo.json"), CollectionInfo.class);
         //To Run on  different DB's - MONGO / REDSHIFT
         collectionInfo.getCollectionDetails().setDataStoreType(dataBaseType.name());
@@ -556,9 +576,10 @@ public class GSDataTest extends NSTestBase {
         Assert.assertEquals("Invalid mapping info.", nsResponseObj.getErrorDesc());
     }
 
+    @Parameters("dbStoreType")
     @Test
     @TestInfo(testCaseIds = {"GS-7626"})
-    public void verifyMoreThanOneMBFileError() throws Exception {
+    public void verifyMoreThanOneMBFileError(@Optional String dbStoreType) throws Exception {
         CollectionInfo collectionInfo = mapper.readValue(new File(testDataFiles + "/global/CollectionInfo.json"), CollectionInfo.class);
         //To Run on  different DB's - MONGO / REDSHIFT
         collectionInfo.getCollectionDetails().setDataStoreType(dataBaseType.name());
@@ -578,9 +599,10 @@ public class GSDataTest extends NSTestBase {
         Assert.assertEquals("Input file exceeded max file size of 1Mb", nsResponseObj.getErrorDesc());
     }
 
+    @Parameters("dbStoreType")
     @Test
     @TestInfo(testCaseIds = {"GS-7628"})
-    public void dataLoadToFormulaFieldShouldNotBeAllowed() throws Exception {
+    public void dataLoadToFormulaFieldShouldNotBeAllowed(@Optional String dbStoreType) throws Exception {
         CollectionInfo collectionInfo = mapper.readValue(new File(testDataFiles + "/global/CollectionInfo.json"), CollectionInfo.class);
         //To Run on  different DB's - MONGO / REDSHIFT
         collectionInfo.getCollectionDetails().setDataStoreType(dataBaseType.name());
@@ -618,10 +640,10 @@ public class GSDataTest extends NSTestBase {
         Assert.assertEquals("Formula Field cannot be mapped", nsResponseObj1.getErrorDesc());
     }
 
-
+    @Parameters("dbStoreType")
     @Test
     @TestInfo(testCaseIds = {"GS-7649", "GS-7648", "GS-8119", "GS-8120"})
-    public void verifyDependentReportsAndRules() throws Exception {
+    public void verifyDependentReportsAndRules(@Optional String dbStoreType) throws Exception {
         //TODO - Rules need to be implemented.
         CollectionInfo collectionInfo = mapper.readValue(new File(testDataFiles + "/global/CollectionInfo.json"), CollectionInfo.class);
         //To Run on  different DB's - MONGO / REDSHIFT
@@ -633,7 +655,7 @@ public class GSDataTest extends NSTestBase {
         CollectionInfo.MappingsSFDC mappingsSFDC = mapper.readValue(mapping, CollectionInfo.MappingsSFDC.class);
         CollectionInfo.Column c = CollectionUtil.getColumnByDisplayName(collectionInfo, "AccountId");
         c.setMappings(mappingsSFDC);
-        c.setIndexed(dataBaseType.MONGO == DBStoreType.MONGO ? true : false);
+        c.setIndexed(dataBaseType == DBStoreType.MONGO);
 
         String collectionId = gsDataImpl.createCustomObject(collectionInfo);
         Assert.assertNotNull(collectionId, "Collection creation failed.");
@@ -656,7 +678,7 @@ public class GSDataTest extends NSTestBase {
         Assert.assertNotNull(reportId1);
         CollectionDependency collectionDependency1 = mapper.readValue("{\"entityType\":\"REPORT\", \"entityId\": \"" + reportId1 + "\", \"entityName\": \"" + reportName1 + "\"}", CollectionDependency.class);
 
-        List<CollectionDependency> dependencies = gsDataImpl.getCollectionMasterReferences(collectionId);
+        /*List<CollectionDependency> dependencies = gsDataImpl.getCollectionMasterReferences(collectionId);
         Assert.assertNotNull(dependencies, "Failed to get Dependencies.");
         Assert.assertTrue(CollectionUtil.isDependencyExists(dependencies, collectionDependency), "Collection Dependency Not Found.");
         Assert.assertTrue(CollectionUtil.isDependencyExists(dependencies, collectionDependency1), "Collection Dependency Not Found.");
@@ -665,13 +687,13 @@ public class GSDataTest extends NSTestBase {
         List<CollectionDependency> dependencies1 = gsDataImpl.getCollectionMasterReferences(collectionId);
         Assert.assertNotNull(dependencies1, "Failed to get Dependencies.");
         Assert.assertFalse(CollectionUtil.isDependencyExists(dependencies1, collectionDependency), "Collection Dependency Should not be Found.");
-        Assert.assertTrue(CollectionUtil.isDependencyExists(dependencies1, collectionDependency1), "Collection Dependency Not Found.");
+        Assert.assertTrue(CollectionUtil.isDependencyExists(dependencies1, collectionDependency1), "Collection Dependency Not Found.");*/
     }
 
-
+    @Parameters("dbStoreType")
     @Test
     @TestInfo(testCaseIds = {"GS-8277"})
-    public void verifyAutoInferMapping() throws Exception {
+    public void verifyAutoInferMapping(@Optional String dbStoreType) throws Exception {
         CollectionInfo collectionInfo = mapper.readValue(new File(testDataFiles + "/global/CollectionInfo.json"), CollectionInfo.class);
         //To Run on  different DB's - MONGO / REDSHIFT
         collectionInfo.getCollectionDetails().setDataStoreType(dataBaseType.name());
@@ -709,9 +731,10 @@ public class GSDataTest extends NSTestBase {
         JsonFluentAssert.assertThatJson(actualAutoInferJson).when(Option.IGNORING_ARRAY_ORDER).isEqualTo(expectedAutoInferJson);
     }
 
+    @Parameters("dbStoreType")
     @Test
     @TestInfo(testCaseIds = {"GS-7622", "GS-7635", "GS-7641", "GS-7642", "GS-7643", "GS-7644", "GS-7645", "GS-8096", "GS-8097", "GS-8120"})
-    public void loadDataToMDA() throws Exception {
+    public void loadDataToMDA(@Optional String dbStoreType) throws Exception {
         CollectionInfo collectionInfo = mapper.readValue(new File(testDataFiles + "/global/CollectionInfo.json"), CollectionInfo.class);
         //To Run on  different DB's - MONGO / REDSHIFT
         collectionInfo.getCollectionDetails().setDataStoreType(dataBaseType.name());
@@ -741,9 +764,10 @@ public class GSDataTest extends NSTestBase {
         Assert.assertEquals(0, diffData.size(), "No of Un Matched Records should be 0");
     }
 
+    @Parameters("dbStoreType")
     @Test
     @TestInfo(testCaseIds = {"GS-7623", "GS-7629", "GS-7630", "GS-7631", "GS-7632", "GS-7633", "GS-7634", "GS-8118"})
-    public void failedRecordsVerification() throws Exception {
+    public void failedRecordsVerification(@Optional String dbStoreType) throws Exception {
         CollectionInfo collectionInfo = mapper.readValue(new File(testDataFiles + "/global/CollectionInfo.json"), CollectionInfo.class);
         //To Run on  different DB's - MONGO / REDSHIFT
         collectionInfo.getCollectionDetails().setDataStoreType(dataBaseType.name());
@@ -770,9 +794,10 @@ public class GSDataTest extends NSTestBase {
         Assert.assertEquals(0, diffData.size(), "No of diff records should be zero.");
     }
 
+    @Parameters("dbStoreType")
     @Test
     @TestInfo(testCaseIds = {"GS-7639"})
-    public void csvHavingBlankHeader() throws Exception {
+    public void csvHavingBlankHeader(@Optional String dbStoreType) throws Exception {
         CollectionInfo collectionInfo = mapper.readValue(new File(testDataFiles + "/global/CollectionInfo.json"), CollectionInfo.class);
         //To Run on  different DB's - MONGO / REDSHIFT
         collectionInfo.getCollectionDetails().setDataStoreType(dataBaseType.name());
@@ -789,9 +814,10 @@ public class GSDataTest extends NSTestBase {
         Assert.assertEquals("The input CSV file does not contain headers, please add headers.", nsResponseObj.getErrorDesc());
     }
 
+    @Parameters("dbStoreType")
     @Test
     @TestInfo(testCaseIds = {"GS-7592"})
-    public void verifyDisplayNameMandatoryWhileCreatingField() throws Exception {
+    public void verifyDisplayNameMandatoryWhileCreatingField(@Optional String dbStoreType) throws Exception {
         CollectionInfo collectionInfo = mapper.readValue(new File(testDataFiles + "/global/CollectionInfo.json"), CollectionInfo.class);
         //To Run on  different DB's - MONGO / REDSHIFT
         collectionInfo.getCollectionDetails().setDataStoreType(dataBaseType.name());
@@ -804,9 +830,10 @@ public class GSDataTest extends NSTestBase {
         Assert.assertEquals("Display name of Column cannot be empty", nsResponseObj.getErrorDesc());
     }
 
+    @Parameters("dbStoreType")
     @Test
     @TestInfo(testCaseIds = {"GS-7602"})
-    public void changeOfDisplayNamesOfFields() throws Exception {
+    public void changeOfDisplayNamesOfFields(@Optional String dbStoreType) throws Exception {
         CollectionInfo collectionInfo = mapper.readValue(new File(testDataFiles + "/global/CollectionInfo.json"), CollectionInfo.class);
         //To Run on  different DB's - MONGO / REDSHIFT
         collectionInfo.getCollectionDetails().setDataStoreType(dataBaseType.name());
@@ -835,9 +862,10 @@ public class GSDataTest extends NSTestBase {
         Assert.assertTrue(CollectionUtil.verifyCollectionInfo(actualCollectionInfo, latestCollectionMaster));
     }
 
+    @Parameters("dbStoreType")
     @Test
     @TestInfo(testCaseIds = {"GS-7636"})
-    public void verifyAllSupportedDateFormat() throws Exception {
+    public void verifyAllSupportedDateFormat(@Optional String dbStoreType) throws Exception {
         CollectionInfo collectionInfo = mapper.readValue(new File(testDataFiles + "/tests/t13/T13CollectionInfo.json"), CollectionInfo.class);
         //To Run on  different DB's - MONGO / REDSHIFT
         collectionInfo.getCollectionDetails().setDataStoreType(dataBaseType.name());
