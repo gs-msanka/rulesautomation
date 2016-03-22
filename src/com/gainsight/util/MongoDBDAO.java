@@ -3,7 +3,9 @@ package com.gainsight.util;
 import com.gainsight.bigdata.tenantManagement.pojos.TenantDetails;
 import com.gainsight.testdriver.Application;
 import com.gainsight.testdriver.Log;
+import com.gainsight.util.config.NsConfig;
 import com.gainsight.utils.MongoUtil;
+import com.gainsight.utils.config.ConfigProviderFactory;
 import com.mongodb.BasicDBObject;
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
@@ -23,12 +25,17 @@ public class MongoDBDAO  {
     private static final String COLLECTION_MASTER   = "collectionmaster";
     private static final String TENANT_MASTER      = "tenantmaster";
     Application application = new Application();
+    static NsConfig nsConfig = ConfigProviderFactory.getConfig(NsConfig.class);
 
     public MongoUtil mongoUtil = new MongoUtil();
 
 
     public MongoDBDAO(String host, int port, String userName, String password, String database) {
         mongoUtil.createConnection(host, port, userName, password, database);
+    }
+
+    public  MongoDBDAO(String host, String port, String userName, String password, String database) {
+        new MongoDBDAO(host, Integer.valueOf(port), userName, password, database);
     }
 
     //Just in case to test locally.
@@ -39,7 +46,13 @@ public class MongoDBDAO  {
 
         mongoDBDAO1.mongoUtil.closeConnection();
     }
-    
+
+
+    public static MongoDBDAO getGlobalMongoDBDAOInstance() {
+        MongoDBDAO mongoDBDAO =  new MongoDBDAO(nsConfig.getGlobalDBHost(), Integer.valueOf(nsConfig.getGlobalDBPort()),
+                nsConfig.getGlobalDBUserName(), nsConfig.getGlobalDBPassword(), nsConfig.getGlobalDBDatabase());
+        return mongoDBDAO;
+    }
     
 
     /**
