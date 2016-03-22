@@ -319,10 +319,12 @@ public class NSTestBase {
                     result = true;
                     Log.info(nsResponseObj.getErrorDesc());
                 }
+            } else {
+                throw new RuntimeException(responseObj.toString());
             }
         } catch (Exception e) {
             Log.error("Failed tenant auto provision ", e);
-            throw new RuntimeException("Failed tenant auto provision " + e.getLocalizedMessage());
+            throw new RuntimeException("Failed tenant auto provision " , e);
         }
         if(result) {
             updateNSURLInAppSettings(nsConfig.getNsURl()+"/"+nsConfig.getNsVersion());
