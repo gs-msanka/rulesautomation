@@ -26,6 +26,7 @@ public class LoadDataAuthenticateTest extends NSTestBase {
 
     @BeforeClass
     public void setup() {
+        tenantManager = new TenantManager();
         Assert.assertTrue(tenantAutoProvision(), "Tenant Auto-Provisioning..."); //Tenant Provision is mandatory step for data load progress.
         tenantDetails = tenantManager.getTenantDetail(sfinfo.getOrg(), null);
         dataLoadManager = new DataLoadManager(sfinfo, getDataLoadAccessKey());
@@ -59,7 +60,7 @@ public class LoadDataAuthenticateTest extends NSTestBase {
         Assert.assertEquals(nsResponseObj.getErrorDesc(), "Invalid authentication credentials. Authentication failed.");
     }
 
-    @TestInfo(testCaseIds = {"GS-3628"})
+    @TestInfo(testCaseIds = {"GS-3628", "GS-5176"})
     @Test
     public void mdaAuthorizeCheckingWithInvalidLoginName() throws IOException {
         ResponseObj responseObj = dataLoadManager.mdaAuthenticate(sfinfo.getOrg(), accessKey, sfinfo.getUserName() + "Invalid");
@@ -70,7 +71,7 @@ public class LoadDataAuthenticateTest extends NSTestBase {
         Assert.assertEquals(nsResponseObj.getErrorDesc(), "Invalid authentication credentials. Authentication failed.");
     }
 
-    @TestInfo(testCaseIds = {"GS-3629"})
+    @TestInfo(testCaseIds = {"GS-3629", "GS-5175"})
     @Test
     public void mdaAuthorizeCheckingWithInvalidOrgId() throws IOException {
         ResponseObj responseObj = dataLoadManager.mdaAuthenticate(tenantManager.sfdcInfo.getOrg(), accessKey, sfinfo.getUserName()); //Sending tenant management org SFDC ID which is not valid ID for the accessKey & UserName.

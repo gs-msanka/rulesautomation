@@ -1,67 +1,67 @@
 {
   "externalID_Text": [
-    "p_c_ExternalID"
+    "Copilot_Customer_ExternalID"
   ],
   "textFields": [
-    "p_c_Text"
+    "Copilot_Customer_Text"
   ],
   "numberFields": [
-    "p_c_Number"
+    "Copilot_Customer_Number"
   ],
   "checkBoxes": [
-    "p_c_Checkbox"
+    "Copilot_Customer_Checkbox"
   ],
   "currencies": [
-    "p_c_Currency"
+    "Copilot_Customer_Currency"
   ],
   "emails": [
-    "p_c_Email"
+    "Copilot_Customer_Email"
   ],
   "percents": [
-    "p_c_Percent"
+    "Copilot_Customer_Percent"
   ],
   "phones": [
-    "p_c_PhoneNumber"
+    "Copilot_Customer_PhoneNumber"
   ],
   "autoNumber": [
-    "p_c_AutoNumber"
+    "Copilot_Customer_AutoNumber"
   ],
   "dates": [
-    "p_c_Date"
+    "Copilot_Customer_Date"
   ],
   "dateTimes": [
-    "p_c_DateTime"
+    "Copilot_Customer_DateTime"
   ],
   "geoLocation": [
-    "p_c_GeoLocation"
+    "Copilot_Customer_GeoLocation"
   ],
   "textArea_Long": [
-    "p_c_TextAreaLong"
+    "Copilot_Customer_TextAreaLong"
   ],
   "textArea_Rich": [
-    "p_c_TextAreaRich"
+    "Copilot_Customer_TextAreaRich"
   ],
   "textAreas": [
-    "p_c_TextArea"
+    "Copilot_Customer_TextArea"
   ],
   "encryptedStrings": [
-    "p_c_TextEncrypted"
+    "Copilot_Customer_TextEncrypted"
   ],
   "urls": [
-    "p_c_URL"
+    "Copilot_Customer_URL"
   ],
   "formulaFieldsList": [
     {
       "Type": "Number",
-      "Formula": "p_c_Number__c",
-      "FieldName": "p_c_Formula",
+      "Formula": "Copilot_Customer_Number__c",
+      "FieldName": "Copilot_Customer_Formula",
       "Description": "Sample Description",
       "HelpText": "For Copilot Automation"
     }
   ],
   "pickLists": [
     {
-      "p_c_Picklist": [
+      "Copilot_Customer_Picklist": [
         "Pvalue1",
         "Pvalue2",
         "Pvalue3"
@@ -70,7 +70,7 @@
   ],
   "multiPickLists": [
     {
-      "p_c_MultiPicklist": [
+      "Copilot_Customer_MultiPicklist": [
         "MPvalue1",
         "MPvalue2",
         "MPvalue3"
@@ -79,19 +79,19 @@
   ],
   "lookups": [
     {
-      "Name": "p_c_Contact",
+      "Name": "Copilot_Customer_Contact",
       "ReferenceTo": "Contact",
       "relationshipName": "Contact_Automation31"
     },
     {
-      "Name": "p_c_User",
+      "Name": "Copilot_Customer_User",
       "ReferenceTo": "User",
-      "relationshipName": "User_Automation31"
+      "relationshipName": "Copilot_Customer_User"
     },
     {
-      "Name": "p_c_customobj_contact2",
-      "ReferenceTo": "C_ContactObject2__c",
-      "relationshipName": "ContactObject_Automation31"
+      "Name": "Copilot_Customer_Contact_Obj2",
+      "ReferenceTo": "Copilot_Contact_Obj2__c",
+      "relationshipName": "Copilot_Customer_Contact_Obj2"
     }
   ]
 }

@@ -1,21 +1,20 @@
-Account.p_c_ExternalID__c,Contact.p_c_ExternalID__c,IsEscalated,Origin,Status,Priority,p_c_ExternalID__c
-Gallo Ernst & Julio Winery,0031a000001h0aaAAA,TRUE,Email,New,High,Case.Copilot_Auto000
-Facts on File Newsletter,0031a000001h0ldAAA,TRUE,Email,New,High,Case.Copilot_Auto001
-PacDevco Inc,0031a000001h0m1AAA,TRUE,Email,New,High,Case.Copilot_Auto002
-UniAmerica Inc,0031a000001h0mOAAQ,FALSE,Email,New,High,Case.Copilot_Auto003
-East Coast Traders,0031a000001h0mTAAQ,FALSE,Phone,On Hold,Medium,Case.Copilot_Auto004
-UBAF Arab American Bank,0031a000001h0moAAA,FALSE,Phone,On Hold,Medium,Case.Copilot_Auto005
-Veritas Software,0031a000001y6MRAAY,FALSE,Phone,On Hold,Medium,Case.Copilot_Auto006
-Quinn/Brein Inc,0031a000002kizoAAA,TRUE,Web,Escalated,Low,Case.Copilot_Auto007
-Nardon Mfg Company Incorporated,0031a000002kizuAAA,TRUE,Web,Escalated,Low,Case.Copilot_Auto008
-Abberley Kooiman,0031a000002kj04AAA,TRUE,Web,Escalated,Low,Case.Copilot_Auto009
-IBM Corp Data Systems Div,0031a000002kj09AAA,TRUE,Email,New,High,Case.Copilot_Auto010
-Via Systems,0031a000002kj0LAAQ,TRUE,Email,New,High,Case.Copilot_Auto011
-IBIS Systems Inc.,0031a000002kj0vAAA,TRUE,Email,New,High,Case.Copilot_Auto012
-Galbreath Co,0031a000002kj16AAA,FALSE,Email,New,High,Case.Copilot_Auto013
-Back Stage Magazine,0031a000002kj1cAAA,FALSE,Phone,On Hold,Medium,Case.Copilot_Auto014
-Cadbury Beverages Div Cadbury,0031a000002kj1gAAA,FALSE,Phone,On Hold,Medium,Case.Copilot_Auto015
-Lafferty RF & Co Inc,0031a000002kj1nAAA,FALSE,Phone,On Hold,Medium,Case.Copilot_Auto016
-O-Cel-O Div General Mills Inc.,0031a000002kj1yAAA,TRUE,Web,Escalated,Low,Case.Copilot_Auto017
-Fedder RP Corp,0031a000002kj2PAAQ,TRUE,Web,Escalated,Low,Case.Copilot_Auto018
-Ferrara Foods & Confections,0031a000002kj2cAAA,TRUE,Web,Escalated,Low,Case.Copilot_Auto019
+Account.Copilot_Account_ExternalID__c,Contact.Copilot_Contact_ExternalId__c,IsEscalated,Origin,Status,Priority,Copilot_Case_ExternalID__c
+Copilot_AccAuto001,CopilotAc001Con001,TRUE,Email,New,High,Case_Copilot_AccAuto001
+Copilot_AccAuto002,CopilotAc002Con001,TRUE,Email,New,High,Case_Copilot_AccAuto002
+Copilot_AccAuto003,CopilotAc003Con001,TRUE,Email,New,High,Case_Copilot_AccAuto003
+Copilot_AccAuto004,CopilotAc004Con001,FALSE,Email,New,High,Case_Copilot_AccAuto004
+Copilot_AccAuto005,CopilotAc005Con001,FALSE,Phone,On Hold,Medium,Case_Copilot_AccAuto005
+Copilot_AccAuto006,CopilotAc006Con001,FALSE,Phone,On Hold,Medium,Case_Copilot_AccAuto006
+Copilot_AccAuto007,CopilotAc007Con001,FALSE,Phone,On Hold,Medium,Case_Copilot_AccAuto007
+Copilot_AccAuto008,CopilotAc008Con001,TRUE,Web,Escalated,Low,Case_Copilot_AccAuto008
+Copilot_AccAuto009,CopilotAc009Con001,TRUE,Web,Escalated,Low,Case_Copilot_AccAuto009
+Copilot_AccAuto010,CopilotAc010Con001,TRUE,Web,Escalated,Low,Case_Copilot_AccAuto010
+Copilot_AccAuto011,CopilotAc011Con001,TRUE,Email,New,High,Case_Copilot_AccAuto011
+Copilot_AccAuto012,CopilotAc012Con001,TRUE,Email,New,High,Case_Copilot_AccAuto012
+Copilot_AccAuto013,CopilotAc013Con001,TRUE,Email,New,High,Case_Copilot_AccAuto013
+Copilot_AccAuto014,CopilotAc014Con001,FALSE,Email,New,High,Case_Copilot_AccAuto014
+Copilot_AccAuto015,CopilotAc015Con001,FALSE,Phone,On Hold,Medium,Case_Copilot_AccAuto015
+Copilot_AccAuto016,CopilotAc016Con001,FALSE,Phone,On Hold,Medium,Case_Copilot_AccAuto016
+Copilot_AccAuto017,CopilotAc017Con001,FALSE,Phone,On Hold,Medium,Case_Copilot_AccAuto017
+Copilot_AccAuto018,CopilotAc018Con001,TRUE,Web,Escalated,Low,Case_Copilot_AccAuto018
+Copilot_AccAuto019,CopilotAc019Con001,TRUE,Web,Escalated,Low,Case_Copilot_AccAuto019

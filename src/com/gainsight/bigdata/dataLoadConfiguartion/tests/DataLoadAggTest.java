@@ -13,6 +13,7 @@ import com.gainsight.bigdata.pojo.CollectionInfo;
 import com.gainsight.bigdata.pojo.MDADateProcessor;
 import com.gainsight.bigdata.pojo.TenantInfo;
 import com.gainsight.bigdata.reportBuilder.reportApiImpl.ReportManager;
+import com.gainsight.bigdata.tenantManagement.apiImpl.TenantManager;
 import com.gainsight.bigdata.tenantManagement.pojos.TenantDetails;
 import com.gainsight.bigdata.util.CollectionUtil;
 import com.gainsight.sfdc.util.DateUtil;
@@ -27,6 +28,7 @@ import com.gainsight.util.Comparator;
 import static org.testng.Assert.*;
 
 import com.gainsight.util.DBStoreType;
+import com.gainsight.util.MongoDBDAO;
 import com.gainsight.utils.annotations.TestInfo;
 import org.testng.annotations.Optional;
 import org.testng.annotations.*;
@@ -52,13 +54,14 @@ public class DataLoadAggTest extends NSTestBase {
 
     final String COLLECTION_MASTER_SCHEMA = Application.basedir+"/testdata/newstack/connectors/dataApi/data/CollectionInfo.json";
     private String testDataFiles = testDataBasePath+"/connectors/dataApi";
-    private static DBStoreType dataBaseType = DBStoreType.MONGO;
+    private static DBStoreType dataBaseType = DBStoreType.REDSHIFT;
     GSDataImpl gsDataImpl;
 
 
     @BeforeClass
     @Parameters("dbStoreType")
     public void setup(@Optional String dbStoreType) throws Exception {
+        tenantManager = new TenantManager();
         dataBaseType = (dbStoreType==null || dbStoreType.isEmpty()) ? dataBaseType : DBStoreType.valueOf(dbStoreType);
         assertTrue(tenantAutoProvision(), "Tenant Auto-Provisioning..."); //Tenant Provision is mandatory step for data load progress.
         gsDataImpl = new GSDataImpl(header);
@@ -69,9 +72,15 @@ public class DataLoadAggTest extends NSTestBase {
         reportManager       = new ReportManager();
         dataLoadAggConfigManager = new DataLoadAggConfigManager(header);
 
+
         if(dataBaseType == DBStoreType.MONGO) {
             if(tenantDetails.isRedshiftEnabled()) {
-                assertTrue(tenantManager.disableRedShift(tenantDetails));
+                MongoDBDAO globalMongo = MongoDBDAO.getGlobalMongoDBDAOInstance();
+                try {
+                    assertTrue(globalMongo.disableRedshift(tenantInfo.getTenantId()));
+                } finally {
+                    globalMongo.mongoUtil.closeConnection();
+                }
             }
         } else if(dataBaseType == DBStoreType.REDSHIFT) {
             if(!tenantDetails.isRedshiftEnabled()) {
@@ -94,7 +103,8 @@ public class DataLoadAggTest extends NSTestBase {
      */
     @TestInfo(testCaseIds = {"GS-6008"})
     @Test
-    public void duplicateAccountIdentifierAndAccIdentifierDoesNotExists() throws Exception {
+    @Parameters("dbStoreType")
+    public void duplicateAccountIdentifierAndAccIdentifierDoesNotExists(@Optional String dbStoreType) throws Exception {
         sfdc.runApexCode(resolveStrNameSpace(FileUtil.getFileContents(testDataFiles+"/tests/t20/DataSetup.apex")));
         CollectionInfo collectionInfo = mapper.readValue(new File(COLLECTION_MASTER_SCHEMA), CollectionInfo.class);
         collectionInfo.getCollectionDetails().setCollectionName("GS_DATA_T20_" + date.getTime());
@@ -153,7 +163,8 @@ public class DataLoadAggTest extends NSTestBase {
      */
     @TestInfo(testCaseIds = {"GS-6008"})
     @Test
-    public void duplicateContactIdentifier() throws IOException {
+    @Parameters("dbStoreType")
+    public void duplicateContactIdentifier(@Optional String dbStoreType) throws IOException {
         sfdc.runApexCode(resolveStrNameSpace(FileUtil.getFileContents(testDataFiles+"/tests/t21/DataSetup.apex")));
         JobInfo jobInfo = mapper.readValue(new File(testDataFiles+"/tests/t21/Contacts.json"), JobInfo.class);
         dataETL.execute(jobInfo);  //Loading the contacts.
@@ -223,7 +234,8 @@ public class DataLoadAggTest extends NSTestBase {
 
     @TestInfo(testCaseIds = {"GS-6008"})
     @Test
-    public void accountAndUserIdentifierWith15To18DigitConversion() throws IOException {
+    @Parameters("dbStoreType")
+    public void accountAndUserIdentifierWith15To18DigitConversion(@Optional String dbStoreType) throws IOException {
         sfdc.runApexCode(resolveStrNameSpace(FileUtil.getFileContents(new File(testDataFiles+"/tests/t22/T22DataSetup.apex"))));
 
         CollectionInfo collectionInfo = mapper.readValue(new File(COLLECTION_MASTER_SCHEMA), CollectionInfo.class);

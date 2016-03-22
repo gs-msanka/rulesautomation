@@ -1,0 +1,93 @@
+{
+  "externalID_Text": [
+    "Copilot_Contact_Obj1_ExternalID"
+  ],
+  "textFields": [
+    "Copilot_Contact_Obj1_Text"
+  ],
+  "numberFields": [
+    "Copilot_Contact_Obj1_Number"
+  ],
+  "checkBoxes": [
+    "Copilot_Contact_Obj1_Checkbox"
+  ],
+  "currencies": [
+    "Copilot_Contact_Obj1_Currency"
+  ],
+  "emails": [
+    "Copilot_Contact_Obj1_Email"
+  ],
+  "percents": [
+    "Copilot_Contact_Obj1_Percent"
+  ],
+  "phones": [
+    "Copilot_Contact_Obj1_PhoneNumber"
+  ],
+  "autoNumber": [
+    "Copilot_Contact_Obj1_AutoNumber"
+  ],
+  "dates": [
+    "Copilot_Contact_Obj1_Date"
+  ],
+  "dateTimes": [
+    "Copilot_Contact_Obj1_DateTime"
+  ],
+  "geoLocation": [
+    "Copilot_Contact_Obj1_GeoLocation"
+  ],
+  "textArea_Long": [
+    "Copilot_Contact_Obj1_TextAreaLong"
+  ],
+  "textArea_Rich": [
+    "Copilot_Contact_Obj1_TextAreaRich"
+  ],
+  "textAreas": [
+    "Copilot_Contact_Obj1_TextArea"
+  ],
+  "encryptedStrings": [
+    "Copilot_Contact_Obj1_TextEncrypted"
+  ],
+  "urls": [
+    "Copilot_Contact_Obj1_URL"
+  ],
+  "pickLists": [
+    {
+      "Copilot_Contact_Obj1_Picklist": [
+        "Pvalue1",
+        "Pvalue2",
+        "Pvalue3"
+      ]
+    }
+  ],
+  "multiPickLists": [
+    {
+      "Copilot_Contact_Obj1_MultiPicklist": [
+        "MPvalue1",
+        "MPvalue2",
+        "MPvalue3"
+      ]
+    }
+  ],
+  "lookups": [
+    {
+      "Name": "Copilot_Contact_Obj1_Contact",
+      "ReferenceTo": "Contact",
+      "relationshipName": "Copilot_Contact_Obj1_Contact"
+    },
+    {
+      "Name": "Copilot_Contact_Obj1_User",
+      "ReferenceTo": "User",
+      "relationshipName": "Copilot_Contact_Obj1_User"
+    },
+    {
+      "Name": "Copilot_Contact_Obj1_Contact_Obj2",
+      "ReferenceTo": "Copilot_Contact_Obj2__c",
+      "relationshipName": "Copilot_Contact_Obj1_Contact_Obj2"
+    },
+    {
+      "Name": "Copilot_Contact_Obj1_Account",
+      "ReferenceTo": "Account",
+      "relationshipName": "Copilot_Contact_Obj1_Account"
+    }
+  ]
+}
