@@ -563,7 +563,7 @@ public class LoadDataToMDATest extends NSTestBase {
         System.out.println(failedRecords.size());
         //Assert.assertEquals(failedRecords.size(), 6);   //5 are actual failed records, 1 is header.
 
-        verifyJobDetails(jobId, actualCollectionInfo.getCollectionDetails().getCollectionName(), 5, 5);
+        verifyJobDetails(jobId, actualCollectionInfo.getCollectionDetails().getCollectionName(), 6, 4);
         List<Map<String, String>> actualData = ReportManager.getProcessedReportData(reportManager.runReportLinksAndGetData(reportManager.createDynamicTabularReport(actualCollectionInfo)), actualCollectionInfo);
         List<Map<String, String>> expData = ReportManager.truncateStringData(ReportManager.populateDefaultBooleanValue(Comparator.getParsedCsvData(new CSVReader(new FileReader(expFile))), actualCollectionInfo), actualCollectionInfo);
         Log.info("Actual     : " + mapper.writeValueAsString(actualData));
