@@ -4,6 +4,8 @@ import com.gainsight.bigdata.pojo.EmailLog;
 import com.gainsight.bigdata.rulesengine.bean.RuleAction.ActionTrueCase;
 import org.codehaus.jackson.annotate.JsonProperty;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
+import org.testng.internal.thread.IAtomicInteger;
+import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 
 import java.util.List;
 
@@ -11,6 +13,7 @@ import java.util.List;
  * Created by Giribabu on 05/12/15.
  */
 @JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class OutReach {
 
     private String createdBy;
@@ -273,5 +276,7 @@ public class OutReach {
         public void setActions(List<ActionTrueCase> actions) {
             this.actions = actions;
         }
+
+
     }
 }
