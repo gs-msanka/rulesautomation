@@ -8,7 +8,7 @@
         "operation": "upsert",
         "contentType": "CSV",
         "cleanUp": true,
-		"externalIDField": "p_c_ExternalID__c",
+		"externalIDField": "Copilot_Account_ExternalID__c",
 		"file": "/testdata/newstack/CoPilot/Data/Input/Account-Init.csv"
     }
 }

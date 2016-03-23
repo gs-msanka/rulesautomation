@@ -76,7 +76,7 @@ public class CalculatedFieldsAndMeasuresTestUsingMatrixData extends BaseTest{
 		nsTestBase.init();
 		tenantManager = new TenantManager();
 		tenantDetails = tenantManager.getTenantDetail(null, tenantManager.getTenantDetail(sfdc.fetchSFDCinfo().getOrg(), null).getTenantId());
-		if (StringUtils.isNotBlank(dbStoreType)) {
+		if (StringUtils.isNotBlank(dbStoreType) && !dbStoreType.equalsIgnoreCase("Redshift")) {
 			mongoDBDAO = new MongoDBDAO(nsConfig.getGlobalDBHost(),Integer.valueOf(nsConfig.getGlobalDBPort()),nsConfig.getGlobalDBUserName(),nsConfig.getGlobalDBPassword(),nsConfig.getGlobalDBDatabase());
 			TenantDetails.DBDetail schemaDBDetails = null;
 			schemaDBDetails = mongoDBDAO.getSchemaDBDetail(tenantDetails.getTenantId());		 
@@ -100,7 +100,7 @@ public class CalculatedFieldsAndMeasuresTestUsingMatrixData extends BaseTest{
 			String collectionId = gsDataImpl.createCustomObject(collectionInfo);
 			Assert.assertNotNull(collectionId, "Collection ID should not be null.");
 			// Updating DB storage type to postgres from back end.
-			if (StringUtils.isNotBlank(dbStoreType)) {
+			if (StringUtils.isNotBlank(dbStoreType) && !dbStoreType.equalsIgnoreCase("Redshift")) {
 				Assert.assertTrue(mongoDBDAO.updateCollectionDBStoreType(tenantDetails.getTenantId(), collectionId, DBStoreType.valueOf(StringUtils.upperCase(dbStoreType))), "Failed while updating the DB store type to "+dbStoreType);
 			}	
 			CollectionInfo actualCollectionInfo = gsDataImpl.getCollectionMaster(collectionId);

@@ -1,67 +1,67 @@
 {
   "externalID_Text": [
-    "p_c_ExternalID"
+    "Copilot_Account_ExternalID"
   ],
   "textFields": [
-    "p_c_Text"
+    "Copilot_Account_Text"
   ],
   "numberFields": [
-    "p_c_Number"
+    "Copilot_Account_Number"
   ],
   "checkBoxes": [
-    "p_c_Checkbox"
+    "Copilot_Account_Checkbox"
   ],
   "currencies": [
-    "p_c_Currency"
+    "Copilot_Account_Currency"
   ],
   "emails": [
-    "p_c_Email"
+    "Copilot_Account_Email"
   ],
   "percents": [
-    "p_c_Percent"
+    "Copilot_Account_Percent"
   ],
   "phones": [
-    "p_c_PhoneNumber"
+    "Copilot_Account_PhoneNumber"
   ],
   "autoNumber": [
-    "p_c_AutoNumber"
+    "Copilot_Account_AutoNumber"
   ],
   "dates": [
-    "p_c_Date"
+    "Copilot_Account_Date"
   ],
   "dateTimes": [
-    "p_c_DateTime"
+    "Copilot_Account_DateTime"
   ],
   "geoLocation": [
-    "p_c_GeoLocation"
+    "Copilot_Account_GeoLocation"
   ],
   "textArea_Long": [
-    "p_c_TextAreaLong"
+    "Copilot_Account_TextAreaLong"
   ],
   "textArea_Rich": [
-    "p_c_TextAreaRich"
+    "Copilot_Account_TextAreaRich"
   ],
   "textAreas": [
-    "p_c_TextArea"
+    "Copilot_Account_TextArea"
   ],
   "encryptedStrings": [
-    "p_c_TextEncrypted"
+    "Copilot_Account_TextEncrypted"
   ],
   "urls": [
-    "p_c_URL"
+    "Copilot_Account_URL"
   ],
   "formulaFieldsList": [
     {
       "Type": "Number",
       "Formula": "NumberOfEmployees",
-      "FieldName": "p_c_Formula",
+      "FieldName": "Copilot_Account_Formula",
       "Description": "Sample Description",
       "HelpText": "For Copilot Automation"
     }
   ],
   "pickLists": [
     {
-      "p_c_Picklist": [
+      "Copilot_Account_Picklist": [
         "Pvalue1",
         "Pvalue2",
         "Pvalue3"
@@ -70,7 +70,7 @@
   ],
   "multiPickLists": [
     {
-      "p_c_MultiPicklist": [
+      "Copilot_Account_MultiPicklist": [
         "MPvalue1",
         "MPvalue2",
         "MPvalue3"
@@ -79,19 +79,19 @@
   ],
   "lookups": [
     {
-      "Name": "p_c_Contact",
+      "Name": "Copilot_Account_Contact",
       "ReferenceTo": "Contact",
-      "relationshipName": "Contact_Automation1"
+      "relationshipName": "Copilot_Account_Contact"
     },
     {
-      "Name": "p_c_User",
+      "Name": "Copilot_Account_User",
       "ReferenceTo": "User",
-      "relationshipName": "User_Automation1"
+      "relationshipName": "Copilot_Account_User"
     },
     {
-      "Name": "p_c_customobj_contact2",
-      "ReferenceTo": "C_ContactObject2__c",
-      "relationshipName": "ContactObject_Automation1"
+      "Name": "Copilot_Account_Contact_Obj2",
+      "ReferenceTo": "Copilot_Contact_Obj2__c",
+      "relationshipName": "Copilot_Account_Contact_Obj2"
     }
   ]
 }
