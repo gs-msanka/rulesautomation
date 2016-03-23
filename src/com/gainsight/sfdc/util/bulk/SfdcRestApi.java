@@ -10,6 +10,7 @@ import com.gainsight.testdriver.Log;
 import com.gainsight.util.config.SfdcConfig;
 import com.gainsight.util.config.SfdcConfigProvider;
 import com.gainsight.utils.config.ConfigProviderFactory;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpStatus;
 import org.codehaus.jackson.JsonNode;
 import org.codehaus.jackson.map.ObjectMapper;
@@ -153,5 +154,27 @@ public class SfdcRestApi {
         }
         Log.info("Key prefix : " +keyPrefix);
         return keyPrefix;
+    }
+
+    /**
+     * Method to post data to salesForce using Rest Api
+     *
+     * @param sObjectApiName - sObjectApiName
+     * @param payload        - entity
+     * @throws Exception
+     */
+    public static void pushDataToSfdc(String sObjectApiName, String payload) throws Exception {
+        String uri = sfdcInfo.getEndpoint() + "/services/data/v" + sfdcConfig.getSfdcApiVersion() + "/sobjects/" + sObjectApiName;
+        try {
+            ResponseObj responseObj = restImpl.insertIntoSalesforce(uri, payload);
+            if (StringUtils.isNotBlank(String.valueOf(responseObj))) {
+                if (responseObj.getStatusCode() == HttpStatus.SC_OK || responseObj.getStatusCode() == HttpStatus.SC_CREATED) {
+                } else {
+                    throw new RuntimeException("status code is not " + HttpStatus.SC_OK + " Please check log for more details " + responseObj.toString());
+                }
+            }
+        } catch (Exception e) {
+            throw new RuntimeException("Error occured while pushing data to sfdc via Rest API", e);
+        }
     }
 }
