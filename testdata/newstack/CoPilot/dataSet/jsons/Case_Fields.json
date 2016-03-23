@@ -1,58 +1,58 @@
 {
   "externalID_Text": [
-    "p_c_ExternalID"
+    "Copilot_Case_ExternalID"
   ],
   "textFields": [
-    "p_c_Text"
+    "Copilot_Case_Text"
   ],
   "numberFields": [
-    "p_c_Number"
+    "Copilot_Case_Number"
   ],
   "checkBoxes": [
-    "p_c_Checkbox"
+    "Copilot_Case_Checkbox"
   ],
   "currencies": [
-    "p_c_Currency"
+    "Copilot_Case_Currency"
   ],
   "emails": [
-    "p_c_Email"
+    "Copilot_Case_Email"
   ],
   "percents": [
-    "p_c_Percent"
+    "Copilot_Case_Percent"
   ],
   "phones": [
-    "p_c_PhoneNumber"
+    "Copilot_Case_PhoneNumber"
   ],
   "autoNumber": [
-    "p_c_AutoNumber"
+    "Copilot_Case_AutoNumber"
   ],
   "dates": [
-    "p_c_Date"
+    "Copilot_Case_Date"
   ],
   "dateTimes": [
-    "p_c_DateTime"
+    "Copilot_Case_DateTime"
   ],
   "geoLocation": [
-    "p_c_GeoLocation"
+    "Copilot_Case_GeoLocation"
   ],
   "textArea_Long": [
-    "p_c_TextAreaLong"
+    "Copilot_Case_TextAreaLong"
   ],
   "textArea_Rich": [
-    "p_c_TextAreaRich"
+    "Copilot_Case_TextAreaRich"
   ],
   "textAreas": [
-    "p_c_TextArea"
+    "Copilot_Case_TextArea"
   ],
   "encryptedStrings": [
-    "p_c_TextEncrypted"
+    "Copilot_Case_TextEncrypted"
   ],
   "urls": [
-    "p_c_URL"
+    "Copilot_Case_URL"
   ],
   "pickLists": [
     {
-      "p_c_Picklist": [
+      "Copilot_Case_Picklist": [
         "Pvalue1",
         "Pvalue2",
         "Pvalue3"
@@ -61,7 +61,7 @@
   ],
   "multiPickLists": [
     {
-      "p_c_MultiPicklist": [
+      "Copilot_Case_MultiPicklist": [
         "MPvalue1",
         "MPvalue2",
         "MPvalue3"
@@ -70,19 +70,19 @@
   ],
   "lookups": [
     {
-      "Name": "p_c_Contact",
+      "Name": "Copilot_Case_Contact",
       "ReferenceTo": "Contact",
-      "relationshipName": "Contact_Automation5"
+      "relationshipName": "Copilot_Case_Contact"
     },
     {
-      "Name": "p_c_User",
+      "Name": "Copilot_Case_User",
       "ReferenceTo": "User",
-      "relationshipName": "User_Automation5"
+      "relationshipName": "Copilot_Case_User"
     },
     {
-      "Name": "p_c_customobj_contact2",
-      "ReferenceTo": "C_ContactObject2__c",
-      "relationshipName": "ContactObject_Automation5"
+      "Name": "Copilot_Case_Contact_Obj2",
+      "ReferenceTo": "Copilot_Contact_Obj2__c",
+      "relationshipName": "Copilot_Case_Contact_Obj2"
     }
   ]
 }

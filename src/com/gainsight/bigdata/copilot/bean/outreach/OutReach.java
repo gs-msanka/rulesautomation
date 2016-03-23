@@ -32,6 +32,7 @@ public class OutReach {
     private int preventDuplicateDays;
     private boolean cascadeDelete;
     private boolean published;
+    private boolean logActivity;
     private String campaignId;
     private List<DefaultECA> defaultECA;
     //TODO - This key is not used, Don't Know actual data type.
@@ -42,6 +43,10 @@ public class OutReach {
     private String lastRunStatus;
     private EmailLog emailLogs;
     private long nextScheduledRun;
+
+    public boolean isLogActivity() {return logActivity;}
+
+    public void setLogActivity(boolean logActivity) {this.logActivity = logActivity;}
 
     public long getNextScheduledRun() {
         return nextScheduledRun;

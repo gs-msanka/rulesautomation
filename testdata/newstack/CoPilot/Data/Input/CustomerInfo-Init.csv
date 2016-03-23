@@ -1,21 +1,21 @@
-JBCXM__Account__r.p_c_ExternalId__c,JBCXM__Status__r.JBCXM__SystemName__c,JBCXM__Stage__r.JBCXM__SystemName__c,p_c_ExternalID__c
-Gallo Ernst & Julio Winery,ActiveCustomer,stage1,Gallo Ernst & Julio Winery
-Facts on File Newsletter,InactiveCustomer,stage2,Facts on File Newsletter
-PacDevco Inc,ActiveCustomer,stage3,PacDevco Inc
-UniAmerica Inc,InactiveCustomer,stage4,UniAmerica Inc
-East Coast Traders,ActiveCustomer,stage5,East Coast Traders
-UBAF Arab American Bank,InactiveCustomer,stage6,UBAF Arab American Bank
-Veritas Software,ActiveCustomer,stage1,Veritas Software
-Quinn/Brein Inc,InactiveCustomer,stage2,Quinn/Brein Inc
-Nardon Mfg Company Incorporated,ActiveCustomer,stage3,Nardon Mfg Company Incorporated
-Abberley Kooiman,InactiveCustomer,stage4,Abberley Kooiman
-IBM Corp Data Systems Div,ActiveCustomer,stage1,IBM Corp Data Systems Div
-Via Systems,InactiveCustomer,stage2,Via Systems
-IBIS Systems Inc.,ActiveCustomer,stage3,IBIS Systems Inc.
-Galbreath Co,InactiveCustomer,stage4,Galbreath Co
-Back Stage Magazine,ActiveCustomer,stage5,Back Stage Magazine
-Cadbury Beverages Div Cadbury,InactiveCustomer,stage6,Cadbury Beverages Div Cadbury
-Lafferty RF & Co Inc,ActiveCustomer,stage1,Lafferty RF & Co Inc
-O-Cel-O Div General Mills Inc.,InactiveCustomer,stage2,O-Cel-O Div General Mills Inc.
-Fedder RP Corp,ActiveCustomer,stage3,Fedder RP Corp
-Ferrara Foods & Confections,ActiveCustomer,stage4,Ferrara Foods & Confections
+JBCXM__Account__r.Copilot_Account_ExternalID__c,JBCXM__Status__r.JBCXM__SystemName__c,JBCXM__Stage__r.JBCXM__SystemName__c,Copilot_Customer_ExternalID__c
+Copilot_AccAuto001,ActiveCustomer,stage1,Copilot_Customer_001
+Copilot_AccAuto002,InactiveCustomer,stage2,Copilot_Customer_002
+Copilot_AccAuto003,ActiveCustomer,stage3,Copilot_Customer_003
+Copilot_AccAuto004,InactiveCustomer,stage4,Copilot_Customer_004
+Copilot_AccAuto005,ActiveCustomer,stage5,Copilot_Customer_005
+Copilot_AccAuto006,InactiveCustomer,stage6,Copilot_Customer_006
+Copilot_AccAuto007,ActiveCustomer,stage1,Copilot_Customer_007
+Copilot_AccAuto008,InactiveCustomer,stage2,Copilot_Customer_008
+Copilot_AccAuto009,ActiveCustomer,stage3,Copilot_Customer_009
+Copilot_AccAuto010,InactiveCustomer,stage4,Copilot_Customer_010
+Copilot_AccAuto011,ActiveCustomer,stage1,Copilot_Customer_011
+Copilot_AccAuto012,InactiveCustomer,stage2,Copilot_Customer_012
+Copilot_AccAuto013,ActiveCustomer,stage3,Copilot_Customer_013
+Copilot_AccAuto014,InactiveCustomer,stage4,Copilot_Customer_014
+Copilot_AccAuto015,ActiveCustomer,stage5,Copilot_Customer_015
+Copilot_AccAuto016,InactiveCustomer,stage6,Copilot_Customer_016
+Copilot_AccAuto017,ActiveCustomer,stage1,Copilot_Customer_017
+Copilot_AccAuto018,InactiveCustomer,stage2,Copilot_Customer_018
+Copilot_AccAuto019,ActiveCustomer,stage3,Copilot_Customer_019
+Copilot_AccAuto020,ActiveCustomer,stage4,Copilot_Customer_020

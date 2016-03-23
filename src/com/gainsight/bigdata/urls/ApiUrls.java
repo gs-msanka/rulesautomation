@@ -132,6 +132,7 @@ public interface ApiUrls extends NSURLs {
     String MANDRILL_ENDPOINT               = "https://mandrillapp.com/api/1.0/";
     String MANDRILL_SUBACCOUNT_INFO        = "/subaccounts/info.json";
 
+
     //List of Zendesk API's
     String API_ZENDESK_ORGANIZATION_LOOKUP = NS_URL + "/api/zendesk/tickets/lookup"; // Creates Zendesk Org to SFDC account lookup
     String API_ZENDESK_DELETE_ORGANIZATION_LOOKUP = NS_URL + "/api/zendesk/tickets/%s/lookup"; // Deletes Zendesk Org to SFDC account lookup
@@ -141,5 +142,25 @@ public interface ApiUrls extends NSURLs {
     String API_ZENDESK_UNLINK_CTA = NS_URL + "/api/zendesk/tickets/2006/ctas"; // UnLink Zendesk ticket to SFDC CTA
     String API_ZENDESK_CREATE_DELETE_SYNC_SCHEDULE = NS_URL + "/api/zendesk/tickets/sync/schedule"; // creates/delete sync schedule
     String API_ZENDESK_SYNC = NS_URL + "/api/zendesk/tickets/sync/%s"; // Does tickets Sync
+
+    // Scorecards2.0 API
+
+    String GET_MEASURE_LIST                = NS_URL + "/api/scorecards/measures/list"; // GET Call to list all the Measures
+    String MEASURE_SAVE                    = NS_URL + "/api/scorecards/measures/save"; // POST call to save the Measure
+    String MEASURE_DELETE                  = NS_URL + "/api/scorecards/measures/"; // DELETE call appended with Measure ID to delete a specific Measure
+    String MEASURE_UPDATE                  = NS_URL + "/api/scorecards/measures/update"; // PUT call to update a Measure
+    String GET_SCORECARDS_LIST             = NS_URL + "/api/scorecards/list"; // gets Measures list
+    String POST_SCORECARDS_SAVE            = NS_URL + "/api/scorecards/save"; //to save Measures
+    String DELETE_SCORECARDS               = NS_URL + "/api/scorecards/"; // to delete Scorecards
+    String SCORECARD_MEASURE_MAP           = NS_URL + "/api/scorecards/%s/measures/mapping"; // POST call to add measures to scorecard
+    String POST_SCHEME_SAVE                = NS_URL + "/api/scorecards/schemes/save"; // Save Scorecard Scheme
+    String GET_SCHEME_LIST                 = NS_URL + "/api/scorecards/schemes/list"; // Get Schemes list
+    String GET_SCHEMES_INFO                = NS_URL + "/api/scorecards/schemes/info"; // Get Schemes info
+    String POST_RELATIONSHIP_MEASURE_MAP   = NS_URL + "/api/scorecards/by/RELATIONSHIP/measures/mapping"; // GET MeasureMapping by entityType
+    String POST_ALL_FACTS                  = NS_URL + "/api/scorecards/facts/by/RELATIONSHIP";// POST call to get Scorecards Facts by entity type
+    String POST_FACTS_UPDATE               = NS_URL + "/api/scorecards/facts/update"; // POST call to update Scorecards Facts
+    String CLEANUP_SCORECARD_DATA          = NS_URL + "/api/scorecards/cleanupschema"; // Deletes Scorecard2.0 Tables
+    String POST_INIT                       = NS_URL + "/api/scorecards/init"; // Creates Scorecards Tables
+    String PUT_SCORECARD_UPDATE            = NS_URL + "/api/scorecards/update"; // PUT call to update a Scorecard
 
 }
