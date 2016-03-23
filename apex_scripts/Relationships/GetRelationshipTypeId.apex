@@ -1,4 +1,4 @@
-//deleting RelationshipTypes prior to creating one
+        //deleting RelationshipTypes and Relationships prior to creating one
         Delete [SELECT ID,Name FROM JBCXM__GSRelationshipType__c WHERE Name = 'Automated RelationshipType' ];
         Delete [SELECT ID,Name FROM JBCXM__GSRelationship__c WHERE Name = 'Automated RelationshipType' ];
 

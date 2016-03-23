@@ -145,7 +145,6 @@ public interface ApiUrls extends NSURLs {
 
     // Scorecards2.0 API
 
-    String BASE_URL                        = NS_URL + "/api/scorecards/"; // base Url for Scorecards
     String GET_MEASURE_LIST                = NS_URL + "/api/scorecards/measures/list"; // GET Call to list all the Measures
     String MEASURE_SAVE                    = NS_URL + "/api/scorecards/measures/save"; // POST call to save the Measure
     String MEASURE_DELETE                  = NS_URL + "/api/scorecards/measures/"; // DELETE call appended with Measure ID to delete a specific Measure

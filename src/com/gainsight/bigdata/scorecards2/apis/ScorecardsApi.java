@@ -144,7 +144,7 @@ public class ScorecardsApi {
         return nsResponseObj;
     }
 
-    /** To get all Scorecards
+    /** Get all Scorecards
      *
      * @return
      * @throws Exception

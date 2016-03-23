@@ -116,7 +116,6 @@ public class MeasureLibraryTest extends NSTestBase {
     @Test
     @TestInfo(testCaseIds = {"GS-230508"})
     public void testDeleteUsedMeasure() throws Exception {
-
         //To create measure
         testMeasureSave();
         String create_relationship = Application.basedir + "/apex_scripts/Relationships/GetRelationshipTypeId.apex";
