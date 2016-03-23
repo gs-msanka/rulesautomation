@@ -156,25 +156,27 @@ public class SfdcRestApi {
         return keyPrefix;
     }
 
+
     /**
      * Method to post data to salesForce using Rest Api
      *
-     * @param sObjectApiName - sObjectApiName
+     * @param sObjectApiName - sObjectApi Name
      * @param payload        - entity
+     * @return - returns responseObj is status code is 200/201 else null
      * @throws Exception
      */
-    public static void pushDataToSfdc(String sObjectApiName, String payload) throws Exception {
+    public static ResponseObj pushDataToSfdc(String sObjectApiName, String payload) throws Exception {
         String uri = sfdcInfo.getEndpoint() + "/services/data/v" + sfdcConfig.getSfdcApiVersion() + "/sobjects/" + sObjectApiName;
+        ResponseObj responseObj = null;
         try {
-            ResponseObj responseObj = restImpl.insertIntoSalesforce(uri, payload);
+            responseObj = restImpl.insertIntoSalesforce(uri, payload);
             if (StringUtils.isNotBlank(String.valueOf(responseObj))) {
                 if (responseObj.getStatusCode() == HttpStatus.SC_OK || responseObj.getStatusCode() == HttpStatus.SC_CREATED) {
-                } else {
-                    throw new RuntimeException("status code is not " + HttpStatus.SC_OK + " Please check log for more details " + responseObj.toString());
                 }
             }
         } catch (Exception e) {
-            throw new RuntimeException("Error occured while pushing data to sfdc via Rest API", e);
+            throw new RuntimeException("Error occurred while inserting/creating data in sfdc via Rest API", e);
         }
+        return responseObj;
     }
 }
