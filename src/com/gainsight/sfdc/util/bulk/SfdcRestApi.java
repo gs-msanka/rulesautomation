@@ -170,10 +170,6 @@ public class SfdcRestApi {
         ResponseObj responseObj = null;
         try {
             responseObj = restImpl.insertIntoSalesforce(uri, payload);
-            if (StringUtils.isNotBlank(String.valueOf(responseObj))) {
-                if (responseObj.getStatusCode() == HttpStatus.SC_OK || responseObj.getStatusCode() == HttpStatus.SC_CREATED) {
-                }
-            }
         } catch (Exception e) {
             throw new RuntimeException("Error occurred while inserting/creating data in sfdc via Rest API", e);
         }
