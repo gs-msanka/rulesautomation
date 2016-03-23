@@ -35,4 +35,19 @@ public class SfdcRestImpl {
         Log.info("Response Obj : " +responseObj.getContent());
         return responseObj;
     }
+
+    /**
+     * Method to post data using salesForce Rest Api
+     *
+     * @param uri     - endPoint
+     * @param payload - entity
+     * @return
+     * @throws Exception
+     */
+    public ResponseObj insertIntoSalesforce(String uri, String payload) throws Exception {
+        ResponseObj responseObj = null;
+        responseObj = wa.doPost(uri, header.getAllHeaders(), payload);
+        Log.info("Response Obj : " + responseObj.getContent());
+        return responseObj;
+    }
 }
