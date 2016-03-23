@@ -10,7 +10,6 @@ import com.gainsight.testdriver.Log;
 import com.gainsight.util.config.SfdcConfig;
 import com.gainsight.util.config.SfdcConfigProvider;
 import com.gainsight.utils.config.ConfigProviderFactory;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpStatus;
 import org.codehaus.jackson.JsonNode;
 import org.codehaus.jackson.map.ObjectMapper;
