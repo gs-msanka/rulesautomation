@@ -162,7 +162,7 @@ public class SfdcRestApi {
      *
      * @param sObjectApiName - sObjectApi Name
      * @param payload        - entity
-     * @return - returns responseObj is status code is 200/201 else null
+     * @return
      * @throws Exception
      */
     public static ResponseObj pushDataToSfdc(String sObjectApiName, String payload) throws Exception {
