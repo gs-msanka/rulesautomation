@@ -154,4 +154,24 @@ public class SfdcRestApi {
         Log.info("Key prefix : " +keyPrefix);
         return keyPrefix;
     }
+
+
+    /**
+     * Method to post data to salesForce using Rest Api
+     *
+     * @param sObjectApiName - sObjectApi Name
+     * @param payload        - entity
+     * @return
+     * @throws Exception
+     */
+    public static ResponseObj pushDataToSfdc(String sObjectApiName, String payload) throws Exception {
+        String uri = sfdcInfo.getEndpoint() + "/services/data/v" + sfdcConfig.getSfdcApiVersion() + "/sobjects/" + sObjectApiName;
+        ResponseObj responseObj = null;
+        try {
+            responseObj = restImpl.insertIntoSalesforce(uri, payload);
+        } catch (Exception e) {
+            throw new RuntimeException("Error occurred while inserting/creating data in sfdc via Rest API", e);
+        }
+        return responseObj;
+    }
 }
