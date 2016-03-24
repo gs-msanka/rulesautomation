@@ -91,7 +91,14 @@ public class ReportBuilderMDAMongoUITest extends BaseTest {
 
         tenantDetails = tenantManager.getTenantDetail(null, tenantDetails.getTenantId());
 
-        Assert.assertTrue(mongoDBDAO.disableRedshift(tenantDetails.getTenantId()));
+        try {
+            if(tenantDetails.isRedshiftEnabled()){
+                Assert.assertTrue(mongoDBDAO.disableRedshift(tenantDetails.getTenantId()));
+            }
+
+        } finally {
+            mongoDBDAO.mongoUtil.closeConnection();
+        }
 
         mongoUtil = new MongoUtil(host, Integer.valueOf(port), userName, passWord, dbDetail.getDbName());
         mongoDBDAO = new MongoDBDAO(host, Integer.valueOf(port), userName, passWord, dbDetail.getDbName());
