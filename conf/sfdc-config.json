@@ -77,6 +77,11 @@
       "sfdc_username" : "ggolla@demo1.com",
       "sfdc_password" : "1234567g",
       "sfdc_stoken" : "e8qGeRsHGqik0kFXgdCGCHegM"
+    },
+    "deltaforce"  : {
+      "sfdc_username" : "scorecards@automation.com",
+      "sfdc_password" : "scorecards15",
+      "sfdc_stoken" : "wyqR8VGjrc8ucWfPDNDPzOS0g"
     }
   }
 }

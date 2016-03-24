@@ -145,14 +145,15 @@ public interface ApiUrls extends NSURLs {
 
     // Scorecards2.0 API
 
-    String BASE_URL                        = NS_URL + "/api/scorecards/"; // base Url for Scorecards
     String GET_MEASURE_LIST                = NS_URL + "/api/scorecards/measures/list"; // GET Call to list all the Measures
     String MEASURE_SAVE                    = NS_URL + "/api/scorecards/measures/save"; // POST call to save the Measure
     String MEASURE_DELETE                  = NS_URL + "/api/scorecards/measures/"; // DELETE call appended with Measure ID to delete a specific Measure
     String MEASURE_UPDATE                  = NS_URL + "/api/scorecards/measures/update"; // PUT call to update a Measure
-    String GET_SCORECARDS_LIST             = NS_URL + "/api/scorecards/list"; // gets Measures list
-    String POST_SCORECARDS_SAVE            = NS_URL + "/api/scorecards/save"; //to save Measures
-    String POST_MEASURE_MAP                = NS_URL + "/api/scorecards/%s/measures/mapping"; // POST call to add measures to scorecard
+    String GET_SCORECARDS_LIST             = NS_URL + "/api/scorecards/list"; // GET Scoreacrds
+    String POST_SCORECARDS_SAVE            = NS_URL + "/api/scorecards/save"; // Save Scorecards
+    String DELETE_SCORECARDS               = NS_URL + "/api/scorecards/"; // DELETE Scorecards
+    String PUT_SCORECARD_UPDATE            = NS_URL + "/api/scorecards/update"; // UPDATE Scorecards
+    String SCORECARD_MEASURE_MAP           = NS_URL + "/api/scorecards/%s/measures/mapping"; // POST call to add measures to scorecard
     String POST_SCHEME_SAVE                = NS_URL + "/api/scorecards/schemes/save"; // Save Scorecard Scheme
     String GET_SCHEME_LIST                 = NS_URL + "/api/scorecards/schemes/list"; // Get Schemes list
     String GET_SCHEMES_INFO                = NS_URL + "/api/scorecards/schemes/info"; // Get Schemes info
