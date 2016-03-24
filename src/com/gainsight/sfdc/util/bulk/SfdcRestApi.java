@@ -159,10 +159,9 @@ public class SfdcRestApi {
      * @param sObjectApiName - sObjectApi Name
      * @param payload        - entity
      * @return
-     * @throws Exception
      */
-    public static String pushDataToSfdc(String sObjectApiName, String payload) throws Exception {
-        return pushDataToSfdc(sObjectApiName,payload,false);
+    public static String createSingleRecordInSfdc(String sObjectApiName, String payload){
+        return createMultipleRecordsInSfdc(sObjectApiName,payload,false);
     }
 
     /**
@@ -173,9 +172,8 @@ public class SfdcRestApi {
      * @param payload           - entity
      * @param isMultipleRecords - true if needs to insert multple records else false
      * @return
-     * @throws Exception
      */
-    public static String pushDataToSfdc(String sObjectApiName, String payload, boolean isMultipleRecords) throws Exception {
+    public static String createMultipleRecordsInSfdc(String sObjectApiName, String payload, boolean isMultipleRecords){
         String uri = null;
         if (isMultipleRecords) {
             uri = sfdcInfo.getEndpoint() + "/services/data/v" + sfdcConfig.getSfdcApiVersion() + "/composite/tree/" + sObjectApiName;

@@ -77,11 +77,6 @@
       "sfdc_username" : "ggolla@demo1.com",
       "sfdc_password" : "1234567g",
       "sfdc_stoken" : "e8qGeRsHGqik0kFXgdCGCHegM"
-    },
-    "abhilash": {
-      "sfdc_username": "thadaka@code1.com",
-      "sfdc_password": "1234567jbr",
-      "sfdc_stoken": "H0MccCPXaqXABZlhu6syD1QyU"
     }
   }
 }
