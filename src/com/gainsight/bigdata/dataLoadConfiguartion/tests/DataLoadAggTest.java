@@ -162,7 +162,7 @@ public class DataLoadAggTest extends NSTestBase {
      * Contact identifier doesn't exists.
      */
     @TestInfo(testCaseIds = {"GS-6008"})
-    @Test
+    @Test(enabled = false)
     @Parameters("dbStoreType")
     public void duplicateContactIdentifier(@Optional String dbStoreType) throws IOException {
         sfdc.runApexCode(resolveStrNameSpace(FileUtil.getFileContents(testDataFiles+"/tests/t21/DataSetup.apex")));
@@ -233,8 +233,9 @@ public class DataLoadAggTest extends NSTestBase {
      */
 
     @TestInfo(testCaseIds = {"GS-6008"})
-    @Test
+    @Test(enabled = false)
     @Parameters("dbStoreType")
+
     public void accountAndUserIdentifierWith15To18DigitConversion(@Optional String dbStoreType) throws IOException {
         sfdc.runApexCode(resolveStrNameSpace(FileUtil.getFileContents(new File(testDataFiles+"/tests/t22/T22DataSetup.apex"))));
 
