@@ -277,6 +277,5 @@ public class OutReach {
             this.actions = actions;
         }
 
-
     }
 }

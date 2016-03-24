@@ -499,35 +499,32 @@ public class CopilotBasicTests extends CopilotTestUtils {
         actualEmailTemplate = copilotAPI.updateEmailTemplateName(actualEmailTemplate.getTemplateId(), "UPDATED EMAIL TEMPLATE NAME");
         Assert.assertEquals(actualEmailTemplate.getTitle(), "UPDATED EMAIL TEMPLATE NAME", "Failed to Update Template Name");
 
-        //Create out reach & verify the same.
+        //Create out reach with both 90days,token check & verify the same.
         OutReach actualOutReach = createAndTriggerOutreach(mapper.readValue(new File(testDataDir + "test/Basic_cases/T8_OutReach.json"), OutReach.class), actualSmartList, actualEmailTemplate);
-        verifyOutReachExecutionHistory(actualOutReach.getStatusId(), 15, 0);
-        Assert.assertEquals(actualOutReach.getLastRunStatus(), "SUCCESS", "Outreach Run Status Failed");
+        verifyOutReachExecutionHistory(actualOutReach.getStatusId(), 8, 7);
+        Assert.assertEquals(actualOutReach.getLastRunStatus(), "PARTIAL_SUCCESS", "Outreach Run Status Failed");
 
         //Re-Trigger out reach, wait for outreach process, verify the execution history of out reach.
         actualOutReach = triggerOutreach(actualOutReach);
         Assert.assertEquals(actualOutReach.getLastRunStatus(), "FAILURE", "Outreach Run Status Failed");
         verifyOutReachExecutionHistory(actualOutReach.getStatusId(), 0, 15);
 
-        //Update outreach -- Re-Trigger out reach, wait for outreach process, verify the execution history of out reach.
+        //Update outreach with 90days uncheck-- Re-Trigger out reach, wait for outreach process, verify the execution history of out reach.
         actualOutReach.getDefaultECA().get(0).getActions().get(0).setPreventDuplicateDays(0);
         actualOutReach.setPreventDuplicateDays(0);
         actualOutReach = copilotAPI.updateOutReach(mapper.writeValueAsString(actualOutReach));
 
         actualOutReach = triggerOutreach(actualOutReach);//should inform the assertion msg to this method
-        Assert.assertEquals(actualOutReach.getLastRunStatus(), "SUCCESS", "Outreach Run Status Failed");
-        verifyOutReachExecutionHistory(actualOutReach.getStatusId(), 15, 0);
-        /*
+        Assert.assertEquals(actualOutReach.getLastRunStatus(), "PARTIAL_SUCCESS", "Outreach Run Status Failed");
+        verifyOutReachExecutionHistory(actualOutReach.getStatusId(), 8, 7);
 
-        //Update outreach with token flag checked -- Re-Trigger out reach, wait for outreach process, verify the execution history of out reach.
-        actualOutReach.getDefaultECA().get(0).getActions().get(0).setPreventDuplicateDays(0);
-        actualOutReach.setPreventDuplicateDays(0);
+        //Update outreach with token flag uncheck -- Re-Trigger out reach, wait for outreach process, verify the execution history of out reach.
+        actualOutReach.getDefaultECA().get(0).getActions().get(0).getTokenMapping().setIsNotNullable(false);
         actualOutReach = copilotAPI.updateOutReach(mapper.writeValueAsString(actualOutReach));
 
-        actualOutReach = triggerOutreach(actualOutReach);//should inform the assertion msg to this method
-        Assert.assertEquals(actualOutReach.getLastRunStatus(), "SUCCESS", "Outreach Run Status Failed");
-        verifyOutReachExecutionHistory(actualOutReach.getStatusId(), 8, 0);
-        */
+        OutReach resultOutReach = triggerOutreach(actualOutReach);//should inform the assertion msg to this method
+        Assert.assertEquals(resultOutReach.getLastRunStatus(), "SUCCESS", "Outreach Run Status Failed");
+        verifyOutReachExecutionHistory(resultOutReach.getStatusId(), 15, 0);
 
         //Get the email template references in outreaches & verify the template use in outreach.
         verifyTemplateUsedInOutreach(actualEmailTemplate, actualOutReach);
@@ -549,7 +546,6 @@ public class CopilotBasicTests extends CopilotTestUtils {
         NsResponseObj smartListNsResponse = copilotAPI.getSmartListNsResponse(actualSmartList.getSmartListId());
         Assert.assertEquals(smartListNsResponse.getErrorCode(), MDAErrorCodes.SMARTLIST_DOESNOT_EXISTS.getGSCode(), "Smart list not found error code not matched.");
     }
-
 
     @Test
     public void emailStrategyCustomerinfoAsBaseObject() throws Exception {

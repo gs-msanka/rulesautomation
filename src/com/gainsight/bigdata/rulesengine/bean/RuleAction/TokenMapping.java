@@ -11,21 +11,23 @@ import java.util.List;
  * Created by Giribabu on 05/12/15.
  */
 @JsonSerialize(include = JsonSerialize.Inclusion.NON_DEFAULT)
-@JsonIgnoreProperties(ignoreUnknown = true)
+//@JsonIgnoreProperties(ignoreUnknown = true)
 public class TokenMapping {
 
-    @JsonProperty("isNotNullable")
-    private boolean notNullable;
+    private boolean isNotNullable;
     private List<Token> tokens;
+    private boolean notNullable;
 
-    @JsonProperty("isNotNullable")
-    public boolean isNotNullable() {
-        return notNullable;
-    }
-
-    @JsonProperty("isNotNullable")
     public void setNotNullable(boolean notNullable) {
         this.notNullable = notNullable;
+    }
+
+    public boolean isNotNullable() {
+        return isNotNullable;
+    }
+
+    public void setIsNotNullable(boolean isNotNullable) {
+        this.isNotNullable = isNotNullable;
     }
 
     public List<Token> getTokens() {
