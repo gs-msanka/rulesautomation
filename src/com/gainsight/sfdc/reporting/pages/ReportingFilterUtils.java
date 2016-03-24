@@ -278,9 +278,11 @@ public class ReportingFilterUtils extends BasePage {
 
 	public void addWhereExpression(String whereExpression) {
 		item.clearAndSetText(WHERE_FILTER_EXPRESSION, whereExpression);
+		item.clearAndSetText(WHERE_FILTER_EXPRESSION, whereExpression);
 	}
 
 	public void addHavingExpression(String havingExpression) {
+		item.clearAndSetText(HAVING_FILTER_EXPRESSION, havingExpression);
 		item.clearAndSetText(HAVING_FILTER_EXPRESSION, havingExpression);
 	}
 }

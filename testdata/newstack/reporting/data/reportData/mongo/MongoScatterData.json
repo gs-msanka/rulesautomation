@@ -1,0 +1,34 @@
+{
+  "data": [
+    {
+      "Industry": "Distribution",
+      "Active": 1,
+      "AccountName": "REPORTINGUI Account 1",
+      "FilesDownloaded": 64
+    },
+    {
+      "Industry": "Chemicals",
+      "Active": 1,
+      "AccountName": "REPORTINGUI Account 10",
+      "FilesDownloaded": 46
+    },
+    {
+      "Industry": null,
+      "Active": 1,
+      "AccountName": "REPORTINGUI Account 100",
+      "FilesDownloaded": 152
+    },
+    {
+      "Industry": "Food & Beverage",
+      "Active": 1,
+      "AccountName": "REPORTINGUI Account 101",
+      "FilesDownloaded": 199
+    },
+    {
+      "Industry": "Service",
+      "Active": 1,
+      "AccountName": "REPORTINGUI Account 102",
+      "FilesDownloaded": 75
+    }
+  ]
+}
