@@ -6,12 +6,14 @@ import com.gainsight.pageobject.util.Timer;
 import com.gainsight.sfdc.survey.pojo.SurveyProperties;
 import com.gainsight.sfdc.survey.pojo.SurveyQuestion;
 import com.gainsight.sfdc.survey.pojo.SurveyQuestion.SurveyAllowedAnswer;
+import com.gainsight.testdriver.Application;
 import com.gainsight.testdriver.Log;
 import com.gainsight.utils.wait.CommonWait;
 import com.gainsight.utils.wait.ExpectedCommonWaitCondition;
 import com.sforce.soap.partner.sobject.SObject;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.Select;
 
@@ -782,7 +784,8 @@ public class SurveyQuestionPage extends SurveyPage {
     public void addLogicRules(){
     	item.click(LINK_ICON);
     	wait.waitTillElementDisplayed(LOGIC_RULES_DIV, MIN_TIME, MAX_TIME);
-    	item.click(LINK_CHECKBOX);
+        JavascriptExecutor executor = (JavascriptExecutor) Application.getDriver();
+         executor.executeScript("arguments[0].click();", element.getElement(LINK_CHECKBOX));
     	button.click(LINK_SAVE_BUTTON);
     }
     
