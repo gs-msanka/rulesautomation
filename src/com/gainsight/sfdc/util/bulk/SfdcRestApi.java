@@ -16,10 +16,7 @@ import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.type.TypeReference;
 
 import java.net.URLEncoder;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by Giriabu on 05/11/15.
@@ -162,16 +159,36 @@ public class SfdcRestApi {
      * @param sObjectApiName - sObjectApi Name
      * @param payload        - entity
      * @return
-     * @throws Exception
      */
-    public static ResponseObj pushDataToSfdc(String sObjectApiName, String payload) throws Exception {
-        String uri = sfdcInfo.getEndpoint() + "/services/data/v" + sfdcConfig.getSfdcApiVersion() + "/sobjects/" + sObjectApiName;
-        ResponseObj responseObj = null;
+    public static String createSingleRecordInSfdc(String sObjectApiName, String payload){
+        return createMultipleRecordsInSfdc(sObjectApiName,payload,false);
+    }
+
+    /**
+     * Method to push multiple records into salesForce using rest API.
+     * In the request data, supply each record’s type, and a reference ID for each record
+     *
+     * @param sObjectApiName    -sObjectApi Name
+     * @param payload           - entity
+     * @param isMultipleRecords - true if needs to insert multple records else false
+     * @return
+     */
+    public static String createMultipleRecordsInSfdc(String sObjectApiName, String payload, boolean isMultipleRecords){
+        String uri = null;
+        if (isMultipleRecords) {
+            uri = sfdcInfo.getEndpoint() + "/services/data/v" + sfdcConfig.getSfdcApiVersion() + "/composite/tree/" + sObjectApiName;
+        } else {
+            uri = sfdcInfo.getEndpoint() + "/services/data/v" + sfdcConfig.getSfdcApiVersion() + "/sobjects/" + sObjectApiName;
+        }
+        String content = null;
         try {
-            responseObj = restImpl.insertIntoSalesforce(uri, payload);
+            ResponseObj responseObj = restImpl.insertIntoSalesforce(uri, payload);
+            if (responseObj.getStatusCode() == HttpStatus.SC_OK || responseObj.getStatusCode() == HttpStatus.SC_CREATED) {
+                content = responseObj.getContent();
+            }
         } catch (Exception e) {
             throw new RuntimeException("Error occurred while inserting/creating data in sfdc via Rest API", e);
         }
-        return responseObj;
+        return content;
     }
 }
