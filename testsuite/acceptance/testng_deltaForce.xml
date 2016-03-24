@@ -13,5 +13,9 @@
             <class name="com.gainsight.sfdc.customer360.test.Customer360ScorecardsTests"/>
         </classes>
     </test>
-
+    <test verbose="3" name="Scorecards2.0" preserve-order="true">
+        <classes>
+            <class name="com.gainsight.bigdata.scorecards2.tests.MeasureLibraryTest"/>
+        </classes>
+    </test>
 </suite>
