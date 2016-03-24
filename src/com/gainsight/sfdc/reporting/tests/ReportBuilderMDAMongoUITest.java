@@ -75,10 +75,18 @@ public class ReportBuilderMDAMongoUITest extends BaseTest {
         reportingBasePage = new ReportingBasePage();
         sfdc.runApexCodeFromFile(new File(Application.basedir
                 + "/testdata/newstack/reporting/ReportingUI_Scripts/Create_Accounts_Customers_Reporting.txt"));
-        mongoDBDAO = MongoDBDAO.getGlobalMongoDBDAOInstance();
         tenantDetails = tenantManager.getTenantDetail(sfdcInfo.getOrg(), null);
+        try {
+            mongoDBDAO = MongoDBDAO.getGlobalMongoDBDAOInstance();
+            dbDetail = mongoDBDAO.getDataDBDetail(tenantDetails.getTenantId());
+            if (tenantDetails.isRedshiftEnabled()) {
+                Assert.assertTrue(mongoDBDAO.disableRedshift(tenantDetails.getTenantId()));
+            }
 
-        dbDetail = mongoDBDAO.getDataDBDetail(tenantDetails.getTenantId());
+        } finally {
+            mongoDBDAO.mongoUtil.closeConnection();
+        }
+
         List<TenantDetails.DBServerDetail> dbDetails = dbDetail.getDbServerDetails();
         for (TenantDetails.DBServerDetail dbServerDetail : dbDetails) {
             dataBaseDetail = dbServerDetail.getHost().split(":");
@@ -87,19 +95,6 @@ public class ReportBuilderMDAMongoUITest extends BaseTest {
             userName = dbServerDetail.getUserName();
             passWord = dbServerDetail.getPassword();
         }
-        mongoDBDAO.getSchemaDBDetail(tenantDetails.getTenantId());
-
-        tenantDetails = tenantManager.getTenantDetail(null, tenantDetails.getTenantId());
-
-        try {
-            if(tenantDetails.isRedshiftEnabled()){
-                Assert.assertTrue(mongoDBDAO.disableRedshift(tenantDetails.getTenantId()));
-            }
-
-        } finally {
-            mongoDBDAO.mongoUtil.closeConnection();
-        }
-
         mongoUtil = new MongoUtil(host, Integer.valueOf(port), userName, passWord, dbDetail.getDbName());
         mongoDBDAO = new MongoDBDAO(host, Integer.valueOf(port), userName, passWord, dbDetail.getDbName());
         mongoDBDAO.deleteMongoDocumentFromCollectionMaster(tenantDetails.getTenantId(), COLLECTION_MASTER, "Auto_Mongo_MDAdata");
