@@ -68,8 +68,6 @@ public class ReportBuilderMDARedShiftUITest extends BaseTest {
         nsTestBase.tenantAutoProvision();
         reportingBuilderPageUrl = visualForcePageUrl + "ReportBuilder";
         reportingBasePage = new ReportingBasePage();
-        sfdc.runApexCodeFromFile(new File(Application.basedir
-                + "/testdata/newstack/reporting/ReportingUI_Scripts/Create_Accounts_Customers_Reporting.txt"));
         mongoDBDAO = new MongoDBDAO(nsConfig.getGlobalDBHost(), Integer.valueOf(nsConfig.getGlobalDBPort()),
                 nsConfig.getGlobalDBUserName(), nsConfig.getGlobalDBPassword(), nsConfig.getGlobalDBDatabase());
         TenantDetails tenantDetails = tenantManager.getTenantDetail(sfdcInfo.getOrg(), null);
@@ -165,8 +163,6 @@ public class ReportBuilderMDARedShiftUITest extends BaseTest {
         NsResponseObj nsResponseObj5 = gsDataImpl.loadDataToMDA(mapper.writeValueAsString(metadata2), dataFile2);
         Assert.assertTrue(nsResponseObj5.isResult(), "Data is not loaded, please check log for more details");
 
-        mongoDBDAO.deleteMongoDocumentFromReportMaster(
-                tenantManager.getTenantDetail(sfdcInfo.getOrg(), null).getTenantId(), "reportmaster", "Auto_");
         reportingBasePage.openReportingPage(reportingBuilderPageUrl);
     }
 

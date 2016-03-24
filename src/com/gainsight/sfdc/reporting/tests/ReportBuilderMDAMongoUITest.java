@@ -75,8 +75,7 @@ public class ReportBuilderMDAMongoUITest extends BaseTest {
         reportingBasePage = new ReportingBasePage();
         sfdc.runApexCodeFromFile(new File(Application.basedir
                 + "/testdata/newstack/reporting/ReportingUI_Scripts/Create_Accounts_Customers_Reporting.txt"));
-        mongoDBDAO = new MongoDBDAO(nsConfig.getGlobalDBHost(), Integer.valueOf(nsConfig.getGlobalDBPort()),
-                nsConfig.getGlobalDBUserName(), nsConfig.getGlobalDBPassword(), nsConfig.getGlobalDBDatabase());
+        mongoDBDAO = MongoDBDAO.getGlobalMongoDBDAOInstance();
         tenantDetails = tenantManager.getTenantDetail(sfdcInfo.getOrg(), null);
 
         dbDetail = mongoDBDAO.getDataDBDetail(tenantDetails.getTenantId());
@@ -92,11 +91,12 @@ public class ReportBuilderMDAMongoUITest extends BaseTest {
 
         tenantDetails = tenantManager.getTenantDetail(null, tenantDetails.getTenantId());
 
+        Assert.assertTrue(mongoDBDAO.disableRedshift(tenantDetails.getTenantId()));
+
         mongoUtil = new MongoUtil(host, Integer.valueOf(port), userName, passWord, dbDetail.getDbName());
         mongoDBDAO = new MongoDBDAO(host, Integer.valueOf(port), userName, passWord, dbDetail.getDbName());
         mongoDBDAO.deleteMongoDocumentFromCollectionMaster(tenantDetails.getTenantId(), COLLECTION_MASTER, "Auto_Mongo_MDAdata");
 
-        Assert.assertTrue(tenantManager.disableRedShift(tenantDetails));
         CollectionInfo collectionInfoMongo = mapper.readValue((new FileReader(Application.basedir + "/testdata/newstack/reporting/schema/ReportCollectionInfoUIAutomationMongo.json")), CollectionInfo.class);
         String collectionId = gsDataImpl.createCustomObject(collectionInfoMongo);
         Assert.assertNotNull(collectionId, "Collection ID should not be null.");
