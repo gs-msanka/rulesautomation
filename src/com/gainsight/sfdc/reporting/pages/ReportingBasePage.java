@@ -43,7 +43,7 @@ public class ReportingBasePage extends BasePage {
 		wait.waitTillElementDisplayed(
 				String.format(XPathConstants.getXPath("CLICKSEARCHEDOBJECTNAME"), objName, objName), 0, 2);
 		item.click(String.format(XPathConstants.getXPath("CLICKSEARCHEDOBJECTNAME"), objName, objName));
-		wait.waitTillElementNotDisplayed(XPathConstants.getXPath("WAITTOLOADFILEDSFOROBJECT"), 1, 5);
+		wait.waitTillElementNotDisplayed(XPathConstants.getXPath("WAITTOLOADFILEDSFOROBJECT"), 1, 15);
 		WebElement ele = element
 				.getElement(By.xpath(String.format(XPathConstants.getXPath("VERIFYSELECTEDOBJECTNAME"), objName)));
 		if (ele.isDisplayed()) {
