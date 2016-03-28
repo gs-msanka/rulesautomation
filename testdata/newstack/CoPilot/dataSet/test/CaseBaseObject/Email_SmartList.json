@@ -1,0 +1,26 @@
+{
+  "name": "Email Strategy - Case Base Object",
+  "description": "",
+  "status": "ACTIVE",
+  "stats": {
+    "contactCount": 0,
+    "customerCount": 0
+  },
+  "automatedRule": {
+    "relatedId": "",
+    "ruleType": "CONDITIONAL",
+    "description": "",
+    "status": true,
+    "triggerCriteria": "[{\"whereLogic\":\"A\",\"refField\":\"AccountId\",\"timeIdentifier\":null,\"select\":[{\"type\":\"field\",\"field\":\"AccountId\",\"fieldName\":\"AccountId\",\"entity\":\"Case\",\"valueType\":\"STRING\",\"dataType\":\"string\",\"referenceTo\":\"Account\",\"fieldType\":\"REFERENCE\",\"groupable\":true,\"objectName\":\"Case\",\"label\":\"Account ID\",\"alias\":\"\",\"aggregation\":\"\",\"properties\":{\"SFDC\":{\"keys\":[\"SFDC_ACCOUNT\"]}},\"meta\":{\"isAccessible\":true,\"isFilterable\":true,\"isSortable\":true,\"isGroupable\":true,\"originalDataType\":\"REFERENCE\",\"isCreateable\":true,\"precision\":0,\"decimalPlaces\":\"0\",\"relationshipName\":\"Account\",\"isFormulaField\":false,\"isUpdateable\":true,\"isRichText\":false,\"isRequired\":false,\"referenceTo\":\"Account\",\"referenceList\":[\"Account\"],\"mapName\":\"AccountId\"},\"isAccountIdRelatedField\":true},{\"type\":\"field\",\"field\":\"Account.Name\",\"fieldName\":\"Account.Name\",\"entity\":\"Case\",\"valueType\":\"STRING\",\"dataType\":\"STRING\",\"fieldType\":\"TEXT\",\"groupable\":true,\"objectName\":\"Case\",\"label\":\"Account ID Name\",\"alias\":\"\",\"aggregation\":\"\",\"properties\":{\"SFDC\":{\"keys\":[\"SFDC_ACCOUNT_NAME\"]}},\"meta\":{\"isAccessible\":true,\"isFilterable\":true,\"isSortable\":true,\"isGroupable\":true,\"originalDataType\":\"TEXT\",\"isCreateable\":false,\"precision\":0,\"decimalPlaces\":\"0\",\"relationshipName\":\"\",\"isFormulaField\":false,\"isUpdateable\":false,\"isRichText\":false,\"isRequired\":true}},{\"type\":\"field\",\"field\":\"Copilot_Case_Email__c\",\"fieldName\":\"Copilot_Case_Email__c\",\"entity\":\"Case\",\"valueType\":\"STRING\",\"dataType\":\"STRING\",\"fieldType\":\"EMAIL\",\"groupable\":true,\"objectName\":\"Case\",\"label\":\"Copilot_Case_Email\",\"alias\":\"\",\"aggregation\":\"\",\"isRecipientField\":true,\"meta\":{\"isAccessible\":true,\"isFilterable\":true,\"isSortable\":true,\"isGroupable\":true,\"originalDataType\":\"EMAIL\",\"isCreateable\":true,\"precision\":0,\"decimalPlaces\":\"0\",\"relationshipName\":\"\",\"isFormulaField\":false,\"isUpdateable\":true,\"isRichText\":false,\"isRequired\":false}}],\"calculatedFields\":[],\"criteria\":[{\"alias\":\"A\",\"left\":{\"keys\":[],\"type\":\"field\",\"valueType\":\"STRING\",\"entity\":\"Case\",\"field\":\"Account.Name\",\"fieldName\":\"Account.Name\",\"objectName\":\"Case\",\"fieldType\":\"TEXT\",\"label\":\"Account ID Name\",\"isExternalCriteria\":false},\"operator\":\"contains\",\"right\":{\"keys\":[],\"type\":\"value\",\"valueType\":\"STRING\",\"isNull\":false,\"value\":\"Galbreath\"}},{\"isGainSightCustomer\":true,\"left\":{\"type\":\"field\",\"valueType\":\"STRING\",\"entity\":\"Case\",\"field\":\"Account.JBCXM__CustomerInfo__c\"},\"operator\":\"ne\",\"right\":{\"type\":\"value\",\"valueType\":\"STRING\",\"value\":null}}]}]",
+    "sourceType": "CONDITIONAL",
+    "actionDetails": [
+      {
+        "actionType": "SMARTLIST",
+        "actionInfo": "{\"params\":{\"areaName\":\"SMARTLIST\"},\"actionType\":\"SMARTLIST\",\"recipientStrategy\":\"SPECIFIC_EMAIL_ADDRESSES\",\"identifierType\":\"CONTACT_MAPPING\",\"recipientFieldName\":\"Copilot_Case_Email__c\",\"additionalCriteria\":[],\"whereLogic\":\"\"}"
+      }
+    ],
+    "triggerUsageOn": "ACCOUNTLEVEL"
+  },
+  "refreshList": false,
+  "dataSourceType": "FORCE"
+}
