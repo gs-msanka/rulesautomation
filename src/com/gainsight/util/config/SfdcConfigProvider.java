@@ -2,7 +2,6 @@ package com.gainsight.util.config;
 
 import com.gainsight.testdriver.Application;
 import com.gainsight.utils.config.AbstractConfigProvider;
-import com.gainsight.utils.config.ConfigProviderFactory;
 import com.gainsight.utils.config.IConfigProvider;
 import com.google.auto.service.AutoService;
 import com.google.gson.JsonObject;
