@@ -162,4 +162,11 @@ public interface ApiUrls extends NSURLs {
     String POST_FACTS_UPDATE               = NS_URL + "/api/scorecards/facts/update"; // POST call to update Scorecards Facts
     String CLEANUP_SCORECARD_DATA          = NS_URL + "/api/scorecards/cleanupschema"; // Deletes Scorecard2.0 Tables
     String POST_INIT                       = NS_URL + "/api/scorecards/init"; // Creates Scorecards Tables
+
+    // Vault APIs
+    String API_ASSET_CRUD                  = NS_URL + "/api/asset"; // Add, Rename parent and child folders. Add different assets
+    String API_ASSET_DOWNLOAD              = NS_URL + "/api/localasset"; // Download assets published
+    String API_ASSET_DELETE                = NS_URL + "/api/asset/id/%s"; // Delete selected asset
+    String API_IS_PUBLISHER_CHECK          = NS_URL + "/api/assetpermission/currentorg"; // Check whether request is from publisher org
+    String API_IS_RULES_ASSET_ENABLED      = NS_URL + "/api/tenants/config/VAULT_RULES_DISABLED"; // Check whether Rules asset type enabled or disabled
 }
