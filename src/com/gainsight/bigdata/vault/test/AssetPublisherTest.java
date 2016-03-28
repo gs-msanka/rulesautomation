@@ -34,10 +34,15 @@ public class AssetPublisherTest extends NSTestBase {
         Log.info("------ Cleaning Folders ------");
         boolean isDeleted;
         List<Asset> assetList = assetApi.getAllAssets();
+        assertNotNull(assetList, "Not able get asserts list to delete");
         for (Asset asset : assetList) {
             Log.info("Deleting Folder :" + asset.getAssetId());
             isDeleted = assetApi.deleteAsset(asset.getAssetId());
             assertTrue(isDeleted, "Folder " + asset.getAssetId() + " deletion failed.");
+        }
+        assetList = assetApi.getAllAssets();
+        if(assetList != null && assetList.size() > 0){
+            fail("Few assets still exist. Un-deleted assets : " + mapper.writeValueAsString(assetList));
         }
         Log.info("------ All Folder Deletion Completed ------");
     }
