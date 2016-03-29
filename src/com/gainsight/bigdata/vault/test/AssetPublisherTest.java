@@ -41,7 +41,7 @@ public class AssetPublisherTest extends NSTestBase {
             assertTrue(isDeleted, "Folder " + asset.getAssetId() + " deletion failed.");
         }
         assetList = assetApi.getAllAssets();
-        if(assetList != null && assetList.size() > 0){
+        if (assetList != null && assetList.size() > 0) {
             fail("Few assets still exist. Un-deleted assets : " + mapper.writeValueAsString(assetList));
         }
         Log.info("------ All Folder Deletion Completed ------");
@@ -69,8 +69,7 @@ public class AssetPublisherTest extends NSTestBase {
         // Create Parent Folder
         Asset assetInfo = setAssetInfo(parentFolderName, null, FOLDER);
         Asset parentFolder = assetApi.createAsset(assetInfo);
-        assertNotNull(parentFolder, "Parent folder creation failed");
-        assertNotNull(parentFolder.getAssetId(), "Parent folder id is not found");
+        validateResponseData(parentFolder);
         Log.info("Parent Folder Create Successful. FolderID:" + parentFolder.getAssetId() + ". FolderName:" + parentFolder.getAssetName());
         // Create Child Folder
         assetInfo = setAssetInfo(childFolderName, parentFolder.getAssetId(), FOLDER);
@@ -91,8 +90,7 @@ public class AssetPublisherTest extends NSTestBase {
         // Create Folder
         Asset assetInfo = setAssetInfo(oldFolderName, null, FOLDER);
         Asset oldFolder = assetApi.createAsset(assetInfo);
-        assertNotNull(oldFolder, "Source folder creation failed");
-        assertNotNull(oldFolder.getAssetId(), "Source folder id is not found");
+        validateResponseData(oldFolder);
         Log.info("Folder Create Successful. FolderID:" + oldFolder.getAssetId() + ". FolderName:" + oldFolder.getAssetName());
         // Rename Folder
         assetInfo = setAssetInfo(newFolderName, null, FOLDER);
@@ -105,6 +103,7 @@ public class AssetPublisherTest extends NSTestBase {
 
     }
 
+
     @TestInfo(testCaseIds = {"GS-230505"})
     @Test
     public void testRenameChildFolder() throws Exception {
@@ -115,14 +114,12 @@ public class AssetPublisherTest extends NSTestBase {
 
         Asset assetInfo = setAssetInfo(parentFolderName, null, FOLDER);
         Asset parentFolder = assetApi.createAsset(assetInfo);
-        assertNotNull(parentFolder, "Parent folder creation failed");
-        assertNotNull(parentFolder.getAssetId(), "Parent folder id is not found");
+        validateResponseData(parentFolder);
         Log.info("Parent Folder Created. FolderID:" + parentFolder.getAssetId() + ". FolderName:" + parentFolder.getAssetName());
 
         assetInfo = setAssetInfo(oldFolderName, parentFolder.getAssetId(), FOLDER);
         Asset oldFolder = assetApi.createAsset(assetInfo);
-        assertNotNull(oldFolder, "Child folder creation failed");
-        assertNotNull(oldFolder.getAssetId(), "Child folder id is not found");
+        validateResponseData(oldFolder);
         Log.info("Child Folder Creation Successful. FolderID: " + oldFolder.getAssetId() + ". FolderName:" + oldFolder.getAssetName());
 
         assetInfo = setAssetInfo(newFolderName, parentFolder.getAssetId(), FOLDER);
@@ -142,8 +139,7 @@ public class AssetPublisherTest extends NSTestBase {
         // Folder Creation
         Asset folderInfo = setAssetInfo(folderName, null, FOLDER);
         Asset folder = assetApi.createAsset(folderInfo);
-        assertNotNull(folder, "Folder creation failed");
-        assertNotNull(folder.getAssetId(), "Folder id is not found");
+        validateResponseData(folder);
         Log.info("Folder Creation Success. FolderID: " + folder.getAssetId() + ". NewFolderName:" + folder.getAssetName());
         // Folder Deletion
         boolean isDeleted = assetApi.deleteAsset(folder.getAssetId());

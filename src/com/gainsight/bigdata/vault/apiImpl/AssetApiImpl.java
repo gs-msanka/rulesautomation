@@ -69,7 +69,7 @@ public class AssetApiImpl {
         try {
             ResponseObj responseObj = wa.doDelete(String.format(API_ASSET_DELETE, assetId), header.getAllHeaders());
             Log.info("Response Data ::" + responseObj.toString());
-            if (responseObj != null) {
+            if (responseObj.getStatusCode() == HttpStatus.SC_OK) {
                 nsResponseObj = mapper.readValue(responseObj.getContent(), NsResponseObj.class);
                 isDeleted = nsResponseObj.isResult();
             }
