@@ -86,7 +86,7 @@ public class AssetApiImpl {
      * @return
      * @throws Exception
      */
-    public List<Asset> getAllAssets() throws Exception {
+    public List<Asset> getAllAssets() {
         String url = API_ASSET_CRUD + "?assetTypes=" + FOLDER.getValue() + "," + SURVEY.getValue() + "," + EMAIL_TEMPLATE.getValue() + "," + RULE.getValue();
         NsResponseObj nsResponseObj = null;
         List<Asset> assetList = null;
