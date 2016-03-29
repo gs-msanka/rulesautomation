@@ -2,11 +2,15 @@ package com.gainsight.sfdc.reporting.tests;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
+import com.gainsight.sfdc.util.DateUtil;
 import com.gainsight.util.config.NsConfig;
 import com.gainsight.utils.config.ConfigProviderFactory;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import org.bson.Document;
 import org.codehaus.jackson.JsonGenerationException;
 import org.codehaus.jackson.map.JsonMappingException;
@@ -37,6 +41,7 @@ import net.javacrumbs.jsonunit.fluent.JsonFluentAssert;
 
 public class MDAConnectBackend extends BaseTest {
 
+    static Date date = Calendar.getInstance().getTime();
 	NsConfig nsConfig = ConfigProviderFactory.getConfig(NsConfig.class);
 	NSTestBase nsTestBase = new NSTestBase();
 
@@ -95,8 +100,153 @@ public class MDAConnectBackend extends BaseTest {
 
 	}
 
-	public void compareGivenJSON(String expectedJSON, String actualJSON) {
-		JsonFluentAssert.assertThatJson(expectedJSON).when(Option.IGNORING_EXTRA_FIELDS).isEqualTo(actualJSON);
+    /**
+     * It will take two jsons and input and compare them and throw proper error message, if there is a diff between those 2 jsons.
+     * @param expectedJSON
+     * @param actualJSON
+     */
+    public void compareGivenJSON(String expectedJSON, String actualJSON) {
+        JsonFluentAssert.assertThatJson(expectedJSON).when(Option.IGNORING_EXTRA_FIELDS).isEqualTo(actualJSON);
     }
 
+    /**
+     * It will take expected json(report data) as input and replace the db names. Same method will connect to mongodb and get the actual json(Report data). Compares the both jsons.
+     * We need to modify the input json in 2 ways. 1 is display names to db names and 2 nd one is Dates also we need to modify to actual date.
+     * Modifying the dates doing on parserJsonData method.
+     * @param tenantId
+     * @param reportInfo
+     * @param mongoUtil
+     * @param expectedData
+     * @throws IOException
+     */
+    public void verifyData(String tenantId, ReportInfo reportInfo, MongoUtil mongoUtil,
+                           String expectedData) throws IOException {
+        Document document = new Document();
+        document.append("TenantId", tenantId);
+        document.append("ReportInfo.reportName", reportInfo.getReportName());
+        document.append("ReportInfo.SchemaName", reportInfo.getSchemaName());
+        List<String> includeFields = new ArrayList<>();
+        List<String> excludeFields = new ArrayList<>();
+        includeFields.add("ReportInfo");
+        includeFields.add("newReport");
+        includeFields.add("reportMasterRequired");
+        includeFields.add("format");
+        includeFields.add("displayType");
+        excludeFields.add("_id");
+        excludeFields.add("ReportInfo.ReportId");
+        Document document1 = mongoUtil.getFirstRecord("reportmaster", document, includeFields, excludeFields);
+        String serverData = new ObjectMapper().writeValueAsString(document1);
+        DataLoadManager dataLoadManager = new DataLoadManager(sfdcInfo, nsTestBase.getDataLoadAccessKey());
+        CollectionInfo collectionInfo = dataLoadManager.getCollection(reportInfo.getSchemaName());
+        HashMap<String, String> displayDBNamesMap = ReportManager.getDisplayAndDBNamesMap(collectionInfo);
+        ReportManager reportManager = new ReportManager();
+        String actualData = reportManager.runReport(serverData);
+
+        expectedData = MDAConnectBackend.parserJsonData(expectedData);
+
+        expectedData = convertDisplayTODBNames(expectedData, displayDBNamesMap);
+        compareGivenJSON(expectedData, actualData);
+    }
+
+    /**
+     * As there is no way to create pojos for input json. I am just considering the input json as string.
+     * While replacing the display names to db names, Below logic will take care.
+     * For understanding more about the below logic, please consider input json format.
+     *
+     * @param expectedData
+     * @param displayDBNamesMap
+     * @return
+     */
+    public static String convertDisplayTODBNames(String expectedData, HashMap<String, String> displayDBNamesMap) {
+        String newString = expectedData.substring(expectedData.indexOf("{", 5) + 1, expectedData.indexOf("}"));
+        String[] arrayString = newString.split(":");
+        int length = arrayString.length;
+        for (String field : arrayString) {
+            if (length > 1) {
+                if (length == arrayString.length) {
+                    if (length > 2) {
+                        expectedData = expectedData.replaceAll(field.substring(1, field.length() - 1) + "\"", displayDBNamesMap.get(field.substring(field.indexOf("\"") + 1, field.length() - 1)) + "\"");
+                    }
+                } else {
+                    field = field.substring(field.indexOf(",") + 1);
+                    expectedData = expectedData.replaceAll(field.substring(1, field.length() - 1) + "\"", displayDBNamesMap.get(field.substring(field.indexOf("\"") + 1, field.length() - 1)) + "\"");
+                }
+                length--;
+            }
+        }
+        return expectedData;
+    }
+
+    /**
+     * It will take input as json and replace the dates to actual dates.
+     * Small info why we need this method. While loading the data to collection, we load dynamic dates.
+     * So actual report data also will depend on the day when we created the collections. So what i am doing was, for date fields in input json, i am giving values as 0, -1 etc..
+     * Replacing them dynamically. Below method will take care of replacing the dates dynamically.
+     * Need to write same kind of method for datetime aswell.
+     *
+     * @param inputJson
+     * @return
+     */
+    public static String parserJsonData(String inputJson) {
+        JsonParser parser = new JsonParser();
+        JsonElement jsonElement = parser.parse(inputJson);
+        JsonObject jsonObject = jsonElement.getAsJsonObject();
+
+        JsonArray jsonArray1 = new JsonArray();
+        JsonArray jsonArray = jsonObject.getAsJsonArray("data");
+        for (int i = 0; i < jsonArray.size(); i++) {
+            JsonObject jsonObject1 = jsonArray.get(i).getAsJsonObject();
+            Boolean check = true;
+            if (jsonObject1.get("Date") != null && ((jsonObject1.get("Date").toString().contains("-")) || jsonObject1.toString().contains("\"Date\":\"0\""))) {
+                String value = jsonObject1.get("Date").getAsString();
+                JsonObject jsonObject2;
+                jsonObject2 = jsonObject1;
+                jsonObject2.remove("Date");
+                jsonObject2.addProperty("Date", DateUtil.addWeeks(date, Integer.parseInt(value), "MM-dd-yyyy"));
+
+                jsonArray1.add(jsonObject2);
+                check = false;
+
+            }
+            if (jsonObject1.get("Date1") != null && ((jsonObject1.get("Date1").toString().contains("-")) || jsonObject1.toString().contains("\"Date1\":\"0\""))) {
+                String value = jsonObject1.get("Date1").getAsString();
+                JsonObject jsonObject2;
+                jsonObject2 = jsonObject1;
+                jsonObject2.remove("Date1");
+                jsonObject2.addProperty("Date1", DateUtil.addWeeks(date, Integer.parseInt(value), "MM-dd-yyyy"));
+
+                jsonArray1.add(jsonObject2);
+                check = false;
+            }
+            if (jsonObject1.get("Date2") != null && ((jsonObject1.get("Date2").toString().contains("-")) || jsonObject1.toString().contains("\"Date2\":\"0\""))) {
+                String value = jsonObject1.get("Date2").getAsString();
+                JsonObject jsonObject2;
+                jsonObject2 = jsonObject1;
+                jsonObject2.remove("Date2");
+                jsonObject2.addProperty("Date2", DateUtil.addWeeks(date, Integer.parseInt(value), "MM-dd-yyyy"));
+
+                jsonArray1.add(jsonObject2);
+                check = false;
+            }
+            if (jsonObject1.get("Date3") != null && ((jsonObject1.get("Date3").toString().contains("-")) || jsonObject1.toString().contains("\"Date3\":\"0\""))) {
+                String value = jsonObject1.get("Date3").getAsString();
+                JsonObject jsonObject2;
+                jsonObject2 = jsonObject1;
+                jsonObject2.remove("Date3");
+                jsonObject2.addProperty("Date3", DateUtil.addWeeks(date, Integer.parseInt(value), "MM-dd-yyyy"));
+
+                jsonArray1.add(jsonObject2);
+                check = false;
+            }
+            if (check) {
+                JsonObject jsonObject2;
+                jsonObject2 = jsonObject1;
+                jsonArray1.add(jsonObject2);
+            }
+        }
+        JsonObject jsonObject1 = new JsonObject();
+        jsonObject1.add("data", jsonArray1);
+        return jsonObject1.toString();
+
+    }
 }

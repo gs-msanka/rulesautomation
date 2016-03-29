@@ -160,10 +160,11 @@ public class ReportingBasePage extends BasePage {
 	 */
 	public void saveReport(String reportName) {
 		Log.info("Saving the Report : " + reportName);
-		
-		JavascriptExecutor js = (JavascriptExecutor) driver;
-		String a = "j$('#" + "reportBuilderName" + "').val(\"" + reportName + "\").trigger(\"change\")";
+
+        JavascriptExecutor js = (JavascriptExecutor) driver;
+        String a = "j$('#" + "reportBuilderName" + "').val(\"" + reportName + "\").trigger(\"change\")";
         js.executeScript(a);
+        wait.waitTillElementPresent(XPathConstants.getXPath("SAVEBUTTON_XPATH"), MIN_TIME, MAX_TIME);
         item.click(XPathConstants.getXPath("SAVEBUTTON_XPATH"));
         item.setText(XPathConstants.getXPath("SAVE_DESCRIPTION_XPATH"), "Test Discription");
         item.click(XPathConstants.getXPath("SAVE_POPUP_SAVE_XPATH"));
@@ -175,10 +176,16 @@ public class ReportingBasePage extends BasePage {
 	/**
 	 * It will click on create new button.
 	 */
-	public void createNewReport() {
-		Log.info("Creting new report by clicking on new button ");
-		item.click(XPathConstants.getXPath("NEW"));
-	}
+    public void createNewReport() {
+
+        Log.info("Creting new report by clicking on new button ");
+        JavascriptExecutor jse = (JavascriptExecutor) driver;
+
+        jse.executeScript("arguments[0].click();", element.getElement(XPathConstants.getXPath("NEW")));
+        if(element.isElementDisplayed(XPathConstants.getXPath("CONFIRM_POPUP"))) {
+            refreshPage();
+        }
+    }
 
 	/**
 	 * Run the report by clickig on Apply button

@@ -59,6 +59,22 @@ public class ReportingUtil extends BaseTest {
 
     }
 
+    /**
+     * @param reportMaster
+     * @param mongoUtil
+     * @param expectedData
+     * @throws Exception
+     */
+    public void verifyReportData(ReportMaster reportMaster,
+                                 MongoUtil mongoUtil, String expectedData) throws Exception {
+        if (expectedData != null) {
+            List<ReportInfo> reportInfos = reportMaster.getReportInfo();
+            mdaConnectBackend.verifyData(tenantManager.getTenantDetail(sfdcInfo.getOrg(), null).getTenantId(),
+                    reportInfos.get(0), mongoUtil, expectedData);
+        }
+
+    }
+
 	/**
 	 * Creates a rule on the ui based on the json input configuration file path
 	 * @param reportInfo

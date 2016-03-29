@@ -3,7 +3,7 @@ package com.gainsight.bigdata.scorecards2.tests;
 import com.gainsight.bigdata.NSTestBase;
 import com.gainsight.bigdata.pojo.NsResponseObj;
 import com.gainsight.bigdata.scorecards2.apis.ScorecardsApi;
-import com.gainsight.bigdata.scorecards2.pojos.MeasureList;
+import com.gainsight.bigdata.scorecards2.pojos.Measure;
 import com.gainsight.bigdata.scorecards2.pojos.MeasureMappingPayload;
 import com.gainsight.bigdata.scorecards2.pojos.SaveScorecardPayload;
 import com.gainsight.bigdata.scorecards2.pojos.ScorecardsList;
@@ -40,7 +40,7 @@ public class MeasureLibraryTest extends NSTestBase {
         tenantDetails = tenantManager.getTenantDetail(sfdc.fetchSFDCinfo().getOrg(), null);
         tenantDetails = tenantManager.getTenantDetail(null, tenantDetails.getTenantId());
         Boolean details = tenantManager.enabledRedShiftWithDBDetails(tenantDetails);
-        Assert.assertNotNull(details,"Enabling Redshift Failed.Check response log for more details");
+        Assert.assertNotNull(details, "Enabling Redshift Failed.Check response log for more details");
 
         String host = env.getProperty("ns_redshift_host");
         String dbName = env.getProperty("ns_redshift_dbName");
@@ -56,7 +56,7 @@ public class MeasureLibraryTest extends NSTestBase {
         if (!existenceCheck) {
             NsResponseObj nsResponseObj = scorecardsApi.initScorecardConfig("");
             Assert.assertNotNull(nsResponseObj, "Status code is not 200, so response object returned is null. Check response log for more details");
-            Assert.assertTrue(nsResponseObj.isResult(),"Creating Scorecard Schema failed.Check response log for more info");
+            Assert.assertTrue(nsResponseObj.isResult(), "Creating Scorecard Schema failed.Check response log for more info");
         }
     }
 
@@ -65,31 +65,51 @@ public class MeasureLibraryTest extends NSTestBase {
     public void testEditMeasure() throws Exception {
         //To insert measures if measures are not already present
         testMeasureSave();
-        MeasureList measureUpdate = mapper.readValue((new FileReader(Application.basedir + "/testdata/newstack/Scorecards2/data/MeasureSave.json")), MeasureList.class);
-        NsResponseObj nsResponseObj = scorecardsApi.getAllMeasuresList();
-        Assert.assertNotNull(nsResponseObj, "Status code is not 200,so response object returned is null.Check response log for more info");
-        MeasureList[] measureList = mapper.convertValue(nsResponseObj.getData(), MeasureList[].class);
-        String Id = measureList[0].getId();
-        measureUpdate.setId(Id);
+        Measure measureUpdate = mapper.readValue((new FileReader(Application.basedir + "/testdata/newstack/Scorecards2/data/MeasureSave.json")), Measure.class);
+        Measure[] measureList = scorecardsApi.getAllMeasuresList();
+        Assert.assertNotNull(measureList, "Status code is not 200,so response object returned is null.Check response log for more info");
+        String measureId = measureList[0].getId();
+        measureUpdate.setId(measureId);
         measureUpdate.setName("FeedBack");
         measureUpdate.setDescription("Measure Updated Successfully");
         String payload = mapper.writeValueAsString(measureUpdate);
         NsResponseObj nsObj = scorecardsApi.updateMeasure(payload);
         Assert.assertNotNull(nsObj, "Status code is not 200,so response object returned is null.Check response log for more info");
-        MeasureList actualValue = mapper.convertValue(nsObj.getData(), MeasureList.class);
+        Measure actualValue = mapper.convertValue(nsObj.getData(), Measure.class);
         Assert.assertEquals(actualValue.getDescription(), measureUpdate.getDescription(), "Description did not match.Check response log for more info");
+
+        // To verify updated data in the GET call
+        Measure[] responseValue = scorecardsApi.getAllMeasuresList();
+        Assert.assertNotNull(responseValue, "Status code is not 200,so response object returned is null.Check response log for more info");
+        for (Measure updatedValue : responseValue) {
+            if (measureId.equals(updatedValue.getId())) {
+                Assert.assertEquals(updatedValue.getDescription(), "Measure Updated Successfully");
+                Assert.assertEquals(updatedValue.getName(), "FeedBack");
+            }
+        }
     }
 
     @Test
     @TestInfo(testCaseIds = {"GS-8325"})
     public void testMeasureSave() throws Exception {
 
-        MeasureList measureSave = mapper.readValue((new FileReader(Application.basedir + "/testdata/newstack/Scorecards2/data/MeasureSave.json")), MeasureList.class);
+        Measure measureSave = mapper.readValue((new FileReader(Application.basedir + "/testdata/newstack/Scorecards2/data/MeasureSave.json")), Measure.class);
         String payload = mapper.writeValueAsString(measureSave);
         NsResponseObj result = scorecardsApi.saveMeasure(payload);
         Assert.assertNotNull(result, "Status code is not 200,so response object returned is null.Check response log for more info");
-        MeasureList actualResult = mapper.convertValue(result.getData(), MeasureList.class);
+        Measure actualResult = mapper.convertValue(result.getData(), Measure.class);
+        String measureId = actualResult.getId();
         testAssertion(measureSave, actualResult);
+
+        // To verify updated data in the GET call
+        Measure[] responseValue = scorecardsApi.getAllMeasuresList();
+        Assert.assertNotNull(responseValue, "Status code is not 200,so response object returned is null.Check response log for more info");
+        for (Measure savedValue : responseValue) {
+            if (measureId.equals(savedValue.getId())) {
+                Assert.assertEquals(savedValue.getDescription(), "New Measure is added successfully");
+                Assert.assertEquals(savedValue.getName(), "NPS");
+            }
+        }
     }
 
     @Test
@@ -97,10 +117,9 @@ public class MeasureLibraryTest extends NSTestBase {
     public void testDeleteMeasure() throws Exception {
         //To insert measures if measures are not already present
         testMeasureSave();
-        NsResponseObj deleteResObj = scorecardsApi.getAllMeasuresList();
-        Assert.assertNotNull(deleteResObj, "Status code is not 200,so response object returned is null.Check response log for more info");
-        MeasureList[] measureList = mapper.convertValue(deleteResObj.getData(), MeasureList[].class);
-        for (MeasureList lst : measureList) {
+        Measure[] measureList = scorecardsApi.getAllMeasuresList();
+        Assert.assertNotNull(measureList, "Status code is not 200,so response object returned is null.Check response log for more info");
+        for (Measure lst : measureList) {
             String measureId = lst.getId();
             NsResponseObj deleteMeasure = scorecardsApi.deleteMeasure(measureId);
             Assert.assertNotNull(deleteMeasure, "Status code is not 200,so response object returned is null.Check response log for more info");
@@ -129,8 +148,7 @@ public class MeasureLibraryTest extends NSTestBase {
         Assert.assertNotNull(nsResponseObj, "Status code is not 200,so response object returned is null.Check response log for more info");
         ScorecardsList scorecardsList = mapper.convertValue(nsResponseObj.getData(), ScorecardsList.class);
         String scorecardId = scorecardsList.getId();
-        NsResponseObj result = scorecardsApi.getAllMeasuresList();
-        MeasureList[] measureList = mapper.convertValue(result.getData(), MeasureList[].class);
+        Measure[] measureList = scorecardsApi.getAllMeasuresList();
         String measureId = measureList[0].getId();
         MeasureMappingPayload[] measurePayload = mapper.readValue((new FileReader(Application.basedir + "/testdata/newstack/Scorecards2/data/MeasureMapping.json")), MeasureMappingPayload[].class);
         measurePayload[0].setScorecardId(scorecardId);
@@ -171,7 +189,7 @@ public class MeasureLibraryTest extends NSTestBase {
      * @paramactualResult- response jsondata
      * @paramexpectedResult- expected jsondata
      */
-    public void testAssertion(MeasureList actualResult, MeasureList expectedResult) {
+    public void testAssertion(Measure actualResult, Measure expectedResult) {
         Assert.assertEquals(actualResult.getName(), expectedResult.getName(), "Name did not match,response is not true.Check response log for more info");
         Assert.assertEquals(actualResult.getDescription(), expectedResult.getDescription(), "Description did not match,response is not true.Check response log for more info");
         Assert.assertEquals(actualResult.getInputType(), expectedResult.getInputType(), "InputType did not match,response is not true.Check response log for more info");

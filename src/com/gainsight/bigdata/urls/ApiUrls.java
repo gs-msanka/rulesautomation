@@ -149,9 +149,10 @@ public interface ApiUrls extends NSURLs {
     String MEASURE_SAVE                    = NS_URL + "/api/scorecards/measures/save"; // POST call to save the Measure
     String MEASURE_DELETE                  = NS_URL + "/api/scorecards/measures/"; // DELETE call appended with Measure ID to delete a specific Measure
     String MEASURE_UPDATE                  = NS_URL + "/api/scorecards/measures/update"; // PUT call to update a Measure
-    String GET_SCORECARDS_LIST             = NS_URL + "/api/scorecards/list"; // gets Measures list
-    String POST_SCORECARDS_SAVE            = NS_URL + "/api/scorecards/save"; //to save Measures
-    String DELETE_SCORECARDS               = NS_URL + "/api/scorecards/"; // to delete Scorecards
+    String GET_SCORECARDS_LIST             = NS_URL + "/api/scorecards/list"; // GET Scoreacrds
+    String POST_SCORECARDS_SAVE            = NS_URL + "/api/scorecards/save"; // Save Scorecards
+    String DELETE_SCORECARDS               = NS_URL + "/api/scorecards/"; // DELETE Scorecards
+    String PUT_SCORECARD_UPDATE            = NS_URL + "/api/scorecards/update"; // UPDATE Scorecards
     String SCORECARD_MEASURE_MAP           = NS_URL + "/api/scorecards/%s/measures/mapping"; // POST call to add measures to scorecard
     String POST_SCHEME_SAVE                = NS_URL + "/api/scorecards/schemes/save"; // Save Scorecard Scheme
     String GET_SCHEME_LIST                 = NS_URL + "/api/scorecards/schemes/list"; // Get Schemes list
@@ -161,6 +162,11 @@ public interface ApiUrls extends NSURLs {
     String POST_FACTS_UPDATE               = NS_URL + "/api/scorecards/facts/update"; // POST call to update Scorecards Facts
     String CLEANUP_SCORECARD_DATA          = NS_URL + "/api/scorecards/cleanupschema"; // Deletes Scorecard2.0 Tables
     String POST_INIT                       = NS_URL + "/api/scorecards/init"; // Creates Scorecards Tables
-    String PUT_SCORECARD_UPDATE            = NS_URL + "/api/scorecards/update"; // PUT call to update a Scorecard
 
+    // Vault APIs
+    String API_ASSET_CRUD                  = NS_URL + "/api/asset"; // Add, Rename parent and child folders. Add different assets
+    String API_ASSET_DOWNLOAD              = NS_URL + "/api/localasset"; // Download assets published
+    String API_ASSET_DELETE                = NS_URL + "/api/asset/id/%s"; // Delete selected asset
+    String API_IS_PUBLISHER_CHECK          = NS_URL + "/api/assetpermission/currentorg"; // Check whether request is from publisher org
+    String API_IS_RULES_ASSET_ENABLED      = NS_URL + "/api/tenants/config/VAULT_RULES_DISABLED"; // Check whether Rules asset type enabled or disabled
 }

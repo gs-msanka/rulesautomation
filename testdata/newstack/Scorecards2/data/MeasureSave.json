@@ -1,8 +1,9 @@
- {
+
+{
   "name": "NPS",
   "description": "New Measure is added successfully",
   "active": true,
   "entityType": "RELATIONSHIP",
   "inputType": "MANUAL",
   "levelType": "MEASURE"
-  }
+}

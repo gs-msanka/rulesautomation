@@ -7,9 +7,9 @@
   "sfdc_installApp" : "false",
   "sfdc_packageVersionNumber" : "4.31",
   "sfdc_packagePassword" : "JBCXM__Install4.31",
-  "sfdc_partnerUrl" : "https://login.salesforce.com/services/Soap/u/32.0",
+  "sfdc_partnerUrl" : "https://login.salesforce.com/services/Soap/u/34.0",
   "sfdc_siteCustomURL" : "https://testingmulticurrency-developer-edition.na15.force.com",
-  "sfdc_apiVersion" : "32.0",
+  "sfdc_apiVersion" : "34.0",
   "profiles" : {
     "default" : {
       "sfdc_username" : "gs-ggolla@testing1.com",
@@ -77,6 +77,11 @@
       "sfdc_username" : "ggolla@demo1.com",
       "sfdc_password" : "1234567g",
       "sfdc_stoken" : "e8qGeRsHGqik0kFXgdCGCHegM"
+    },
+    "deltaforce"  : {
+      "sfdc_username" : "scorecards@automation.com",
+      "sfdc_password" : "scorecards15",
+      "sfdc_stoken" : "wyqR8VGjrc8ucWfPDNDPzOS0g"
     }
   }
 }

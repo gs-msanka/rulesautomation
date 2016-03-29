@@ -1,0 +1,25 @@
+[{
+  "name": "Default",
+  "children": [{
+    "name": "FeedBack",
+    "measureId": "0067d679-22b3-4d13-949a-654dd51e4ac0",
+    "inputType": "MANUAL",
+    "group": false,
+    "displayOrder": 1,
+    "weight": 100,
+    "validity": 1,
+    "validityType": "WEEKS",
+    "scorecardId": "d85b9749-f5af-44ec-a46e-d36bf4ea5cc0",
+    "entityType": "RELATIONSHIP",
+    "schemeId": "grade_scheme_id"
+  }],
+  "levelType": "GROUP",
+  "displayOrder": 1,
+  "validity": null,
+  "validityType": null,
+  "weight": 0,
+  "inputType": "CALCULATED",
+  "scorecardId": "d85b9749-f5af-44ec-a46e-d36bf4ea5cc0",
+  "entityType": "RELATIONSHIP",
+  "schemeId": "grade_scheme_id"
+}]

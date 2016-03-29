@@ -7,6 +7,7 @@ import com.gainsight.bigdata.gsData.apiImpl.GSDataImpl;
 import com.gainsight.bigdata.pojo.CollectionInfo;
 import com.gainsight.bigdata.pojo.NsResponseObj;
 import com.gainsight.bigdata.reportBuilder.pojos.ReportMaster;
+import com.gainsight.bigdata.reportBuilder.reportApiImpl.ReportManager;
 import com.gainsight.bigdata.tenantManagement.apiImpl.TenantManager;
 import com.gainsight.bigdata.tenantManagement.pojos.TenantDetails;
 import com.gainsight.bigdata.util.CollectionUtil;
@@ -22,6 +23,7 @@ import com.gainsight.testdriver.Application;
 import com.gainsight.util.MongoDBDAO;
 import com.gainsight.utils.MongoUtil;
 import com.gainsight.utils.annotations.TestInfo;
+import org.apache.commons.io.FileUtils;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.testng.Assert;
@@ -71,11 +73,20 @@ public class ReportBuilderMDAMongoUITest extends BaseTest {
         nsTestBase.tenantAutoProvision();
         reportingBuilderPageUrl = visualForcePageUrl + "ReportBuilder";
         reportingBasePage = new ReportingBasePage();
-        mongoDBDAO = new MongoDBDAO(nsConfig.getGlobalDBHost(), Integer.valueOf(nsConfig.getGlobalDBPort()),
-                nsConfig.getGlobalDBUserName(), nsConfig.getGlobalDBPassword(), nsConfig.getGlobalDBDatabase());
+        sfdc.runApexCodeFromFile(new File(Application.basedir
+                + "/testdata/newstack/reporting/ReportingUI_Scripts/Create_Accounts_Customers_Reporting.txt"));
         tenantDetails = tenantManager.getTenantDetail(sfdcInfo.getOrg(), null);
+        try {
+            mongoDBDAO = MongoDBDAO.getGlobalMongoDBDAOInstance();
+            dbDetail = mongoDBDAO.getDataDBDetail(tenantDetails.getTenantId());
+            if (tenantDetails.isRedshiftEnabled()) {
+                Assert.assertTrue(mongoDBDAO.disableRedshift(tenantDetails.getTenantId()));
+            }
 
-        dbDetail = mongoDBDAO.getDataDBDetail(tenantDetails.getTenantId());
+        } finally {
+            mongoDBDAO.mongoUtil.closeConnection();
+        }
+
         List<TenantDetails.DBServerDetail> dbDetails = dbDetail.getDbServerDetails();
         for (TenantDetails.DBServerDetail dbServerDetail : dbDetails) {
             dataBaseDetail = dbServerDetail.getHost().split(":");
@@ -84,15 +95,10 @@ public class ReportBuilderMDAMongoUITest extends BaseTest {
             userName = dbServerDetail.getUserName();
             passWord = dbServerDetail.getPassword();
         }
-        mongoDBDAO.getSchemaDBDetail(tenantDetails.getTenantId());
-
-        tenantDetails = tenantManager.getTenantDetail(null, tenantDetails.getTenantId());
-
         mongoUtil = new MongoUtil(host, Integer.valueOf(port), userName, passWord, dbDetail.getDbName());
         mongoDBDAO = new MongoDBDAO(host, Integer.valueOf(port), userName, passWord, dbDetail.getDbName());
         mongoDBDAO.deleteMongoDocumentFromCollectionMaster(tenantDetails.getTenantId(), COLLECTION_MASTER, "Auto_Mongo_MDAdata");
 
-        Assert.assertTrue(tenantManager.disableRedShift(tenantDetails));
         CollectionInfo collectionInfoMongo = mapper.readValue((new FileReader(Application.basedir + "/testdata/newstack/reporting/schema/ReportCollectionInfoUIAutomationMongo.json")), CollectionInfo.class);
         String collectionId = gsDataImpl.createCustomObject(collectionInfoMongo);
         Assert.assertNotNull(collectionId, "Collection ID should not be null.");
@@ -119,10 +125,12 @@ public class ReportBuilderMDAMongoUITest extends BaseTest {
         ReportMaster reportMaster = mapper.readValue(
                 new File(Application.basedir + "/testdata/newstack/reporting/data/MongoReportWithGrid.json"),
                 ReportMaster.class);
+        String str = FileUtils.readFileToString(
+                new File(Application.basedir + "/testdata/newstack/reporting/data/reportData/mongo/MongoGridData.json"));
         reportingBasePage.createNewReport();
         reportMaster.getReportInfo().get(0).setReportReadLimit(tenantDetails.getReportReadLimit());
         reportingUtil.createReportFromUiAndVerifyBackedJSON(reportMaster, reportingBasePage, mongoUtil);
-
+        reportingUtil.verifyReportData(reportMaster, mongoUtil, str);
     }
 
     @TestInfo(testCaseIds = {"GS-9030"})
@@ -132,10 +140,12 @@ public class ReportBuilderMDAMongoUITest extends BaseTest {
         ReportMaster reportMaster = mapper.readValue(
                 new File(Application.basedir + "/testdata/newstack/reporting/data/MongoReportWithBar.json"),
                 ReportMaster.class);
+        String str = FileUtils.readFileToString(
+                new File(Application.basedir + "/testdata/newstack/reporting/data/reportData/mongo/MongoBarData.json"));
         reportingBasePage.createNewReport();
         reportMaster.getReportInfo().get(0).setReportReadLimit(tenantDetails.getReportReadLimit());
         reportingUtil.createReportFromUiAndVerifyBackedJSON(reportMaster, reportingBasePage, mongoUtil);
-
+        reportingUtil.verifyReportData(reportMaster, mongoUtil, null);
     }
 
     @TestInfo(testCaseIds = {"GS-9031"})
@@ -145,10 +155,12 @@ public class ReportBuilderMDAMongoUITest extends BaseTest {
         ReportMaster reportMaster = mapper.readValue(
                 new File(Application.basedir + "/testdata/newstack/reporting/data/MongoReportWithPie.json"),
                 ReportMaster.class);
+        String str = FileUtils.readFileToString(
+                new File(Application.basedir + "/testdata/newstack/reporting/data/reportData/mongo/MongopieData.json"));
         reportingBasePage.createNewReport();
         reportMaster.getReportInfo().get(0).setReportReadLimit(tenantDetails.getReportReadLimit());
         reportingUtil.createReportFromUiAndVerifyBackedJSON(reportMaster, reportingBasePage, mongoUtil);
-
+        reportingUtil.verifyReportData(reportMaster, mongoUtil, null);
     }
 
     @TestInfo(testCaseIds = {"GS-9032"})
@@ -156,11 +168,15 @@ public class ReportBuilderMDAMongoUITest extends BaseTest {
     public void columnMongoReport() throws Exception {
 
         ReportMaster reportMaster = mapper.readValue(
-                new File(Application.basedir + "/testdata/newstack/reporting/data/columnReportWith1M2D.json"),
+                new File(Application.basedir + "/testdata/newstack/reporting/data/MongoColumnData.json"),
                 ReportMaster.class);
+        String str = FileUtils.readFileToString(
+                new File(Application.basedir + "/testdata/newstack/reporting/data/reportData/mongo/MongoColumnData.json"));
         reportingBasePage.createNewReport();
         reportMaster.getReportInfo().get(0).setReportReadLimit(tenantDetails.getReportReadLimit());
         reportingUtil.createReportFromUiAndVerifyBackedJSON(reportMaster, reportingBasePage, mongoUtil);
+        reportingUtil.verifyReportData(reportMaster, mongoUtil, null);
+
     }
 
     @TestInfo(testCaseIds = {"GS-9033"})
@@ -170,9 +186,12 @@ public class ReportBuilderMDAMongoUITest extends BaseTest {
         ReportMaster reportMaster = mapper.readValue(
                 new File(Application.basedir + "/testdata/newstack/reporting/data/MongoReportWithBubble.json"),
                 ReportMaster.class);
+        String str = FileUtils.readFileToString(
+                new File(Application.basedir + "/testdata/newstack/reporting/data/reportData/mongo/MongoBubbleData.json"));
         reportingBasePage.createNewReport();
 
         reportingUtil.createReportFromUiAndVerifyBackedJSON(reportMaster, reportingBasePage, mongoUtil);
+        reportingUtil.verifyReportData(reportMaster, mongoUtil, str);
 
     }
 
@@ -183,9 +202,12 @@ public class ReportBuilderMDAMongoUITest extends BaseTest {
         ReportMaster reportMaster = mapper.readValue(
                 new File(Application.basedir + "/testdata/newstack/reporting/data/scatterReportForMongoData.json"),
                 ReportMaster.class);
+        String str = FileUtils.readFileToString(
+                new File(Application.basedir + "/testdata/newstack/reporting/data/reportData/mongo/MongoScatterData.json"));
         reportingBasePage.createNewReport();
 
         reportingUtil.createReportFromUiAndVerifyBackedJSON(reportMaster, reportingBasePage, mongoUtil);
+        reportingUtil.verifyReportData(reportMaster, mongoUtil, str);
     }
 
     @TestInfo(testCaseIds = {"GS-9035"})
@@ -194,10 +216,13 @@ public class ReportBuilderMDAMongoUITest extends BaseTest {
         ReportMaster reportMaster = mapper.readValue(
                 new File(Application.basedir + "/testdata/newstack/reporting/data/lineReportForMongoData.json"),
                 ReportMaster.class);
+        String str = FileUtils.readFileToString(
+                new File(Application.basedir + "/testdata/newstack/reporting/data/reportData/mongo/MongoLineReportData.json"));
         reportingBasePage.createNewReport();
 
         reportMaster.getReportInfo().get(0).setReportReadLimit(tenantDetails.getReportReadLimit());
         reportingUtil.createReportFromUiAndVerifyBackedJSON(reportMaster, reportingBasePage, mongoUtil);
+        reportingUtil.verifyReportData(reportMaster, mongoUtil, null);
     }
 
     @TestInfo(testCaseIds = {"GS-9036"})
@@ -207,34 +232,41 @@ public class ReportBuilderMDAMongoUITest extends BaseTest {
         ReportMaster reportMaster = mapper.readValue(
                 new File(Application.basedir + "/testdata/newstack/reporting/data/areaReportForMongoData.json"),
                 ReportMaster.class);
+        String str = FileUtils.readFileToString(
+                new File(Application.basedir + "/testdata/newstack/reporting/data/reportData/mongo/MongoAreaReportData.json"));
         reportingBasePage.createNewReport();
         reportMaster.getReportInfo().get(0).setReportReadLimit(tenantDetails.getReportReadLimit());
         reportingUtil.createReportFromUiAndVerifyBackedJSON(reportMaster, reportingBasePage, mongoUtil);
-
+        reportingUtil.verifyReportData(reportMaster, mongoUtil, null);
     }
 
-    @TestInfo(testCaseIds = {"GS-9037"})
+   @TestInfo(testCaseIds = {"GS-9037"})
     @Test
     public void stackedBarReportForMongoData() throws Exception {
-        ReportMaster reportMaster = mapper.readValue(
-                new File(Application.basedir + "/testdata/newstack/reporting/data/stackedBarReportForMongoData.json"),
-                ReportMaster.class);
-        reportingBasePage.createNewReport();
-        reportMaster.getReportInfo().get(0).setReportReadLimit(tenantDetails.getReportReadLimit());
-        reportingUtil.createReportFromUiAndVerifyBackedJSON(reportMaster, reportingBasePage, mongoUtil);
-
+       ReportMaster reportMaster = mapper.readValue(
+               new File(Application.basedir + "/testdata/newstack/reporting/data/stackedBarReportForMongoData.json"),
+               ReportMaster.class);
+       String str = FileUtils.readFileToString(
+               new File(Application.basedir + "/testdata/newstack/reporting/data/reportData/mongo/MongoStackedBarReportData.json"));
+       reportingBasePage.createNewReport();
+       reportMaster.getReportInfo().get(0).setReportReadLimit(tenantDetails.getReportReadLimit());
+       reportingUtil.createReportFromUiAndVerifyBackedJSON(reportMaster, reportingBasePage, mongoUtil);
+       reportingUtil.verifyReportData(reportMaster, mongoUtil, null);
     }
 
-    @TestInfo(testCaseIds = {"GS-9038"})
+   @TestInfo(testCaseIds = {"GS-9038"})
     @Test
     public void stackedColumnReportForMongo() throws Exception {
 
-        ReportMaster reportMaster = mapper.readValue(
-                new File(Application.basedir + "/testdata/newstack/reporting/data/stackedColumnReportWith1M2D.json"),
-                ReportMaster.class);
-        reportingBasePage.createNewReport();
-        reportMaster.getReportInfo().get(0).setReportReadLimit(tenantDetails.getReportReadLimit());
-        reportingUtil.createReportFromUiAndVerifyBackedJSON(reportMaster, reportingBasePage, mongoUtil);
+       ReportMaster reportMaster = mapper.readValue(
+               new File(Application.basedir + "/testdata/newstack/reporting/data/stackedColumnReportWith1M2D.json"),
+               ReportMaster.class);
+       String str = FileUtils.readFileToString(
+               new File(Application.basedir + "/testdata/newstack/reporting/data/reportData/mongo/MongoStackedColumnReportData.json"));
+       reportingBasePage.createNewReport();
+       reportMaster.getReportInfo().get(0).setReportReadLimit(tenantDetails.getReportReadLimit());
+       reportingUtil.createReportFromUiAndVerifyBackedJSON(reportMaster, reportingBasePage, mongoUtil);
+       reportingUtil.verifyReportData(reportMaster, mongoUtil, str);
     }
 
     @TestInfo(testCaseIds = {"GS-9039"})
@@ -244,10 +276,12 @@ public class ReportBuilderMDAMongoUITest extends BaseTest {
         ReportMaster reportMaster = mapper.readValue(
                 new File(Application.basedir + "/testdata/newstack/reporting/data/columnLineReportForMDAData.json"),
                 ReportMaster.class);
+        String str = FileUtils.readFileToString(
+                new File(Application.basedir + "/testdata/newstack/reporting/data/reportData/mongo/MongoColumnLineReportData.json"));
         reportingBasePage.createNewReport();
         reportMaster.getReportInfo().get(0).setReportReadLimit(tenantDetails.getReportReadLimit());
         reportingUtil.createReportFromUiAndVerifyBackedJSON(reportMaster, reportingBasePage, mongoUtil);
-
+        reportingUtil.verifyReportData(reportMaster, mongoUtil, null);
     }
 
     @TestInfo(testCaseIds = {"GS-200142"})
@@ -257,10 +291,12 @@ public class ReportBuilderMDAMongoUITest extends BaseTest {
         ReportMaster reportMaster = mapper.readValue(
                 new File(Application.basedir + "/testdata/newstack/reporting/data/ReportingCalculatedMeasures/MDAMongoCalculatedMeasures.json"),
                 ReportMaster.class);
+        String str = FileUtils.readFileToString(
+                new File(Application.basedir + "/testdata/newstack/reporting/data/reportData/mongo/MongoCalculationsReportData.json"));
         reportingBasePage.createNewReport();
         reportMaster.getReportInfo().get(0).setReportReadLimit(tenantDetails.getReportReadLimit());
         reportingUtil.createReportFromUiAndVerifyBackedJSON(reportMaster, reportingBasePage, mongoUtil);
-
+        reportingUtil.verifyReportData(reportMaster, mongoUtil, null);
     }
 
     @TestInfo(testCaseIds = {"GS-200143"})
@@ -271,10 +307,12 @@ public class ReportBuilderMDAMongoUITest extends BaseTest {
                 new File(Application.basedir
                         + "/testdata/newstack/reporting/data/ReportingMDAMongo/MDAMongoAggregationString.json"),
                 ReportMaster.class);
+        String str = FileUtils.readFileToString(
+                new File(Application.basedir + "/testdata/newstack/reporting/data/reportData/mongo/MongoStringAggReportData.json"));
         reportingBasePage.createNewReport();
         reportMaster.getReportInfo().get(0).setReportReadLimit(tenantDetails.getReportReadLimit());
         reportingUtil.createReportFromUiAndVerifyBackedJSON(reportMaster, reportingBasePage, mongoUtil);
-
+        reportingUtil.verifyReportData(reportMaster, mongoUtil, str);
     }
 
     @TestInfo(testCaseIds = {"GS-200144"})
@@ -285,10 +323,12 @@ public class ReportBuilderMDAMongoUITest extends BaseTest {
                 new File(Application.basedir
                         + "/testdata/newstack/reporting/data/ReportingMDAMongo/MDAAggregationNumber.json"),
                 ReportMaster.class);
+        String str = FileUtils.readFileToString(
+                new File(Application.basedir + "/testdata/newstack/reporting/data/reportData/mongo/MongoNumAggReportData.json"));
         reportingBasePage.createNewReport();
         reportMaster.getReportInfo().get(0).setReportReadLimit(tenantDetails.getReportReadLimit());
         reportingUtil.createReportFromUiAndVerifyBackedJSON(reportMaster, reportingBasePage, mongoUtil);
-
+        reportingUtil.verifyReportData(reportMaster, mongoUtil, null);
     }
 
     @TestInfo(testCaseIds = {"GS-200145"})
@@ -299,10 +339,11 @@ public class ReportBuilderMDAMongoUITest extends BaseTest {
                 new File(Application.basedir
                         + "/testdata/newstack/reporting/data/ReportingMDAMongo/MDAAggregationDate.json"),
                 ReportMaster.class);
+        String str = FileUtils.readFileToString(
+                new File(Application.basedir + "/testdata/newstack/reporting/data/reportData/mongo/MongoDateAggReportData.json"));
         reportingBasePage.createNewReport();
         reportMaster.getReportInfo().get(0).setReportReadLimit(tenantDetails.getReportReadLimit());
         reportingUtil.createReportFromUiAndVerifyBackedJSON(reportMaster, reportingBasePage, mongoUtil);
-
     }
 
     @TestInfo(testCaseIds = {"GS-200146"})
@@ -313,24 +354,28 @@ public class ReportBuilderMDAMongoUITest extends BaseTest {
                 new File(Application.basedir
                         + "/testdata/newstack/reporting/data/ReportingMDAMongo/MDAAggregationDateTime.json"),
                 ReportMaster.class);
+        String str = FileUtils.readFileToString(
+                new File(Application.basedir + "/testdata/newstack/reporting/data/reportData/mongo/MongoDateTimeAggReportData.json"));
         reportingBasePage.createNewReport();
         reportMaster.getReportInfo().get(0).setReportReadLimit(tenantDetails.getReportReadLimit());
         reportingUtil.createReportFromUiAndVerifyBackedJSON(reportMaster, reportingBasePage, mongoUtil);
-
+        reportingUtil.verifyReportData(reportMaster, mongoUtil, null);
     }
 
-    @TestInfo(testCaseIds = {"GS-200147"})
+   @TestInfo(testCaseIds = {"GS-200147"})
     @Test
     public void booleanAggregation() throws Exception {
 
-        ReportMaster reportMaster = mapper.readValue(
-                new File(Application.basedir
-                        + "/testdata/newstack/reporting/data/ReportingMDAMongo/MDAAggregationBoolean.json"),
-                ReportMaster.class);
-        reportingBasePage.createNewReport();
-        reportMaster.getReportInfo().get(0).setReportReadLimit(tenantDetails.getReportReadLimit());
-        reportingUtil.createReportFromUiAndVerifyBackedJSON(reportMaster, reportingBasePage, mongoUtil);
-
+       ReportMaster reportMaster = mapper.readValue(
+               new File(Application.basedir
+                       + "/testdata/newstack/reporting/data/ReportingMDAMongo/MDAAggregationBoolean.json"),
+               ReportMaster.class);
+       String str = FileUtils.readFileToString(
+               new File(Application.basedir + "/testdata/newstack/reporting/data/reportData/mongo/MongoBooleanAggReportData.json"));
+       reportingBasePage.createNewReport();
+       reportMaster.getReportInfo().get(0).setReportReadLimit(tenantDetails.getReportReadLimit());
+       reportingUtil.createReportFromUiAndVerifyBackedJSON(reportMaster, reportingBasePage, mongoUtil);
+       reportingUtil.verifyReportData(reportMaster, mongoUtil, null);
     }
 
     @TestInfo(testCaseIds = {"GS-200148"})
@@ -341,10 +386,12 @@ public class ReportBuilderMDAMongoUITest extends BaseTest {
                 new File(Application.basedir
                         + "/testdata/newstack/reporting/data/ReportingMDAMongo/MDARelativeTimeFunctions.json"),
                 ReportMaster.class);
+        String str = FileUtils.readFileToString(
+                new File(Application.basedir + "/testdata/newstack/reporting/data/reportData/mongo/MongoRelTimeReportData.json"));
         reportingBasePage.createNewReport();
         reportMaster.getReportInfo().get(0).setReportReadLimit(tenantDetails.getReportReadLimit());
         reportingUtil.createReportFromUiAndVerifyBackedJSON(reportMaster, reportingBasePage, mongoUtil);
-
+        reportingUtil.verifyReportData(reportMaster, mongoUtil, null);
     }
 
     @TestInfo(testCaseIds = {"GS-200149"})
@@ -355,10 +402,12 @@ public class ReportBuilderMDAMongoUITest extends BaseTest {
                 new File(Application.basedir
                         + "/testdata/newstack/reporting/data/ReportingMDAMongo/FlatReportsWithMaxShowMe.json"),
                 ReportMaster.class);
+        String str = FileUtils.readFileToString(
+                new File(Application.basedir + "/testdata/newstack/reporting/data/reportData/mongo/MongoFlatReportWithSMData.json"));
         reportingBasePage.createNewReport();
         reportMaster.getReportInfo().get(0).setReportReadLimit(tenantDetails.getReportReadLimit());
         reportingUtil.createReportFromUiAndVerifyBackedJSON(reportMaster, reportingBasePage, mongoUtil);
-
+        reportingUtil.verifyReportData(reportMaster, mongoUtil, null);
     }
 
     @TestInfo(testCaseIds = {"GS-200150"})
@@ -369,22 +418,28 @@ public class ReportBuilderMDAMongoUITest extends BaseTest {
                 new File(Application.basedir
                         + "/testdata/newstack/reporting/data/ReportingMDAMongo/FlatReportsWithFilterAndRankingMDAMongo.json"),
                 ReportMaster.class);
+        String str = FileUtils.readFileToString(
+                new File(Application.basedir + "/testdata/newstack/reporting/data/reportData/mongo/MongoFlatReportWithFRData.json"));
         reportingBasePage.createNewReport();
         reportMaster.getReportInfo().get(0).setReportReadLimit(tenantDetails.getReportReadLimit());
         reportingUtil.createReportFromUiAndVerifyBackedJSON(reportMaster, reportingBasePage, mongoUtil);
+        reportingUtil.verifyReportData(reportMaster, mongoUtil, str);
 
     }
 
-    @TestInfo(testCaseIds = {"GS-200151"})
+   @TestInfo(testCaseIds = {"GS-200151"})
     @Test
     public void filtersOnNullForAllDataTypes() throws Exception {
 
-        ReportMaster reportMaster = mapper.readValue(
-                new File(Application.basedir + "/testdata/newstack/reporting/data/ReportingMDAMongo/filtersOnNullForAllDataType.json"),
-                ReportMaster.class);
-        reportingBasePage.createNewReport();
-        reportMaster.getReportInfo().get(0).setReportReadLimit(tenantDetails.getReportReadLimit());
-        reportingUtil.createReportFromUiAndVerifyBackedJSON(reportMaster, reportingBasePage, mongoUtil);
+       ReportMaster reportMaster = mapper.readValue(
+               new File(Application.basedir + "/testdata/newstack/reporting/data/ReportingMDAMongo/filtersOnNullForAllDataType.json"),
+               ReportMaster.class);
+       String str = FileUtils.readFileToString(
+               new File(Application.basedir + "/testdata/newstack/reporting/data/reportData/mongo/MongonullAllData.json"));
+       reportingBasePage.createNewReport();
+       reportMaster.getReportInfo().get(0).setReportReadLimit(tenantDetails.getReportReadLimit());
+       reportingUtil.createReportFromUiAndVerifyBackedJSON(reportMaster, reportingBasePage, mongoUtil);
+       reportingUtil.verifyReportData(reportMaster, mongoUtil, str);
 
     }
 
@@ -395,9 +450,12 @@ public class ReportBuilderMDAMongoUITest extends BaseTest {
         ReportMaster reportMaster = mapper.readValue(
                 new File(Application.basedir + "/testdata/newstack/reporting/data/ReportingMDAMongo/HavingFiltersWithExpressions.json"),
                 ReportMaster.class);
+        String str = FileUtils.readFileToString(
+                new File(Application.basedir + "/testdata/newstack/reporting/data/reportData/mongo/MongoHavingData.json"));
         reportingBasePage.createNewReport();
         reportMaster.getReportInfo().get(0).setReportReadLimit(tenantDetails.getReportReadLimit());
         reportingUtil.createReportFromUiAndVerifyBackedJSON(reportMaster, reportingBasePage, mongoUtil);
+        reportingUtil.verifyReportData(reportMaster, mongoUtil, str);
 
     }
 
@@ -408,9 +466,12 @@ public class ReportBuilderMDAMongoUITest extends BaseTest {
         ReportMaster reportMaster = mapper.readValue(
                 new File(Application.basedir + "/testdata/newstack/reporting/data/ReportingMDAMongo/WhereFiltersWithExpressions.json"),
                 ReportMaster.class);
+        String str = FileUtils.readFileToString(
+                new File(Application.basedir + "/testdata/newstack/reporting/data/reportData/mongo/MongoWhereData.json"));
         reportingBasePage.createNewReport();
         reportMaster.getReportInfo().get(0).setReportReadLimit(tenantDetails.getReportReadLimit());
         reportingUtil.createReportFromUiAndVerifyBackedJSON(reportMaster, reportingBasePage, mongoUtil);
+        reportingUtil.verifyReportData(reportMaster, mongoUtil, null);
 
     }
 

@@ -3,12 +3,16 @@ package com.gainsight.bigdata.scorecards2.pojos;
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 
+import java.util.ArrayList;
+import java.util.List;
 /**
- * Created by nyarlagadda on 17/02/16.
+ * Created by nyarlagadda on 23/02/16.
  */
+
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
-public class MeasureList {
+
+public class ScorecardsList {
 
     private Boolean deleted;
     private String createdBy;
@@ -19,12 +23,17 @@ public class MeasureList {
     private String id;
     private String name;
     private String description;
-    private String entityType;
-    private String levelType;
-    private String inputType;
-    private Integer displayOrder;
     private Boolean active;
-    private Boolean defaultRollup;
+    private String entityType;
+    private String relationshipTypeId;
+    private Boolean overallRollup;
+    private Boolean groupRollup;
+    private String schemeId;
+    private Boolean historyEnabled;
+    private List<Status> status = new ArrayList<>();
+    private ScoringScheme scoringScheme;
+
+
 
     public Boolean getDeleted() {
         return deleted;
@@ -98,38 +107,6 @@ public class MeasureList {
         this.description = description;
     }
 
-    public String getEntityType() {
-        return entityType;
-    }
-
-    public void setEntityType(String entityType) {
-        this.entityType = entityType;
-    }
-
-    public String getLevelType() {
-        return levelType;
-    }
-
-    public void setLevelType(String levelType) {
-        this.levelType = levelType;
-    }
-
-    public String getInputType() {
-        return inputType;
-    }
-
-    public void setInputType(String inputType) {
-        this.inputType = inputType;
-    }
-
-    public Integer getDisplayOrder() {
-        return displayOrder;
-    }
-
-    public void setDisplayOrder(Integer displayOrder) {
-        this.displayOrder = displayOrder;
-    }
-
     public Boolean getActive() {
         return active;
     }
@@ -138,11 +115,67 @@ public class MeasureList {
         this.active = active;
     }
 
-    public Boolean getDefaultRollup() {
-        return defaultRollup;
+    public String getEntityType() {
+        return entityType;
     }
 
-    public void setDefaultRollup(Boolean defaultRollup) {
-        this.defaultRollup = defaultRollup;
+    public void setEntityType(String entityType) {
+        this.entityType = entityType;
+    }
+
+    public String getRelationshipTypeId() {
+        return relationshipTypeId;
+    }
+
+    public void setRelationshipTypeId(String relationshipTypeId) {
+        this.relationshipTypeId = relationshipTypeId;
+    }
+
+    public Boolean getOverallRollup() {
+        return overallRollup;
+    }
+
+    public void setOverallRollup(Boolean overallRollup) {
+        this.overallRollup = overallRollup;
+    }
+
+    public Boolean getGroupRollup() {
+        return groupRollup;
+    }
+
+    public void setGroupRollup(Boolean groupRollup) {
+        this.groupRollup = groupRollup;
+    }
+
+    public String getSchemeId() {
+        return schemeId;
+    }
+
+    public void setSchemeId(String schemeId) {
+        this.schemeId = schemeId;
+    }
+
+    public Boolean getHistoryEnabled() {
+        return historyEnabled;
+    }
+
+    public void setHistoryEnabled(Boolean historyEnabled) {
+        this.historyEnabled = historyEnabled;
+    }
+
+    public List<Status> getStatus() {
+        return status;
+    }
+
+    public void setStatus(List<Status> status) {
+        this.status = status;
+    }
+
+    public ScoringScheme getScoringScheme() {
+        return scoringScheme;
+    }
+
+    public void setScoringScheme(ScoringScheme scoringScheme) {
+        this.scoringScheme = scoringScheme;
     }
 }
