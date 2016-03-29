@@ -15,18 +15,9 @@
             "areaName": "EMAIL"
           },
           "fromAddress": {
-            "name": {
-              "type": "field",
-              "field": "Name",
-              "entity": "Account",
-              "fieldName": "Name",
-              "objectName": "Account",
-              "valueType": "STRING",
-              "aggregation": "",
-              "label": "Account ➝ Account Name"
-            },
+            "name": "Copilot Automation",
             "emailId": "agrandhi@gainsight.com",
-            "replyTo": "agrandhi@gainsight.com"
+            "replyTo": ""
           },
           "copyToAddress": [],
           "tokenMapping": {
@@ -34,38 +25,6 @@
             "tokens": [
               {
                 "name": "embd::6fd5ef90-9baa-4cd7-a132-c7db6f2ad714",
-                "value": {
-                  "type": "field",
-                  "field": "JBCXM__CustomerInfo__r.p_c_Contact__c",
-                  "fieldName": "p_c_Contact__c",
-                  "entity": "Account",
-                  "alias": "",
-                  "fieldType": "REFERENCE",
-                  "label": "p_c_Contact",
-                  "aggregation": "",
-                  "valueType": "STRING",
-                  "fieldLabel": "Customer Info ➝ p_c_Contact",
-                  "objectName": "JBCXM__CustomerInfo__c"
-                }
-              },
-              {
-                "name": "embd::5b84d9fa-ab21-4924-b5da-013e23f39af4",
-                "value": {
-                  "type": "field",
-                  "field": "JBCXM__CustomerInfo__r.p_c_Contact__c",
-                  "fieldName": "p_c_Contact__c",
-                  "entity": "Account",
-                  "alias": "",
-                  "fieldType": "REFERENCE",
-                  "label": "p_c_Contact",
-                  "aggregation": "",
-                  "valueType": "STRING",
-                  "fieldLabel": "Customer Info ➝ p_c_Contact",
-                  "objectName": "JBCXM__CustomerInfo__c"
-                }
-              },
-              {
-                "name": "subj::43e4a77a-ea21-4962-a69a-dc57203dbe03",
                 "value": {
                   "type": "field",
                   "field": "Name",
@@ -78,6 +37,39 @@
                   "valueType": "STRING",
                   "fieldLabel": "Account ➝ Account Name",
                   "objectName": "Account"
+                }
+              },
+              {
+                "name": "embd::5b84d9fa-ab21-4924-b5da-013e23f39af4",
+                "value": {
+                  "type": "field",
+                  "field": "Name",
+                  "fieldName": "Name",
+                  "entity": "Contact",
+                  "alias": "",
+                  "fieldType": "STRING",
+                  "label": "Full Name",
+                  "aggregation": "",
+                  "valueType": "STRING",
+                  "isExternalCriteria": true,
+                  "fieldLabel": "Contact ➝ Full Name",
+                  "objectName": "Contact"
+                }
+              },
+              {
+                "name": "subj::43e4a77a-ea21-4962-a69a-dc57203dbe03",
+                "value": {
+                  "type": "field",
+                  "field": "JBCXM__CustomerInfo__r.Copilot_Customer_Contact__c",
+                  "fieldName": "Copilot_Customer_Contact__c",
+                  "entity": "Account",
+                  "alias": "",
+                  "fieldType": "REFERENCE",
+                  "label": "Copilot_Customer_Contact",
+                  "aggregation": "",
+                  "valueType": "STRING",
+                  "fieldLabel": "Customer Info ➝ Copilot_Customer_Contact",
+                  "objectName": "JBCXM__CustomerInfo__c"
                 }
               },
               {
@@ -110,6 +102,7 @@
     "STANDARD"
   ],
   "preventDuplicateDays": 90,
+  "logActivity": false,
   "cascadeDelete": false,
   "published": false,
   "reportTokenMappings": []

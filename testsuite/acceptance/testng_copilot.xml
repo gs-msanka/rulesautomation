@@ -8,10 +8,7 @@
 
     <test verbose="3" name="Copilot Application Test Suite" preserve-order="true">
         <classes>
-            <class name="com.gainsight.bigdata.copilot.tests.AccountBaseObjectStrategies" />
-            <class name="com.gainsight.bigdata.copilot.tests.ContactBaseObjectStrategy" />
-            <class name="com.gainsight.bigdata.copilot.tests.CaseBaseObjectStrategies" />
-            <class name="com.gainsight.bigdata.copilot.tests.CustomerInfoBaseObjectStrategies" />
+            <class name="com.gainsight.bigdata.copilot.tests.SfdcPowerlistStrategies" />
         </classes>
     </test>
 	
