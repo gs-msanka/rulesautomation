@@ -443,7 +443,7 @@ public class SetupRuleActionPage extends BasePage {
             fieldMapping = fieldMapping + String.format(FIELD_MAPPING_LTU2, fieldMappingObject.getSourceField());
             item.click(xpath + fieldMapping);
             String fieldMappingDestination = String.format(FIELD_MAPPING_DESTINATION, fieldMappingObject.getDestination());
-            item.click(xpath + fieldMapping + fieldMappingDestination);
+            item.doubleClick(xpath + fieldMapping + fieldMappingDestination);
         }
     }
 

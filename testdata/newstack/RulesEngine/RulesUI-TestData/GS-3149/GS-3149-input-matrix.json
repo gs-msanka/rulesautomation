@@ -3,7 +3,7 @@
   "ruleName": "GS 3149 - Load To Customers Using Matrix Data(Postgres/Mongo/Redshift)",
   "ruleFor": "Account",
   "relationshipType": null,
-  "ruleDescription": "GS 3149 - Load To Customers Using Matrix Data(Postgres/Mongo/Redshift",
+  "ruleDescription": "GS 3149 - Load To Customers Using Matrix Data(Postgres/Mongo/Redshift)",
   "setupRule": {
     "dataSource": "Matrix",
     "selectObject": "Object",

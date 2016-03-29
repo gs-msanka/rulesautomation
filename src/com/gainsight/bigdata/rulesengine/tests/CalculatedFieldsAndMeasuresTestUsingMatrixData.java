@@ -65,12 +65,19 @@ public class CalculatedFieldsAndMeasuresTestUsingMatrixData extends BaseTest{
 	private TenantManager tenantManager;
 	private final String CUSTOM_OBJECT_CLEANUP = "Delete [SELECT Id FROM RulesSFDCCustom__c];";
 	MongoDBDAO mongoDBDAO = null;
-	
 	String collectionName;
-	
+
+
+    /***
+     * This function does initial setup required to execute the test cases. Typical setup includes these items:
+     * login To Salesforce, Creation and clean up activities,
+     * init the tenant info and creating database collections required(if any).
+     * @param dbStoreType defines the database type of the collection to be created. Valid values are Mongo, Postgres and Redshift.
+     * @throws Exception
+     */
 	@BeforeClass
 	@Parameters("dbStoreType")
-	public void setup(@Optional String dbStoreType) throws Exception {
+	public void setup(@Optional("") String dbStoreType) throws Exception {
 		basepage.login();
 		sfdc.connect();
 		nsTestBase.init();

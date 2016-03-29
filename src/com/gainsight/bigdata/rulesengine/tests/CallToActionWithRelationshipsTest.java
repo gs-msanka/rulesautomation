@@ -166,8 +166,8 @@ public class CallToActionWithRelationshipsTest extends BaseTest {
         CTAAction act = mapper.readValue(rulesPojo.getSetupActions().get(0).getAction(), CTAAction.class);
         jobInfo.getExtractionRule().setWhereCondition(" where JBCXM__PlaybookId__r.Name='" + act.getPlaybook() + "'");
         dataETL.execute(jobInfo);
-        List<Map<String, String>> expectedTasks = Comparator.getParsedCsvData(new CSVReader(FileUtil.resolveNameSpace(new File(Application.basedir + "/testdata/newstack/RulesEngine/RulesUI_ExpectedData/PlayBookTasks.csv"), null)));
-        List<Map<String, String>> actualTasks = Comparator.getParsedCsvData(new CSVReader(FileUtil.resolveNameSpace(new File(Application.basedir + "/testdata/newstack/RulesEngine/RulesUI_ExpectedData/CSTasks.csv"), null)));
+        List<Map<String, String>> expectedTasks = Comparator.getParsedCsvData(new CSVReader(new FileReader(Application.basedir + "/testdata/newstack/RulesEngine/RulesUI_ExpectedData/PlayBookTasks.csv")));
+        List<Map<String, String>> actualTasks = Comparator.getParsedCsvData(new CSVReader(new FileReader(Application.basedir + "/testdata/newstack/RulesEngine/RulesUI_ExpectedData/CSTasks.csv")));
         List<Map<String, String>> differenceData = Comparator.compareListData(expectedTasks, actualTasks);
         Assert.assertEquals(actualTasks.size(), 54, "Total Number of CSTasks are not matching for the cta's created");
         Log.info("Difference is : " + mapper.writeValueAsString(differenceData));
@@ -193,8 +193,8 @@ public class CallToActionWithRelationshipsTest extends BaseTest {
         CTAAction act = mapper.readValue(rulesPojo.getSetupActions().get(0).getAction(), CTAAction.class);
         jobInfo.getExtractionRule().setWhereCondition(" where JBCXM__PlaybookId__r.Name='" + act.getPlaybook() + "'");
         dataETL.execute(jobInfo);
-        List<Map<String, String>> expectedTasks = Comparator.getParsedCsvData(new CSVReader(FileUtil.resolveNameSpace(new File(Application.basedir + "/testdata/newstack/RulesEngine/RulesUI_ExpectedData/PlayBookTasks.csv"), null)));
-        List<Map<String, String>> actualTasks = Comparator.getParsedCsvData(new CSVReader(FileUtil.resolveNameSpace(new File(Application.basedir + "/testdata/newstack/RulesEngine/RulesUI_ExpectedData/CSTasks.csv"), null)));
+        List<Map<String, String>> expectedTasks = Comparator.getParsedCsvData(new CSVReader(new FileReader(Application.basedir + "/testdata/newstack/RulesEngine/RulesUI_ExpectedData/PlayBookTasks.csv")));
+        List<Map<String, String>> actualTasks = Comparator.getParsedCsvData(new CSVReader(new FileReader(Application.basedir + "/testdata/newstack/RulesEngine/RulesUI_ExpectedData/CSTasks.csv")));
         List<Map<String, String>> differenceData = Comparator.compareListData(expectedTasks, actualTasks);
         Assert.assertEquals(actualTasks.size(), 54, "Total Number of CSTasks are not matching for the cta's created");
         Log.info("Difference is : " + mapper.writeValueAsString(differenceData));
@@ -224,8 +224,8 @@ public class CallToActionWithRelationshipsTest extends BaseTest {
         CTAAction act = mapper.readValue(rulesPojo.getSetupActions().get(0).getAction(), CTAAction.class);
         jobInfo.getExtractionRule().setWhereCondition(" where JBCXM__PlaybookId__r.Name='" + act.getPlaybook() + "'");
         dataETL.execute(jobInfo);
-        List<Map<String, String>> expectedTasks = Comparator.getParsedCsvData(new CSVReader(FileUtil.resolveNameSpace(new File(Application.basedir + "/testdata/newstack/RulesEngine/RulesUI_ExpectedData/PlayBookTasks.csv"), null)));
-        List<Map<String, String>> actualTasks = Comparator.getParsedCsvData(new CSVReader(FileUtil.resolveNameSpace(new File(Application.basedir + "/testdata/newstack/RulesEngine/RulesUI_ExpectedData/CSTasks.csv"), null)));
+        List<Map<String, String>> expectedTasks = Comparator.getParsedCsvData(new CSVReader(new FileReader(Application.basedir + "/testdata/newstack/RulesEngine/RulesUI_ExpectedData/PlayBookTasks.csv")));
+        List<Map<String, String>> actualTasks = Comparator.getParsedCsvData(new CSVReader(new FileReader(Application.basedir + "/testdata/newstack/RulesEngine/RulesUI_ExpectedData/CSTasks.csv")));
         List<Map<String, String>> differenceData = Comparator.compareListData(expectedTasks, actualTasks);
         Assert.assertEquals(actualTasks.size(), 54, "Total Number of CSTasks are not matching for the cta's created");
         Log.info("Difference is : " + mapper.writeValueAsString(differenceData));

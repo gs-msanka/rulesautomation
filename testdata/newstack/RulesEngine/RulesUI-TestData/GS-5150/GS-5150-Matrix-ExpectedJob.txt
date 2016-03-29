@@ -1,0 +1,39 @@
+{
+  "jobName": "GS-5148.",
+  "jobType": "GS-5148.",
+  "namespacePrefix": "JBCXM",
+  "useNameSpace": true,
+  "extract": {
+    "source": "sfdc",
+    "connection": "conf/application.conf",
+    "table": "JBCXM__UsageData__c",
+    "useRestApi": true,
+    "fields": [
+      "JBCXM__Account__r.Name",
+      "JBCXM__Date__c",
+      "Name",
+      "Active_Users__c",
+      "DB_Size__c",
+      "Emails_Sent_Count__c",
+      "Files_Downloaded__c",
+      "JBCXM__InstanceId__c",
+      "JBCXM__InstanceName__c"
+    ],
+    "output": "/testdata/newstack/RulesEngine/RulesUI-TestData/GS-5150/ActualData.csv"
+  },
+  "transform": {
+    "query": "Select AccountName as \"JBCXM__Account__r.Name\", InstanceId as \"JBCXM__InstanceId__c\", InstanceName as \"JBCXM__InstanceName__c\", CustomDate1 as  \"JBCXM__Date__c\", CustomAggregationName as \"Name\" , CustomNumber1 as \"Active_Users__c\" ,CustomNumber2 as \"DB_Size__c\",CustomNumber3 as \"Emails_Sent_Count__c\", CustomNumber4 as \"Files_Downloaded__c\" from demo",
+    "useQuery": true,
+    "tableInfo": [
+      {
+        "file": "/testdata/newstack/RulesEngine/RulesUI-TestData/GS-5150/Rules_UsageData_Instance-Output.csv",
+        "table": "demo",
+        "joinColumnName": "",
+        "columns": []
+      }
+    ],
+    "join": true,
+    "picklist": false,
+    "output": "/testdata/newstack/RulesEngine/RulesUI-TestData/GS-5150/ExpectedData.csv"
+  }
+}

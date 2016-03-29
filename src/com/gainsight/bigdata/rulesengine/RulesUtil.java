@@ -1000,29 +1000,6 @@
 			return list;
 		}
 
-
-        /****
-         * @param rulePojo - RulesPojo Object
-         * @param objectName - source object name to update
-         * @throws IOException
-         */
-
-        public void UpdateSourceObjectinRule(RulesPojo rulePojo, String objectName) throws IOException {
-            rulePojo.getSetupRule().setSelectObject(objectName);
-            rulePojo.getSetupRule().getSetupData().get(0).setSourceObject(objectName);
-            for(RuleAction ruleAction: rulePojo.getSetupActions()){
-                Log.debug("Rule action before modification: "+new ObjectMapper().writeValueAsString(ruleAction));
-                if(ruleAction.getAction() != null ){
-                    Iterator<JsonNode> fieldMapIterator =  ruleAction.getAction().get("fieldMappings").getElements();
-                    while(fieldMapIterator.hasNext()){
-                        ObjectNode objNode = (ObjectNode)fieldMapIterator.next();
-                        if(!objNode.get("sourceField").toString().contains("CalculatedField"))
-                            objNode.put("sourceObject", objectName);
-                    }
-                }
-            }
-        }
-
 		/**
 		 * @return the ctaTypesMap
 		 */

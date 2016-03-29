@@ -1,0 +1,96 @@
+{
+  "ruleType": "Custom",
+  "ruleName": "Load To UsageAction via Matrix Data - Account Level - Weekly criteria",
+  "ruleDescription": "Load To UsageAction via Matrix Data - Account Level - Weekly criteria Desc",
+  "setupRule": {
+    "dataSource": "Matrix",
+    "selectObject": "Matrix Object",
+    "setupData": [
+      {
+        "sourceObject": "Matrix Object",
+        "showFields": [
+          {
+            "fieldName": "ID",
+            "showAdvancedName": ""
+          },
+          {
+            "fieldName": "CustomDate1",
+            "showAdvancedName": ""
+          },
+          {
+            "fieldName": "CustomAggregationName",
+            "showAdvancedName": ""
+          },
+          {
+            "fieldName": "CustomNumber1",
+            "showAdvancedName": ""
+          },
+          {
+            "fieldName": "CustomNumber2",
+            "showAdvancedName": ""
+          },
+          {
+            "fieldName": "AccountName",
+            "showAdvancedName": ""
+          },
+          {
+            "fieldName": "CustomNumber4",
+            "showAdvancedName": ""
+          },
+          {
+            "fieldName": "CustomNumber3",
+            "showAdvancedName": ""
+          }
+        ]
+      }
+    ],
+    "advancedLogic": "",
+    "timeIdentifier": "CustomDate1"
+  },
+  "setupActions": [
+    {
+      "actionType": "loadToUsage",
+      "action": {
+        "fieldMappings": [
+          {
+            "sourceObject": "Matrix Object",
+            "sourceField": "ID",
+            "destination": "Account"
+          },
+          {
+            "sourceObject": "Matrix Object",
+            "sourceField": "CustomDate1",
+            "destination": "Date"
+          },
+          {
+            "sourceObject": "Matrix Object",
+            "sourceField": "CustomAggregationName ",
+            "destination": "Usage Data Aggregation Level  Name"
+          },
+          {
+            "sourceObject": "Matrix Object",
+            "sourceField": "CustomNumber1",
+            "destination": "Active Users"
+          },
+          {
+            "sourceObject": "Matrix Object",
+            "sourceField": "CustomNumber2",
+            "destination": "DB Size"
+          },
+          {
+            "sourceObject": "Matrix Object",
+            "sourceField": "CustomNumber3",
+            "destination": "Emails Sent Count"
+          },
+          {
+            "sourceObject": "Matrix Object",
+            "sourceField": "CustomNumber4",
+            "destination": "Files Downloaded"
+          }
+        ]
+      },
+      "criterias": []
+    }
+  ],
+  "showScheduler": null
+}

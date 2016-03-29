@@ -41,6 +41,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import static org.testng.Assert.assertTrue;
+
 
 /**
  * Created by msanka on 3/9/2016.
@@ -58,53 +60,60 @@ public class LoadToCustomersTestUsingMatrixData extends BaseTest {
     private Date date = Calendar.getInstance().getTime();
     private TenantDetails tenantDetails = null;
     private TenantManager tenantManager;
-
-    private static final String CUSTOM_OBJECT_CLEANUP = "Delete [SELECT Id FROM RulesSFDCCustom__c];";
     MongoDBDAO mongoDBDAO = null;
-    String collectionName;
+    private String collectionName;
     private static final String CLEAN_UP_FOR_RULES = Application.basedir + "/testdata/newstack/RulesEngine/RulesUI-Scripts/CleanUpForRules.apex";
-    private static final String ACCOUNTS_JOB_FOR_LOAD_TO_CUSTOMERS_ACTION = Application.basedir + "/testdata/newstack/RulesEngine/RulesUI-Jobs/Job_Accounts_For_Load_to_Customers_Action.txt";
     private static final String CLEANUP_SCRIPT = Application.basedir + "/testdata/newstack/RulesEngine/RulesUI-Scripts/Cleanup.apex";
-    private static final String CREATE_ACCOUNTS = Application.basedir + "/testdata/newstack/RulesEngine/RulesUI-Scripts/Create_Accounts.txt";
+    private static final String RULE_SCRIPTS_DIR = Application.basedir + "/testdata/newstack/RulesEngine/RulesUI-Scripts/";
+    private static final String GLOBAL_TEST_DATA_DIR = Application.basedir+ "/testdata/newstack/RulesEngine/RulesUI-TestData/GlobalTestData/";
+    private static final String TEST_DATA_DIR = Application.basedir + "/testdata/newstack/RulesEngine/RulesUI-TestData/";
+    private static final String RULE_JOBS = Application.basedir+ "/testdata/newstack/RulesEngine/RulesUI-Jobs/";
 
 
 
+    /***
+     * This function does initial setup required to execute the test cases. Typical setup includes these items:
+     * login To Salesforce, Creation and clean up activities on sfdc objects,
+     * init the tenant info and creating database collections required(if any).
+     * @param dbStoreType defines database type of collection. Valid values are Mongo, Postgres and Redshift.
+     * @throws Exception
+     */
     @BeforeClass
     @Parameters("dbStoreType")
-    public void setup(@Optional("Postgres") String dbStoreType) throws Exception {
+    public void setup(@Optional("") String dbStoreType) throws Exception {
         basepage.login();
-        sfdc.connect();
         nsTestBase.init();
         tenantManager = new TenantManager();
-        tenantDetails = tenantManager.getTenantDetail(null, tenantManager.getTenantDetail(sfdc.fetchSFDCinfo().getOrg(), null).getTenantId());
-        if (StringUtils.isNotBlank(dbStoreType) && !dbStoreType.equalsIgnoreCase("Redshift")) {
-            mongoDBDAO = new MongoDBDAO(nsConfig.getGlobalDBHost(), Integer.valueOf(nsConfig.getGlobalDBPort()), nsConfig.getGlobalDBUserName(), nsConfig.getGlobalDBPassword(), nsConfig.getGlobalDBDatabase());
-            TenantDetails.DBDetail schemaDBDetails = null;
-            schemaDBDetails = mongoDBDAO.getSchemaDBDetail(tenantDetails.getTenantId());
-            if (schemaDBDetails == null || schemaDBDetails.getDbServerDetails() == null || schemaDBDetails.getDbServerDetails().get(0) == null) {
-                throw new RuntimeException("DB details are not correct, please check it.");
+        String tenantId = tenantManager.getTenantDetail(sfdc.fetchSFDCinfo().getOrg(), null).getTenantId();
+        tenantDetails = tenantManager.getTenantDetail(null, tenantId);
+        if (StringUtils.isNotBlank(dbStoreType) && dbStoreType.equalsIgnoreCase("Mongo")) {
+            if(tenantDetails.isRedshiftEnabled()){
+                mongoDBDAO = MongoDBDAO.getGlobalMongoDBDAOInstance();
+                Log.debug("Tenant Id:"+ tenantId);
+                assertTrue(mongoDBDAO.disableRedshift(tenantId), "Failed updating dataStoreType to Mongo.");
             }
-            Log.info("Connecting to schema db....");
-            mongoDBDAO = new MongoDBDAO(schemaDBDetails.getDbServerDetails().get(0).getHost().split(":")[0], 27017, schemaDBDetails.getDbServerDetails().get(0).getUserName(), schemaDBDetails.getDbServerDetails().get(0).getPassword(), schemaDBDetails.getDbName());
+        }
+        else if(StringUtils.isNotBlank(dbStoreType) && dbStoreType.equalsIgnoreCase("Redshift")){
+            if(!tenantDetails.isRedshiftEnabled()) {
+                assertTrue(tenantManager.enabledRedShiftWithDBDetails(tenantDetails), "Failed updating dataStoreType to Redshift");
+            }
         }
         rulesManagerPageUrl = visualForcePageUrl + "Rulesmanager";
         rulesManagerPage = new RulesManagerPage();
         gsDataImpl = new GSDataImpl(NSTestBase.header);
         sfdc.runApexCode(getNameSpaceResolvedFileContents(CLEAN_UP_FOR_RULES));
-        sfdc.runApexCode(getNameSpaceResolvedFileContents(Application.basedir + "/testdata/newstack/RulesEngine/RulesUI-Scripts/Create_Accounts_Customers.txt"));
+        sfdc.runApexCode(getNameSpaceResolvedFileContents(RULE_SCRIPTS_DIR + "Create_Accounts_Customers.txt"));
         // Loading testdata at class level in setup
         boolean isLoadTestDataGlobally = true;
         if (isLoadTestDataGlobally) {
-            CollectionInfo collectionInfo = mapper.readValue((new FileReader(Application.basedir+ "/testdata/newstack/RulesEngine/RulesUI-TestData/GlobalTestData/CollectionSchemaWithMongoCalculatedMeasures.json")),CollectionInfo.class);
+            CollectionInfo collectionInfo = mapper.readValue((new FileReader(GLOBAL_TEST_DATA_DIR + "CollectionSchemaWithMongoCalculatedMeasures.json")),CollectionInfo.class);
             collectionInfo.getCollectionDetails().setCollectionName(dbStoreType + date.getTime());
             String collectionId = gsDataImpl.createCustomObject(collectionInfo);
             Assert.assertNotNull(collectionId, "Collection ID should not be null.");
-            if (StringUtils.isNotBlank(dbStoreType) && !dbStoreType.equalsIgnoreCase("Redshift")) {
-                Assert.assertTrue(mongoDBDAO.updateCollectionDBStoreType(tenantDetails.getTenantId(), collectionId, DBStoreType.valueOf(StringUtils.upperCase(dbStoreType))), "Failed while updating the DB store type to "+dbStoreType);
-            }            CollectionInfo actualCollectionInfo = gsDataImpl.getCollectionMaster(collectionId);
+            CollectionInfo actualCollectionInfo = gsDataImpl.getCollectionMaster(collectionId);
             collectionName = actualCollectionInfo.getCollectionDetails().getCollectionName();
-            dataETL.execute(mapper.readValue(resolveNameSpace(Application.basedir+ "/testdata/newstack/RulesEngine/RulesUI-TestData/GlobalTestData/DataloadJob5.txt"),JobInfo.class));
-            JobInfo loadTransform = mapper.readValue((new FileReader(Application.basedir+ "/testdata/newstack/RulesEngine/RulesUI-TestData/GlobalTestData/DataloadJob.txt")), JobInfo.class);
+            dataETL.execute(mapper.readValue(resolveNameSpace(GLOBAL_TEST_DATA_DIR + "DataloadJob5.txt"),JobInfo.class));
+            JobInfo loadTransform = mapper.readValue((new FileReader(GLOBAL_TEST_DATA_DIR + "DataloadJob.txt")), JobInfo.class);
             File dataFile = FileProcessor.getDateProcessedFile(loadTransform, date);
             DataLoadMetadata metadata = CollectionUtil.getDBDataLoadMetaData(actualCollectionInfo, new String[] { "ID", "AccountName", "CustomDate1", "CustomNumber1", "CustomNumber2", "CustomNumberWithDecimals1", "CustomNumberWithDecimals2"},	DataLoadOperationType.INSERT);
             Assert.assertTrue(gsDataImpl.isValidDataProvided(mapper.writeValueAsString(metadata), dataFile), "Data is not valid");
@@ -116,26 +125,23 @@ public class LoadToCustomersTestUsingMatrixData extends BaseTest {
     @BeforeMethod
     public void cleanup() {
         sfdc.runApexCode(getNameSpaceResolvedFileContents(CLEANUP_SCRIPT));
-
-
     }
 
     @TestInfo(testCaseIds = {"GS-5134", "GS-3149", "GS-23045", "GS-5152"})
     @Test()
     public void testLoadToCustomers() throws Exception {
-        RulesPojo rulesPojo = mapper.readValue(new File(Application.basedir + "/testdata/newstack/RulesEngine/RulesUI-TestData/GS-3149/GS-3149-input-matrix.json"), RulesPojo.class);
-        rulesPojo.getSetupRule().setJoinWithCollection(collectionName);
-        rulesUtil.UpdateSourceObjectinRule(rulesPojo, collectionName);
+        RulesPojo rulesPojo = mapper.readValue(new File(TEST_DATA_DIR + "GS-3149/GS-3149-input-matrix.json"), RulesPojo.class);
+        rulesEngineUtil.updateSourceObjectInRule(rulesPojo, collectionName);
         Log.debug("updated input testdata/pojo is " +mapper.writeValueAsString(rulesPojo));
         rulesManagerPage.openRulesManagerPage(rulesManagerPageUrl);
         rulesManagerPage.clickOnAddRule();
         rulesEngineUtil.createRuleFromUi(rulesPojo);
-        Assert.assertTrue(rulesUtil.runRule(rulesPojo.getRuleName()), "Check whether Rule ran successfully or not !");
 
-        JobInfo jobInfo = mapper.readValue(resolveNameSpace(Application.basedir+ "/testdata/newstack/RulesEngine/RulesUI-Jobs/GS-3149-Mongo.txt"),JobInfo.class);
+        Assert.assertTrue(rulesUtil.runRule(rulesPojo.getRuleName()), "Check whether Rule ran successfully or not !");
+        JobInfo jobInfo = mapper.readValue(resolveNameSpace(RULE_JOBS + "GS-3149-Mongo.txt"),JobInfo.class);
         dataETL.execute(jobInfo);
-        List<Map<String, String>> expectedData = Comparator.getParsedCsvData(new CSVReader(FileUtil.resolveNameSpace(new File(Application.basedir+ "/testdata/newstack/RulesEngine/RulesUI-TestData/GS-3149/GS-3149-Matrix-ExpectedData.csv"), null)));
-        List<Map<String, String>> actualData = Comparator.getParsedCsvData(new CSVReader(FileUtil.resolveNameSpace(new File(Application.basedir+ "/testdata/newstack/RulesEngine/RulesUI-TestData/GS-3149/GS-3149-ActualData.csv"), null)));
+        List<Map<String, String>> expectedData = Comparator.getParsedCsvData(new CSVReader(new FileReader(TEST_DATA_DIR + "GS-3149/GS-3149-Matrix-ExpectedData.csv")));
+        List<Map<String, String>> actualData = Comparator.getParsedCsvData(new CSVReader(new FileReader(TEST_DATA_DIR + "GS-3149/GS-3149-ActualData.csv")));
         List<Map<String, String>> differenceData = Comparator.compareListData(expectedData, actualData);
         Log.info("Difference is : " + mapper.writeValueAsString(differenceData));
         Assert.assertEquals(differenceData.size(), 0, "Check the Diff above which is not matching between expected testdata from csv and actual data from csv");
@@ -145,22 +151,27 @@ public class LoadToCustomersTestUsingMatrixData extends BaseTest {
     @TestInfo(testCaseIds = { "GS-5135" })
     @Test()
     public void testLoadToCustomers2() throws Exception {
-        RulesPojo rulesPojo = mapper.readValue(new File(Application.basedir + "/testdata/newstack/RulesEngine/RulesUI-TestData/GS-5135/GS-5135-input-matrix.json"), RulesPojo.class);
-        rulesPojo.getSetupRule().setSelectObject(collectionName);
-        rulesPojo.getSetupRule().setJoinWithCollection(collectionName);
-        rulesUtil.UpdateSourceObjectinRule(rulesPojo, collectionName);
+        RulesPojo rulesPojo = mapper.readValue(new File(TEST_DATA_DIR + "GS-5135/GS-5135-input-matrix.json"), RulesPojo.class);
+        rulesEngineUtil.updateSourceObjectInRule(rulesPojo, collectionName);
         Log.debug("updated input testdata/pojo is " +mapper.writeValueAsString(rulesPojo));
         rulesManagerPage.openRulesManagerPage(rulesManagerPageUrl);
         rulesManagerPage.clickOnAddRule();
         rulesEngineUtil.createRuleFromUi(rulesPojo);
-        Assert.assertTrue(rulesUtil.runRule(rulesPojo.getRuleName()), "Check whether Rule ran successfully or not !");
 
-        JobInfo jobInfo = mapper.readValue(resolveNameSpace(Application.basedir+ "/testdata/newstack/RulesEngine/RulesUI-Jobs/GS-5135-Matrix.txt"),JobInfo.class);
+        Assert.assertTrue(rulesUtil.runRule(rulesPojo.getRuleName()), "Check whether Rule ran successfully or not !");
+        JobInfo jobInfo = mapper.readValue(resolveNameSpace(RULE_JOBS + "GS-5135-Matrix.txt"),JobInfo.class);
         dataETL.execute(jobInfo);
-        List<Map<String, String>> expectedData = Comparator.getParsedCsvData(new CSVReader(FileUtil.resolveNameSpace(new File(Application.basedir+ "/testdata/newstack/RulesEngine/RulesUI-TestData/GS-5135/GS-5135-Matrix-ExpectedData.csv"), null)));
-        List<Map<String, String>> actualData = Comparator.getParsedCsvData(new CSVReader(FileUtil.resolveNameSpace(new File(Application.basedir+ "/testdata/newstack/RulesEngine/RulesUI-TestData/GS-5135/GS-5135-ActualData.csv"), null)));
+        List<Map<String, String>> expectedData = Comparator.getParsedCsvData(new CSVReader(new FileReader(TEST_DATA_DIR + "GS-5135/GS-5135-Matrix-ExpectedData.csv")));
+        List<Map<String, String>> actualData = Comparator.getParsedCsvData(new CSVReader(new FileReader(TEST_DATA_DIR + "GS-5135/GS-5135-ActualData.csv")));
         List<Map<String, String>> differenceData = Comparator.compareListData(expectedData, actualData);
         Log.info("Difference is : " + mapper.writeValueAsString(differenceData));
         Assert.assertEquals(differenceData.size(), 0, "Check the Diff above which is not matching between expected testdata from csv and actual data from csv");
+    }
+
+    @AfterClass
+    public void tearDown() {
+        if (mongoDBDAO != null) {
+            mongoDBDAO.mongoUtil.closeConnection();
+        }
     }
 }

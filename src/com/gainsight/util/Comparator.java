@@ -1,6 +1,7 @@
 package com.gainsight.util;
 
 import au.com.bytecode.opencsv.CSVReader;
+import com.gainsight.sfdc.util.FileUtil;
 import com.gainsight.testdriver.Log;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -76,7 +77,8 @@ public class Comparator {
         }
         String[] headerArray = parsedCsvReader.get(0);
         for (int i = 0; i < headerArray.length; i++) {
-            headerMap.put(headerArray[i], i);
+            String headerName = FileUtil.resolveNameSpace(headerArray[i]);
+            headerMap.put(headerName, i);
         }
 
 
