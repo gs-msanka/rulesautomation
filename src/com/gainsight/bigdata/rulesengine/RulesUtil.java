@@ -33,7 +33,7 @@
 	import com.gainsight.utils.wait.ExpectedCommonWaitCondition;
 	import com.sforce.soap.partner.sobject.SObject;
 
-    import org.codehaus.jackson.node.ObjectNode;
+
     import org.codehaus.jackson.type.TypeReference;
 	import org.testng.Assert;
 
