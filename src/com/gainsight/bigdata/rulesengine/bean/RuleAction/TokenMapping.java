@@ -15,6 +15,11 @@ import java.util.List;
 public class TokenMapping {
 
     private List<Token> tokens;
+    private boolean notNullable;
+
+    public void setNotNullable(boolean notNullable) {
+        this.notNullable = notNullable;
+    }
 
     public List<Token> getTokens() {
         return tokens;
