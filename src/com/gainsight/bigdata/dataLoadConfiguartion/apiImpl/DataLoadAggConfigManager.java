@@ -49,6 +49,7 @@ public class DataLoadAggConfigManager {
         NsResponseObj nsResponseObj = null;
         try {
             ResponseObj responseObj = wa.doGet(DATA_API_GET, header.getAllHeaders());
+            Log.info("ResponseObject :"+responseObj.toString());
             if (responseObj.getStatusCode() == HttpStatus.SC_OK) {
                 nsResponseObj = mapper.readValue(responseObj.getContent(), NsResponseObj.class);
             } else {
