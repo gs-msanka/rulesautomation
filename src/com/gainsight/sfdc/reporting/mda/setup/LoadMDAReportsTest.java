@@ -133,7 +133,7 @@ public class LoadMDAReportsTest extends NSTestBase {
                         tenantManager.getTenantDetail(sfinfo.getOrg(), null).getTenantId(), "reportmaster", "MONGO_");
             }
             if(tenantDetails.isRedshiftEnabled()) {
-                Assert.assertTrue(tenantManager.disableRedShift(tenantDetails));
+                Assert.assertTrue(mongoDBDAO.disableRedshift(tenantDetails.getTenantId()));
             }
         } else if(dbStoreType !=null && dbStoreType.equalsIgnoreCase("redshift")) {
             String dbcollName = mongoDBDAO.getDbCollectionName(tenantDetails.getTenantId(),"GIRI_GS_AUTOREDSHIFT");
