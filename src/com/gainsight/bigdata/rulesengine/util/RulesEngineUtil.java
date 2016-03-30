@@ -19,15 +19,13 @@ import org.codehaus.jackson.JsonNode;
 import org.codehaus.jackson.JsonParseException;
 import org.codehaus.jackson.map.JsonMappingException;
 import org.codehaus.jackson.map.ObjectMapper;
+import org.codehaus.jackson.node.ObjectNode;
 
 import java.io.File;
 import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
-import java.util.TimeZone;
+import java.util.*;
 
 /**
  * Created by vmenon on 9/15/2015.
@@ -214,7 +212,7 @@ public class RulesEngineUtil{
 	}
 
 	/**
-	 * @param number of days
+	 * @param amount of days
 	 * @return returns numbers of days based on weekday
 	 */
 	public static int getcountOfDaysIfCtaCreatedOnWeekend(int  amount){
@@ -262,4 +260,29 @@ public class RulesEngineUtil{
 		setupRulePage.selectDataSource(rulesPojo.getSetupRule().getDataSource());
 		setupRulePage.selectSourceObject(rulesPojo.getSetupRule().getSelectObject());
 	}
+
+	/****
+     * This method takes sourceObject name as argument and updates it in the rule.
+	 * @param rulePojo - RulesPojo Object
+	 * @param objectName - source object name to update
+	 * @throws IOException
+	 */
+
+	public void updateSourceObjectInRule(RulesPojo rulePojo, String objectName) throws IOException {
+		rulePojo.getSetupRule().setSelectObject(objectName);
+		rulePojo.getSetupRule().getSetupData().get(0).setSourceObject(objectName);
+		for(RuleAction ruleAction: rulePojo.getSetupActions()){
+			Log.debug("Rule action before modification: "+ new ObjectMapper().writeValueAsString(ruleAction));
+			if(ruleAction.getAction() != null ){
+				Iterator<JsonNode> fieldMapIterator =  ruleAction.getAction().get("fieldMappings").getElements();
+				while(fieldMapIterator.hasNext()){
+					ObjectNode objNode = (ObjectNode)fieldMapIterator.next();
+                    if(objNode != null && !objNode.get("sourceField").asText().contains("CalculatedField")){
+                        objNode.put("sourceObject", objectName);
+                    }
+				}
+			}
+		}
+	}
+
 }

@@ -1,0 +1,80 @@
+{
+  "jobName": "Update Account names and ID",
+  "jobType": "AccountUpsert",
+  "namespacePrefix": "JBCXM",
+  "useNameSpace": false,
+  "extract": {
+    "useRestApi": true,
+    "source": "sfdc",
+    "connection": "conf/application.conf",
+    "table": "Account",
+    "fields": [
+      "Id",
+      "Name"
+    ],
+    "output": "/resources/datagen/process/RulesUIAccountsss.csv"
+  },
+  "transform": {
+    "query": "",
+    "useQuery": false,
+    "tableInfo": [
+      {
+        "file": "/resources/datagen/process/RulesUIAccountsss.csv",
+        "table": "account",
+        "joinColumnName": "Name",
+        "columns": [
+          {
+            "name": "ID",
+            "alias": "ID"
+          }
+        ]
+      },
+      {
+        "file": "/testdata/newstack/RulesEngine/RulesUI-TestData/GlobalTestData/Data_Into_Custom_Object9.csv",
+        "table": "accounts",
+        "joinColumnName": "AccountName",
+        "columns": [
+          {
+            "name": "AccountName",
+            "alias": "AccountName"
+          },
+          {
+            "name": "CustomDate1",
+            "alias": "CustomDate1"
+          },
+          {
+            "name": "CustomNumber1",
+            "alias": "CustomNumber1"
+          },
+          {
+            "name": "CustomNumber2",
+            "alias": "CustomNumber2"
+          },
+          {
+            "name": "CustomNumber3",
+            "alias": "CustomNumber3"
+          },
+          {
+            "name": "CustomNumber4",
+            "alias": "CustomNumber4"
+          },
+          {
+            "name": "CustomAggregationName",
+            "alias": "CustomAggregationName"
+          },
+          {
+            "name": "InstanceId",
+            "alias": "InstanceId"
+          },
+          {
+             "name": "InstanceName",
+             "alias": "InstanceName"
+          }
+        ]
+      }
+    ],
+    "join": true,
+    "picklist": false,
+    "output": "/testdata/newstack/RulesEngine/RulesUI-TestData/GS-5150/Rules_Matrix_UsageData_Instance.csv"
+  }
+}

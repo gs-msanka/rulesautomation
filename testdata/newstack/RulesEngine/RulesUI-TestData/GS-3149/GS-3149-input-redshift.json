@@ -1,0 +1,101 @@
+{
+  "ruleType": "Custom",
+  "ruleName": "GS 3149 - Load To Customers Using Redshift Data Source",
+  "ruleFor": "Account",
+  "relationshipType": null,
+  "ruleDescription": "GS 3149 - Load To Customers Using Redshift Data Source",
+  "setupRule": {
+    "dataSource": "Matrix",
+    "selectObject": "Object",
+    "setupData": [{
+      "sourceObject": "Object",
+      "showFields": [
+        {
+          "fieldName": "T2_ID",
+          "showAdvancedName": ""
+        },
+
+        {
+          "fieldName": "T2_CustomNumberWithDecimals1",
+          "showAdvancedName": ""
+        },
+        {
+          "fieldName": "T2_CustomNumber1",
+          "showAdvancedName": ""
+        },
+        {
+          "fieldName": "lookup_T1-SUBSTRACT",
+          "showAdvancedName": ""
+        },
+        {
+          "fieldName": "lookup_T1-MULTIPLE",
+          "showAdvancedName": ""
+        },
+        {
+          "fieldName": "T2_AccountName",
+          "showAdvancedName": ""
+        },
+        {
+          "fieldName": "T2_CustomDate1",
+          "showAdvancedName": ""
+        }
+      ]
+    }],
+    "calculatedFields": [
+      {
+        "fieldName": "CalculatedField",
+        "calculationType": "Comparison",
+        "calculateDifferenceType": "Percentage",
+        "fieldAConfig": {
+          "calculatedFieldType": "Show field",
+          "showField": "T1-SUBSTRACT"
+        },
+        "fieldBConfig": {
+          "calculatedFieldType": "Show field",
+          "showField": "T1-MULTIPLE"
+        }
+      }],
+    "timeIdentifier": "T2_CustomDate1",
+    "joinOnCollection": "",
+    "joinWithCollection": "",
+    "lookUpField": true,
+    "joinOnCollectionField": "T2_ID"
+
+  },
+  "setupActions": [{
+    "actionType": "loadToCustomers",
+    "upsert": false,
+    "action": {
+      "fieldMappings": [{
+        "sourceObject": "Object",
+        "sourceField": "T2_ID",
+        "destination": "Account",
+        "isCustom": "false"
+      },
+        {
+          "sourceObject": "Object",
+          "sourceField": "T2_CustomNumberWithDecimals1",
+          "destination": "One-time Rev",
+          "pickList": false,
+          "isCustom": "false"
+        },
+        {
+          "sourceObject": "Object",
+          "sourceField": "T2_CustomNumber1",
+          "destination": "ASV",
+          "pickList": false,
+          "isCustom": "false"
+        },
+        {
+          "sourceObject": "",
+          "sourceField": "CalculatedField",
+          "destination": "Users",
+          "pickList": false,
+          "isCustom": "false"
+        }
+      ]
+    },
+    "criterias": []
+  }],
+  "showScheduler": null
+}

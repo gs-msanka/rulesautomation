@@ -1,0 +1,57 @@
+{
+  "ruleType": "Custom",
+  "ruleName": "GS 5135 - Upsert Customer Info Using MDA Subject Area",
+  "ruleFor": "Account",
+  "relationshipType": null,
+  "ruleDescription": "GS 5135 - Upsert Customer Info Using MDA Subject Area",
+  "setupRule": {
+    "dataSource": "Matrix",
+    "selectObject": "Object",
+    "setupData": [{
+      "sourceObject": "Object",
+      "showFields": [
+        {
+        "fieldName": "T2_ID",
+        "showAdvancedName": ""
+        },
+        {
+          "fieldName": "T2_CustomNumber1",
+          "showAdvancedName": ""
+        },
+        {
+          "fieldName": "T2_CustomDate1",
+          "showAdvancedName": ""
+        }
+      ]
+    }],
+    "calculatedFields": [],
+    "timeIdentifier": "CustomDate1",
+    "joinOnCollection": "",
+    "joinWithCollection": "",
+    "lookUpField": true,
+    "joinOnCollectionField": "T2_ID"
+  },
+  "setupActions": [{
+    "actionType": "loadToCustomers",
+    "upsert": true,
+    "action": {
+      "fieldMappings": [
+        {
+          "sourceObject": "Object",
+          "sourceField": "T2_CustomDate1",
+          "destination": "Orig. Contr. Date",
+          "pickList": false,
+          "isCustom": "false"
+        },
+        {
+          "sourceObject": "Object",
+          "sourceField": "T2_ID",
+          "destination": "Account",
+          "isCustom": "false"
+        }
+      ]
+    },
+    "criterias": []
+  }],
+  "showScheduler": null
+}

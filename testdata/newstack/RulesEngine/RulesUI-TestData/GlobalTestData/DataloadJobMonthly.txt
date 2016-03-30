@@ -1,0 +1,13 @@
+{
+  "jobName": "Load Data into custom object",
+  "jobType": "Load Data into custom object",
+  "namespacePrefix": "JBCXM",
+  "useNameSpace": false,
+    "preprocess": {
+      "inputFile": "/testdata/newstack/RulesEngine/RulesUI-TestData/GS-5150/Rules_Matrix_UsageData_Instance.csv",
+      "monthly": true,
+      "weekly": "",
+      "fieldName": "CustomDate1",
+      "outputFile": "/testdata/newstack/RulesEngine/RulesUI-TestData/GS-5150/Rules_UsageData_Instance-Output.csv"
+    }
+}

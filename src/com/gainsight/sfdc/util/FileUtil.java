@@ -17,6 +17,17 @@ import org.apache.commons.io.FilenameUtils;
  */
 public class FileUtil {
 
+
+    private static String nameSpace = null;
+
+    /***
+     * Update this field nameSpace to respective value to resolve GainSight headers.     *
+     * @param nameSpace
+     */
+    public static void setNameSpace(String nameSpace){
+        nameSpace = nameSpace;
+    }
+
     public static String getFileContents(String fileName) {
         String code = "";
         try {
@@ -73,6 +84,10 @@ public class FileUtil {
             Log.error(e.getLocalizedMessage());
             throw new RuntimeException("IO Exception on : " +file.getName());
         }
+    }
+
+    public static String resolveNameSpace(String str){
+        return resolveNameSpace(str, nameSpace);
     }
 
     public static String resolveNameSpace(String str, String nameSpace) {

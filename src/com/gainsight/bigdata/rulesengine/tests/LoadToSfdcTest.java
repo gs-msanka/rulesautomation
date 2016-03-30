@@ -150,8 +150,8 @@ public class LoadToSfdcTest extends BaseTest {
 		//Asserting expected data and actual data
 		JobInfo jobInfo = mapper.readValue(resolveNameSpace(Application.basedir + "/testdata/newstack/RulesEngine/RulesUI-TestData/GS-3963/GS-3963-ExpectedJob.txt"),JobInfo.class);
 		dataETL.execute(jobInfo);		
-		List<Map<String, String>> expectedData = Comparator.getParsedCsvData(new CSVReader(new FileReader(Application.basedir+ "/testdata/newstack/RulesEngine/RulesUI-TestData/GS-3963/GS3963-ExpectedData2.csv")));
-		List<Map<String, String>> actualData = Comparator.getParsedCsvData(new CSVReader(new FileReader(Application.basedir+ "/testdata/newstack/RulesEngine/RulesUI-TestData/GS-3963/GS3963-ActualData.csv")));
+		List<Map<String, String>> expectedData = Comparator.getParsedCsvDataWithHeaderNamespaceResolved(Application.basedir+ "/testdata/newstack/RulesEngine/RulesUI-TestData/GS-3963/GS3963-ExpectedData2.csv");
+		List<Map<String, String>> actualData = Comparator.getParsedCsvDataWithHeaderNamespaceResolved(Application.basedir+ "/testdata/newstack/RulesEngine/RulesUI-TestData/GS-3963/GS3963-ActualData.csv");
 		List<Map<String, String>> differenceData = Comparator.compareListData(expectedData, actualData);
 		Log.info("Actual : " + mapper.writeValueAsString(actualData));
 		Log.info("Expected : " + mapper.writeValueAsString(expectedData));
@@ -194,8 +194,8 @@ public class LoadToSfdcTest extends BaseTest {
 		
 		//Asserting expected data and actual data
 		dataETL.execute(mapper.readValue(resolveNameSpace(Application.basedir + "/testdata/newstack/RulesEngine/RulesUI-TestData/GS-3965/GS-3965-ExpectedJob.txt"),JobInfo.class));		
-		List<Map<String, String>> expectedData1 = Comparator.getParsedCsvData(new CSVReader(new FileReader(Application.basedir+ "/testdata/newstack/RulesEngine/RulesUI-TestData/GS-3965/GS3965-ExpectedData2.csv")));
-		List<Map<String, String>> actualData1 = Comparator.getParsedCsvData(new CSVReader(new FileReader(Application.basedir+ "/testdata/newstack/RulesEngine/RulesUI-TestData/GS-3965/GS3965-ActualData.csv")));
+		List<Map<String, String>> expectedData1 = Comparator.getParsedCsvDataWithHeaderNamespaceResolved(Application.basedir+ "/testdata/newstack/RulesEngine/RulesUI-TestData/GS-3965/GS3965-ExpectedData2.csv");
+		List<Map<String, String>> actualData1 = Comparator.getParsedCsvDataWithHeaderNamespaceResolved(Application.basedir+ "/testdata/newstack/RulesEngine/RulesUI-TestData/GS-3965/GS3965-ActualData.csv");
 		List<Map<String, String>> differenceData1 = Comparator.compareListData(expectedData1, actualData1);
 		Log.info("Actual : " + mapper.writeValueAsString(actualData1));
 		Log.info("Expected : " + mapper.writeValueAsString(expectedData1));
@@ -242,8 +242,8 @@ public class LoadToSfdcTest extends BaseTest {
 		//Asserting expected data and actual data
 		JobInfo jobInfo = mapper.readValue(resolveNameSpace(Application.basedir + "/testdata/newstack/RulesEngine/RulesUI-TestData/GS-3963/GS-3963-ExpectedJob.txt"),JobInfo.class);
 		dataETL.execute(jobInfo);		
-		List<Map<String, String>> expectedData = Comparator.getParsedCsvData(new CSVReader(new FileReader(Application.basedir+ "/testdata/newstack/RulesEngine/RulesUI-TestData/GS-3963/GS3963-ExpectedData2.csv")));
-		List<Map<String, String>> actualData = Comparator.getParsedCsvData(new CSVReader(new FileReader(Application.basedir+ "/testdata/newstack/RulesEngine/RulesUI-TestData/GS-3963/GS3963-ActualData.csv")));
+		List<Map<String, String>> expectedData = Comparator.getParsedCsvDataWithHeaderNamespaceResolved(Application.basedir+ "/testdata/newstack/RulesEngine/RulesUI-TestData/GS-3963/GS3963-ExpectedData2.csv");
+		List<Map<String, String>> actualData = Comparator.getParsedCsvDataWithHeaderNamespaceResolved(Application.basedir+ "/testdata/newstack/RulesEngine/RulesUI-TestData/GS-3963/GS3963-ActualData.csv");
 		List<Map<String, String>> differenceData = Comparator.compareListData(expectedData, actualData);
 		Log.info("Actual : " + mapper.writeValueAsString(actualData));
 		Log.info("Expected : " + mapper.writeValueAsString(expectedData));
@@ -287,8 +287,8 @@ public class LoadToSfdcTest extends BaseTest {
 		
 		//Asserting expected data and actual data
 		dataETL.execute(mapper.readValue(resolveNameSpace(Application.basedir + "/testdata/newstack/RulesEngine/RulesUI-TestData/GS-3984/GS-3984-ExpectedJob.txt"),JobInfo.class));		
-		List<Map<String, String>> expectedData1 = Comparator.getParsedCsvData(new CSVReader(new FileReader(Application.basedir+ "/testdata/newstack/RulesEngine/RulesUI-TestData/GS-3984/GS3984-ExpectedData2.csv")));
-		List<Map<String, String>> actualData1 = Comparator.getParsedCsvData(new CSVReader(new FileReader(Application.basedir+ "/testdata/newstack/RulesEngine/RulesUI-TestData/GS-3984/GS3984-ActualData.csv")));
+		List<Map<String, String>> expectedData1 = Comparator.getParsedCsvDataWithHeaderNamespaceResolved(Application.basedir+ "/testdata/newstack/RulesEngine/RulesUI-TestData/GS-3984/GS3984-ExpectedData2.csv");
+		List<Map<String, String>> actualData1 = Comparator.getParsedCsvDataWithHeaderNamespaceResolved(Application.basedir+ "/testdata/newstack/RulesEngine/RulesUI-TestData/GS-3984/GS3984-ActualData.csv");
 		List<Map<String, String>> differenceData1 = Comparator.compareListData(expectedData1, actualData1);
 		Log.info("Actual : " + mapper.writeValueAsString(actualData1));
 		Log.info("Expected : " + mapper.writeValueAsString(expectedData1));
@@ -312,8 +312,8 @@ public class LoadToSfdcTest extends BaseTest {
 		
 		//Asserting expected data and actual data
 		dataETL.execute(mapper.readValue(resolveNameSpace(Application.basedir + "/testdata/newstack/RulesEngine/RulesUI-TestData/GS-3966/GS-3966-ActualJob.txt"),JobInfo.class));		
-		List<Map<String, String>> expectedData = Comparator.getParsedCsvData(new CSVReader(new FileReader(Application.basedir+ "/testdata/newstack/RulesEngine/RulesUI-TestData/GS-3966/ExpectedData.csv")));
-		List<Map<String, String>> actualData = Comparator.getParsedCsvData(new CSVReader(new FileReader(Application.basedir+ "/testdata/newstack/RulesEngine/RulesUI-TestData/GS-3966/GS3966-ActualData.csv")));
+		List<Map<String, String>> expectedData = Comparator.getParsedCsvDataWithHeaderNamespaceResolved(Application.basedir+ "/testdata/newstack/RulesEngine/RulesUI-TestData/GS-3966/ExpectedData.csv");
+		List<Map<String, String>> actualData = Comparator.getParsedCsvDataWithHeaderNamespaceResolved(Application.basedir+ "/testdata/newstack/RulesEngine/RulesUI-TestData/GS-3966/GS3966-ActualData.csv");
 		List<Map<String, String>> differenceData = Comparator.compareListData(expectedData, actualData);
 		Log.info("Actual : " + mapper.writeValueAsString(actualData));
 		Log.info("Expected : " + mapper.writeValueAsString(expectedData));

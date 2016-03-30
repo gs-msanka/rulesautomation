@@ -1,0 +1,97 @@
+{
+  "ruleType": "Custom",
+  "ruleName": "GS 3149 - Load To Customers Using Matrix Data(Postgres/Mongo/Redshift)",
+  "ruleFor": "Account",
+  "relationshipType": null,
+  "ruleDescription": "GS 3149 - Load To Customers Using Matrix Data(Postgres/Mongo/Redshift)",
+  "setupRule": {
+    "dataSource": "Matrix",
+    "selectObject": "Object",
+    "setupData": [{
+      "sourceObject": "Object",
+      "showFields": [{
+        "fieldName": "ID",
+        "showAdvancedName": ""
+      },
+        {
+          "fieldName": "CustomNumber1",
+          "showAdvancedName": ""
+        },
+        {
+          "fieldName": "CustomNumber2",
+          "showAdvancedName": ""
+        },
+        {
+          "fieldName": "AccountName",
+          "showAdvancedName": ""
+        },
+        {
+          "fieldName": "CustomDate1",
+          "showAdvancedName": ""
+        }
+      ]
+    }],
+    "calculatedFields": [
+      {
+        "fieldName": "CalculatedField",
+        "calculationType": "Comparison",
+        "calculateDifferenceType": "Percentage",
+        "fieldAConfig": {
+          "calculatedFieldType": "Aggregation",
+          "showField": "",
+          "aggregation": {
+            "aggregationCalculation": "SUM",
+            "sourceField":"CustomNumber2",
+            "periodType":"Past",
+            "noOfPeriods":"4",
+            "granularity":"Weeks"
+          }
+        },
+        "fieldBConfig": {
+          "calculatedFieldType": "Show field",
+          "showField": "CustomNumber1"
+        }
+      }],
+    "timeIdentifier": "CustomDate1",
+    "joinOnCollection": "",
+    "joinWithCollection": "",
+    "joinOnCollectionField": null,
+    "lookUpField": false
+  },
+  "setupActions": [{
+    "actionType": "loadToCustomers",
+    "upsert": false,
+    "action": {
+      "fieldMappings": [{
+        "sourceObject": "Object",
+        "sourceField": "ID",
+        "destination": "Account",
+        "isCustom": "false"
+      },
+        {
+          "sourceObject": "Object",
+          "sourceField": "CustomNumber2",
+          "destination": "One-time Rev",
+          "pickList": false,
+          "isCustom": "false"
+        },
+        {
+          "sourceObject": "Object",
+          "sourceField": "CustomNumber1",
+          "destination": "ASV",
+          "pickList": false,
+          "isCustom": "false"
+        },
+        {
+          "sourceObject": "",
+          "sourceField": "CalculatedField",
+          "destination": "Users",
+          "pickList": false,
+          "isCustom": "false"
+        }
+      ]
+    },
+    "criterias": []
+  }],
+  "showScheduler": null
+}

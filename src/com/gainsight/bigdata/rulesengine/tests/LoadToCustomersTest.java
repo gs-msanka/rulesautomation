@@ -17,7 +17,6 @@ import com.gainsight.bigdata.rulesengine.pages.RulesManagerPage;
 import com.gainsight.bigdata.rulesengine.pojo.RulesPojo;
 import com.gainsight.bigdata.rulesengine.util.RulesEngineUtil;
 import com.gainsight.sfdc.tests.BaseTest;
-import com.gainsight.sfdc.util.FileUtil;
 import com.gainsight.sfdc.util.datagen.DataETL;
 import com.gainsight.sfdc.util.datagen.JobInfo;
 import com.gainsight.testdriver.Application;
@@ -75,8 +74,8 @@ public class LoadToCustomersTest extends BaseTest {
 		
 		JobInfo jobInfo = mapper.readValue(resolveNameSpace(Application.basedir+ "/testdata/newstack/RulesEngine/RulesUI-Jobs/GS-3149.txt"),JobInfo.class);
 		dataETL.execute(jobInfo);
-		List<Map<String, String>> expectedData = Comparator.getParsedCsvData(new CSVReader(FileUtil.resolveNameSpace(new File(Application.basedir+ "/testdata/newstack/RulesEngine/RulesUI_ExpectedData/GS-3149-ExpectedData.csv"), null)));
-		List<Map<String, String>> actualData = Comparator.getParsedCsvData(new CSVReader(FileUtil.resolveNameSpace(new File(Application.basedir+ "/testdata/newstack/RulesEngine/RulesUI_ExpectedData/GS-3149-ActualData.csv"), null)));
+		List<Map<String, String>> expectedData = Comparator.getParsedCsvDataWithHeaderNamespaceResolved(Application.basedir+ "/testdata/newstack/RulesEngine/RulesUI_ExpectedData/GS-3149-ExpectedData.csv");
+		List<Map<String, String>> actualData = Comparator.getParsedCsvDataWithHeaderNamespaceResolved(Application.basedir+ "/testdata/newstack/RulesEngine/RulesUI_ExpectedData/GS-3149-ActualData.csv");
 		List<Map<String, String>> differenceData = Comparator.compareListData(expectedData, actualData);
 		Log.info("Difference is : " + mapper.writeValueAsString(differenceData));
 		Assert.assertEquals(differenceData.size(), 0, "Check the Diff above which is not matching between expected testdata from csv and actual data from csv");
@@ -94,8 +93,8 @@ public class LoadToCustomersTest extends BaseTest {
 
 		JobInfo jobInfo = mapper.readValue(resolveNameSpace(Application.basedir+ "/testdata/newstack/RulesEngine/RulesUI-Jobs/GS-5135.txt"),JobInfo.class);
 		dataETL.execute(jobInfo);
-		List<Map<String, String>> expectedData = Comparator.getParsedCsvData(new CSVReader(FileUtil.resolveNameSpace(new File(Application.basedir+ "/testdata/newstack/RulesEngine/RulesUI_ExpectedData/GS-5135-ExpectedData.csv"), null)));
-		List<Map<String, String>> actualData = Comparator.getParsedCsvData(new CSVReader(FileUtil.resolveNameSpace(new File(Application.basedir+ "/testdata/newstack/RulesEngine/RulesUI_ExpectedData/GS-5135-ActualData.csv"), null)));
+		List<Map<String, String>> expectedData = Comparator.getParsedCsvDataWithHeaderNamespaceResolved(Application.basedir+ "/testdata/newstack/RulesEngine/RulesUI_ExpectedData/GS-5135-ExpectedData.csv");
+		List<Map<String, String>> actualData = Comparator.getParsedCsvDataWithHeaderNamespaceResolved(Application.basedir+ "/testdata/newstack/RulesEngine/RulesUI_ExpectedData/GS-5135-ActualData.csv");
 		List<Map<String, String>> differenceData = Comparator.compareListData(expectedData, actualData);
 		Log.info("Difference is : " + mapper.writeValueAsString(differenceData));
 		Assert.assertEquals(differenceData.size(), 0, "Check the Diff above which is not matching between expected testdata from csv and actual data from csv");
@@ -113,16 +112,16 @@ public class LoadToCustomersTest extends BaseTest {
 
 		JobInfo jobInfo = mapper.readValue(resolveNameSpace(Application.basedir+ "/testdata/newstack/RulesEngine/RulesUI-Jobs/GS-5134.txt"),JobInfo.class);
 		dataETL.execute(jobInfo);
-		List<Map<String, String>> expectedData = Comparator.getParsedCsvData(new CSVReader(FileUtil.resolveNameSpace(new File(Application.basedir+ "/testdata/newstack/RulesEngine/RulesUI_ExpectedData/GS-5134-ExpectedData5.csv"), null)));
-		List<Map<String, String>> actualData = Comparator.getParsedCsvData(new CSVReader(FileUtil.resolveNameSpace(new File(Application.basedir+ "/testdata/newstack/RulesEngine/RulesUI_ExpectedData/GS-5134-ActualData.csv"), null)));
+		List<Map<String, String>> expectedData = Comparator.getParsedCsvDataWithHeaderNamespaceResolved(Application.basedir+ "/testdata/newstack/RulesEngine/RulesUI_ExpectedData/GS-5134-ExpectedData5.csv");
+		List<Map<String, String>> actualData = Comparator.getParsedCsvDataWithHeaderNamespaceResolved(Application.basedir+ "/testdata/newstack/RulesEngine/RulesUI_ExpectedData/GS-5134-ActualData.csv");
 		List<Map<String, String>> differenceData = Comparator.compareListData(expectedData, actualData);
 		Log.info("Difference is : " + mapper.writeValueAsString(differenceData));
 		Assert.assertEquals(differenceData.size(), 0, "Check the Diff above which is not matching between expected testdata from csv and actual data from csv");
 		
 		JobInfo jobInfo2 = mapper.readValue(resolveNameSpace(Application.basedir+ "/testdata/newstack/RulesEngine/RulesUI-Jobs/GS-5134-2.txt"),JobInfo.class);	
 		dataETL.execute(jobInfo2);
-		List<Map<String, String>> expectedData2 = Comparator.getParsedCsvData(new CSVReader(FileUtil.resolveNameSpace(new File(Application.basedir+ "/testdata/newstack/RulesEngine/RulesUI_ExpectedData/GS-5134-ExpectedData-2.csv"), null)));
-		List<Map<String, String>> actualData2 = Comparator.getParsedCsvData(new CSVReader(FileUtil.resolveNameSpace(new File(Application.basedir+ "/testdata/newstack/RulesEngine/RulesUI_ExpectedData/GS-5134-ActualData3.csv"), null)));
+		List<Map<String, String>> expectedData2 = Comparator.getParsedCsvDataWithHeaderNamespaceResolved(Application.basedir+ "/testdata/newstack/RulesEngine/RulesUI_ExpectedData/GS-5134-ExpectedData-2.csv");
+		List<Map<String, String>> actualData2 = Comparator.getParsedCsvDataWithHeaderNamespaceResolved(Application.basedir+ "/testdata/newstack/RulesEngine/RulesUI_ExpectedData/GS-5134-ActualData3.csv");
 		List<Map<String, String>> differenceData2 = Comparator.compareListData(expectedData2, actualData2);
 		Log.info("Difference is : " + mapper.writeValueAsString(differenceData2));
 		Assert.assertEquals(differenceData2.size(), 0, "Check the Diff above which is not matching between expected testdata from csv and actual data from csv");
@@ -144,8 +143,8 @@ public class LoadToCustomersTest extends BaseTest {
 
 		JobInfo jobInfo = mapper.readValue(resolveNameSpace(Application.basedir+ "/testdata/newstack/RulesEngine/RulesUI-Jobs/GS-5152-2.txt"),JobInfo.class);
 		dataETL.execute(jobInfo);
-		List<Map<String, String>> expectedData = Comparator.getParsedCsvData(new CSVReader(FileUtil.resolveNameSpace(new File(Application.basedir+ "/testdata/newstack/RulesEngine/RulesUI_ExpectedData/GS-5152-ExpectedData.csv"), null)));
-		List<Map<String, String>> actualData = Comparator.getParsedCsvData(new CSVReader(FileUtil.resolveNameSpace(new File(Application.basedir+ "/testdata/newstack/RulesEngine/RulesUI_ExpectedData/GS-5152-ActualData.csv"), null)));
+		List<Map<String, String>> expectedData = Comparator.getParsedCsvDataWithHeaderNamespaceResolved(Application.basedir+ "/testdata/newstack/RulesEngine/RulesUI_ExpectedData/GS-5152-ExpectedData.csv");
+		List<Map<String, String>> actualData = Comparator.getParsedCsvDataWithHeaderNamespaceResolved(Application.basedir+ "/testdata/newstack/RulesEngine/RulesUI_ExpectedData/GS-5152-ActualData.csv");
 		List<Map<String, String>> differenceData = Comparator.compareListData(expectedData, actualData);
 		Log.info("Difference is : " + mapper.writeValueAsString(differenceData));
 		Assert.assertEquals(differenceData.size(), 0, "Check the Diff above which is not matching between expected testdata from csv and actual data from csv");

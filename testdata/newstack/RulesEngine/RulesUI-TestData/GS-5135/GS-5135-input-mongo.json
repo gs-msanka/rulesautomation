@@ -1,0 +1,72 @@
+{
+  "ruleType": "Custom",
+  "ruleName": "GS 5134 - Upsert Customer Info Using MDA Subject Area(Mongo)",
+  "ruleFor": "Account",
+  "relationshipType": null,
+  "ruleDescription": "GS 5134 - Upsert Customer Info Using MDA Subject Area(Mongo)",
+  "setupRule": {
+    "dataSource": "Matrix",
+    "selectObject": "Object",
+    "setupData": [{
+      "sourceObject": "Object",
+      "showFields": [{
+        "fieldName": "ID",
+        "showAdvancedName": ""
+      },
+        {
+          "fieldName": "CustomNumber1",
+          "showAdvancedName": ""
+        },
+        {
+          "fieldName": "CustomNumber2",
+          "showAdvancedName": ""
+        },
+        {
+          "fieldName": "SumOfTwoMeasures",
+          "showAdvancedName": ""
+        },
+        {
+          "fieldName": "DivideOfTwoMeasures",
+          "showAdvancedName": ""
+        },
+        {
+          "fieldName": "AccountName",
+          "showAdvancedName": ""
+        },
+        {
+          "fieldName": "CustomDate1",
+          "showAdvancedName": ""
+        }
+      ]
+    }],
+         "calculatedFields": [],
+         "timeIdentifier": "CustomDate1",
+         "joinOnCollection": "",
+         "joinWithCollection": "",
+         "joinOnCollectionField": null,
+          "lookUpField": false
+  },
+  "setupActions": [{
+    "actionType": "loadToCustomers",
+    "upsert": true,
+    "action": {
+      "fieldMappings": [
+        {
+          "sourceObject": "Object",
+          "sourceField": "CustomDate1",
+          "destination": "Orig. Contr. Date",
+          "pickList": false,
+          "isCustom": "false"
+        },
+        {
+          "sourceObject": "Object",
+          "sourceField": "ID",
+          "destination": "Account",
+          "isCustom": "false"
+        }
+      ]
+    },
+    "criterias": []
+  }],
+  "showScheduler": null
+}
