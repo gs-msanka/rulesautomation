@@ -16,19 +16,16 @@ import com.gainsight.bigdata.tenantManagement.apiImpl.TenantManager;
 import com.gainsight.bigdata.tenantManagement.pojos.TenantDetails;
 import com.gainsight.bigdata.util.CollectionUtil;
 import com.gainsight.sfdc.tests.BaseTest;
-import com.gainsight.sfdc.util.FileUtil;
 import com.gainsight.sfdc.util.datagen.DataETL;
 import com.gainsight.sfdc.util.datagen.FileProcessor;
 import com.gainsight.sfdc.util.datagen.JobInfo;
 import com.gainsight.testdriver.Application;
 import com.gainsight.testdriver.Log;
 import com.gainsight.util.Comparator;
-import com.gainsight.util.DBStoreType;
 import com.gainsight.util.MongoDBDAO;
 import com.gainsight.utils.annotations.TestInfo;
 import org.apache.commons.lang3.StringUtils;
 import org.codehaus.jackson.map.ObjectMapper;
-import org.omg.CORBA.PRIVATE_MEMBER;
 import org.testng.Assert;
 import org.testng.annotations.*;
 
@@ -141,8 +138,8 @@ public class LoadToUsageTestUsingMatrixData extends BaseTest {
         Assert.assertTrue(rulesUtil.runRule(rulesPojo.getRuleName()), "Check whether Rule ran successfully or not !");
 
         dataETL.execute(mapper.readValue(resolveNameSpace(TEST_DATA_DIR + "GS-5148/GS-5148-Matrix-ExpectedJob.txt"),JobInfo.class));
-        List<Map<String, String>> expectedData = Comparator.getParsedCsvData(new CSVReader(new FileReader(TEST_DATA_DIR + "GS-5148/ExpectedData.csv")));
-        List<Map<String, String>> actualData = Comparator.getParsedCsvData(new CSVReader(new FileReader(TEST_DATA_DIR + "GS-5148/ActualData.csv")));
+        List<Map<String, String>> expectedData = Comparator.getParsedCsvDataWithHeaderNamespaceResolved(TEST_DATA_DIR + "GS-5148/ExpectedData.csv");
+        List<Map<String, String>> actualData = Comparator.getParsedCsvDataWithHeaderNamespaceResolved(TEST_DATA_DIR + "GS-5148/ActualData.csv");
         List<Map<String, String>> differenceData = Comparator.compareListData(expectedData, actualData);
         Log.info("Actual : " + mapper.writeValueAsString(actualData));
         Log.info("Expected : " + mapper.writeValueAsString(expectedData));
@@ -153,8 +150,8 @@ public class LoadToUsageTestUsingMatrixData extends BaseTest {
         //Running rule for second time to verify duplication of data is not happening while running rule again
         Assert.assertTrue(rulesUtil.runRule(rulesPojo.getRuleName()), "Check whether Rule ran successfully or not !");
         dataETL.execute(mapper.readValue(resolveNameSpace(TEST_DATA_DIR + "GS-5148/GS-5148-Matrix-ExpectedJob.txt"),JobInfo.class));
-        List<Map<String, String>> expectedData1 = Comparator.getParsedCsvData(new CSVReader(new FileReader(TEST_DATA_DIR + "/GS-5148/ExpectedData.csv")));
-        List<Map<String, String>> actualData1 = Comparator.getParsedCsvData(new CSVReader(new FileReader(TEST_DATA_DIR + "GS-5148/ActualData.csv")));
+        List<Map<String, String>> expectedData1 = Comparator.getParsedCsvDataWithHeaderNamespaceResolved(TEST_DATA_DIR + "/GS-5148/ExpectedData.csv");
+        List<Map<String, String>> actualData1 = Comparator.getParsedCsvDataWithHeaderNamespaceResolved(TEST_DATA_DIR + "GS-5148/ActualData.csv");
         List<Map<String, String>> differenceData1 = Comparator.compareListData(expectedData1, actualData1);
         Log.info("Actual : " + mapper.writeValueAsString(actualData1));
         Log.info("Expected : " + mapper.writeValueAsString(expectedData1));
@@ -188,8 +185,8 @@ public class LoadToUsageTestUsingMatrixData extends BaseTest {
         Assert.assertTrue(rulesUtil.runRule(rulesPojo.getRuleName()), "Rule processing failed !!!");
 
         dataETL.execute(mapper.readValue(resolveNameSpace(TEST_DATA_DIR + "GS-5150/GS-5150-Matrix-ExpectedJob.txt"),JobInfo.class));
-        List<Map<String, String>> expectedData = Comparator.getParsedCsvData(new CSVReader(new FileReader(TEST_DATA_DIR + "GS-5150/ExpectedData.csv")));
-        List<Map<String, String>> actualData = Comparator.getParsedCsvData(new CSVReader(new FileReader(TEST_DATA_DIR + "GS-5150/ActualData.csv")));
+        List<Map<String, String>> expectedData = Comparator.getParsedCsvDataWithHeaderNamespaceResolved(TEST_DATA_DIR + "GS-5150/ExpectedData.csv");
+        List<Map<String, String>> actualData = Comparator.getParsedCsvDataWithHeaderNamespaceResolved(TEST_DATA_DIR + "GS-5150/ActualData.csv");
         List<Map<String, String>> differenceData = Comparator.compareListData(expectedData, actualData);
         Log.info("Actual : " + mapper.writeValueAsString(actualData));
         Log.info("Expected : " + mapper.writeValueAsString(expectedData));

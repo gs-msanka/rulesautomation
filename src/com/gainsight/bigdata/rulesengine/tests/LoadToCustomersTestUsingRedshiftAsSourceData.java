@@ -15,13 +15,13 @@ import com.gainsight.bigdata.tenantManagement.apiImpl.TenantManager;
 import com.gainsight.bigdata.tenantManagement.pojos.TenantDetails;
 import com.gainsight.bigdata.util.CollectionUtil;
 import com.gainsight.sfdc.tests.BaseTest;
-import com.gainsight.sfdc.util.FileUtil;
 import com.gainsight.sfdc.util.datagen.DataETL;
 import com.gainsight.sfdc.util.datagen.FileProcessor;
 import com.gainsight.sfdc.util.datagen.JobInfo;
 import com.gainsight.testdriver.Application;
 import com.gainsight.testdriver.Log;
 import com.gainsight.util.*;
+import com.gainsight.util.Comparator;
 import com.gainsight.utils.annotations.TestInfo;
 import org.apache.commons.lang3.StringUtils;
 import org.codehaus.jackson.map.ObjectMapper;
@@ -32,7 +32,6 @@ import org.testng.annotations.*;
 import java.io.File;
 import java.io.FileReader;
 import java.util.*;
-import java.util.Comparator;
 
 import static org.testng.Assert.assertTrue;
 
@@ -122,8 +121,8 @@ public class LoadToCustomersTestUsingRedshiftAsSourceData extends BaseTest {
 
         JobInfo jobInfo = mapper.readValue(resolveNameSpace(RULE_JOBS + "GS-3149-Mongo.txt"),JobInfo.class);
         dataETL.execute(jobInfo);
-        List<Map<String, String>> expectedData = com.gainsight.util.Comparator.getParsedCsvData(new CSVReader(new FileReader(TEST_DATA_DIR + "GS-3149/GS-3149-Redshift-ExpectedData.csv")));
-        List<Map<String, String>> actualData = com.gainsight.util.Comparator.getParsedCsvData(new CSVReader(new FileReader(TEST_DATA_DIR + "GS-3149/GS-3149-ActualData.csv")));
+        List<Map<String, String>> expectedData = Comparator.getParsedCsvDataWithHeaderNamespaceResolved(TEST_DATA_DIR + "GS-3149/GS-3149-Redshift-ExpectedData.csv");
+        List<Map<String, String>> actualData =   Comparator.getParsedCsvDataWithHeaderNamespaceResolved(TEST_DATA_DIR + "GS-3149/GS-3149-ActualData.csv");
         List<Map<String, String>> differenceData = com.gainsight.util.Comparator.compareListData(expectedData, actualData);
         Log.info("Difference is : " + mapper.writeValueAsString(differenceData));
         Assert.assertEquals(differenceData.size(), 0, "Check the Diff above which is not matching between expected testdata from csv and actual data from csv");
@@ -144,8 +143,8 @@ public class LoadToCustomersTestUsingRedshiftAsSourceData extends BaseTest {
 
         JobInfo jobInfo = mapper.readValue(resolveNameSpace(RULE_JOBS + "GS-5135-Redshift.txt"),JobInfo.class);
         dataETL.execute(jobInfo);
-        List<Map<String, String>> expectedData = com.gainsight.util.Comparator.getParsedCsvData(new CSVReader(new FileReader(TEST_DATA_DIR + "GS-5135/GS-5135-Redshift-ExpectedData.csv")));
-        List<Map<String, String>> actualData = com.gainsight.util.Comparator.getParsedCsvData(new CSVReader(new FileReader(TEST_DATA_DIR + "GS-5135/GS-5135-ActualData.csv")));
+        List<Map<String, String>> expectedData = Comparator.getParsedCsvDataWithHeaderNamespaceResolved(TEST_DATA_DIR + "GS-5135/GS-5135-Redshift-ExpectedData.csv");
+        List<Map<String, String>> actualData =   Comparator.getParsedCsvDataWithHeaderNamespaceResolved(TEST_DATA_DIR + "GS-5135/GS-5135-ActualData.csv");
         List<Map<String, String>> differenceData = com.gainsight.util.Comparator.compareListData(expectedData, actualData);
         Log.info("Difference is : " + mapper.writeValueAsString(differenceData));
         Assert.assertEquals(differenceData.size(), 0, "Check the Diff above which is not matching between expected testdata from csv and actual data from csv");

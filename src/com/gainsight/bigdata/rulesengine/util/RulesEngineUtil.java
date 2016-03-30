@@ -262,6 +262,7 @@ public class RulesEngineUtil{
 	}
 
 	/****
+     * This method takes sourceObject name as argument and updates it in the rule.
 	 * @param rulePojo - RulesPojo Object
 	 * @param objectName - source object name to update
 	 * @throws IOException

@@ -15,14 +15,12 @@ import com.gainsight.bigdata.tenantManagement.apiImpl.TenantManager;
 import com.gainsight.bigdata.tenantManagement.pojos.TenantDetails;
 import com.gainsight.bigdata.util.CollectionUtil;
 import com.gainsight.sfdc.tests.BaseTest;
-import com.gainsight.sfdc.util.FileUtil;
 import com.gainsight.sfdc.util.datagen.DataETL;
 import com.gainsight.sfdc.util.datagen.FileProcessor;
 import com.gainsight.sfdc.util.datagen.JobInfo;
 import com.gainsight.testdriver.Application;
 import com.gainsight.testdriver.Log;
 import com.gainsight.util.Comparator;
-import com.gainsight.util.DBStoreType;
 import com.gainsight.util.MongoDBDAO;
 import com.gainsight.utils.annotations.TestInfo;
 import org.apache.commons.lang3.StringUtils;
@@ -135,8 +133,8 @@ public class LoadToCustomersTestUsingMongoAsSourceData extends BaseTest {
 
         JobInfo jobInfo = mapper.readValue(resolveNameSpace(RULE_JOBS + "GS-3149-Mongo.txt"),JobInfo.class);
         dataETL.execute(jobInfo);
-        List<Map<String, String>> expectedData = Comparator.getParsedCsvData(new CSVReader(new FileReader(TEST_DATA_DIR + "GS-3149/GS-3149-Mongo-ExpectedData.csv")));
-        List<Map<String, String>> actualData = Comparator.getParsedCsvData(new CSVReader(new FileReader(TEST_DATA_DIR + "GS-3149/GS-3149-ActualData.csv")));
+        List<Map<String, String>> expectedData = Comparator.getParsedCsvDataWithHeaderNamespaceResolved(TEST_DATA_DIR + "GS-3149/GS-3149-Mongo-ExpectedData.csv");
+        List<Map<String, String>> actualData = Comparator.getParsedCsvDataWithHeaderNamespaceResolved(TEST_DATA_DIR + "GS-3149/GS-3149-ActualData.csv");
         List<Map<String, String>> differenceData = Comparator.compareListData(expectedData, actualData);
         Log.info("Difference is : " + mapper.writeValueAsString(differenceData));
         Assert.assertEquals(differenceData.size(), 0, "Check the Diff above which is not matching between expected testdata from csv and actual data from csv");
@@ -146,7 +144,7 @@ public class LoadToCustomersTestUsingMongoAsSourceData extends BaseTest {
     @TestInfo(testCaseIds = { "GS-5135" , "GS-5152"})
     @Test()
     public void testLoadToCustomers2() throws Exception {
-        RulesPojo rulesPojo = mapper.readValue(new File( TEST_DATA_DIR + "GS-5135/GS-5135-input-mongo.json"), RulesPojo.class);
+        RulesPojo rulesPojo = mapper.readValue(new File(TEST_DATA_DIR + "GS-5135/GS-5135-input-mongo.json"), RulesPojo.class);
         rulesEngineUtil.updateSourceObjectInRule(rulesPojo, collectionName);
         Log.debug("updated input testdata/pojo is " +mapper.writeValueAsString(rulesPojo));
         rulesManagerPage.openRulesManagerPage(rulesManagerPageUrl);
@@ -156,8 +154,8 @@ public class LoadToCustomersTestUsingMongoAsSourceData extends BaseTest {
 
         JobInfo jobInfo = mapper.readValue(resolveNameSpace(RULE_JOBS + "GS-5135-Mongo.txt"),JobInfo.class);
         dataETL.execute(jobInfo);
-        List<Map<String, String>> expectedData = Comparator.getParsedCsvData(new CSVReader(new FileReader(TEST_DATA_DIR + "GS-5135/GS-5135-Mongo-ExpectedData.csv")));
-        List<Map<String, String>> actualData = Comparator.getParsedCsvData(new CSVReader(new FileReader(TEST_DATA_DIR + "GS-5135/GS-5135-ActualData.csv")));
+        List<Map<String, String>> expectedData = Comparator.getParsedCsvDataWithHeaderNamespaceResolved(TEST_DATA_DIR + "GS-5135/GS-5135-Mongo-ExpectedData.csv");
+        List<Map<String, String>> actualData = Comparator.getParsedCsvDataWithHeaderNamespaceResolved(TEST_DATA_DIR + "GS-5135/GS-5135-ActualData.csv");
         List<Map<String, String>> differenceData = Comparator.compareListData(expectedData, actualData);
         Log.info("Difference is : " + mapper.writeValueAsString(differenceData));
         Assert.assertEquals(differenceData.size(), 0, "Check the Diff above which is not matching between expected testdata from csv and actual data from csv");
@@ -167,9 +165,6 @@ public class LoadToCustomersTestUsingMongoAsSourceData extends BaseTest {
     @Test()
     public void testLoadToCustomers3() throws Exception {
         RulesPojo rulesPojo = mapper.readValue(new File(TEST_DATA_DIR + "GS-230485/GS-230485-input-mongo.json"), RulesPojo.class);
-        rulesPojo.getSetupRule().setSelectObject(collectionName);
-        rulesPojo.getSetupRule().setJoinWithCollection(collectionName);
-        rulesPojo.getSetupRule().getSetupData().get(0).setSourceObject(collectionName);
         rulesEngineUtil.updateSourceObjectInRule(rulesPojo, collectionName);
         Log.debug(rulesPojo.getSetupActions().toString());
         Log.debug("updated input testdata/pojo is " +mapper.writeValueAsString(rulesPojo));
@@ -180,8 +175,8 @@ public class LoadToCustomersTestUsingMongoAsSourceData extends BaseTest {
 
         JobInfo jobInfo = mapper.readValue(resolveNameSpace(RULE_JOBS + "GS-230485-Mongo.txt"),JobInfo.class);
         dataETL.execute(jobInfo);
-        List<Map<String, String>> expectedData = Comparator.getParsedCsvData(new CSVReader(new FileReader(TEST_DATA_DIR + "GS-230485/GS-230485-Mongo-ExpectedData.csv")));
-        List<Map<String, String>> actualData = Comparator.getParsedCsvData(new CSVReader(new FileReader(TEST_DATA_DIR + "GS-230485/GS-230485-ActualData.csv")));
+        List<Map<String, String>> expectedData = Comparator.getParsedCsvDataWithHeaderNamespaceResolved(TEST_DATA_DIR + "GS-230485/GS-230485-Mongo-ExpectedData.csv");
+        List<Map<String, String>> actualData = Comparator.getParsedCsvDataWithHeaderNamespaceResolved(TEST_DATA_DIR + "GS-230485/GS-230485-ActualData.csv");
         List<Map<String, String>> differenceData = Comparator.compareListData(expectedData, actualData);
         Log.info("Difference is : " + mapper.writeValueAsString(differenceData));
         Assert.assertEquals(differenceData.size(), 0, "Check the Diff above which is not matching between expected testdata from csv and actual data from csv");
