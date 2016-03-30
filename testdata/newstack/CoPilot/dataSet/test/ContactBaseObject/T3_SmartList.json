@@ -3,8 +3,8 @@
   "description": "",
   "status" : "ACTIVE",
   "stats" : {
-    "contactCount" : 30,
-    "customerCount" : 1
+    "contactCount" : 0,
+    "customerCount" : 0
   },
   "automatedRule" : {
     "relatedId" : "",

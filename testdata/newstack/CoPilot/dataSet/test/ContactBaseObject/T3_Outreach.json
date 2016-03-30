@@ -1,5 +1,5 @@
 {
-  "name": "No Strategy OutReach",
+  "name": "No Strategy Outreach",
   "category": "default",
   "smartListId": "***",
   "smartListName": "***",
@@ -26,7 +26,7 @@
               "label": "Contact ➝ Account ID Name"
             },
             "emailId": "agrandhi@gainsight.com",
-            "replyTo": "agrandhi@gainsight.com"
+            "replyTo": ""
           },
           "copyToAddress": [],
           "tokenMapping": {
@@ -110,6 +110,7 @@
     "STANDARD"
   ],
   "preventDuplicateDays": 90,
+  "logActivity": false,
   "cascadeDelete": false,
   "published": false,
   "reportTokenMappings": []

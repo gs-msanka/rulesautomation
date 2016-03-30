@@ -15,18 +15,9 @@
             "areaName": "EMAIL"
           },
           "fromAddress": {
-            "name": {
-              "type": "field",
-              "field": "Name",
-              "entity": "Account",
-              "fieldName": "Name",
-              "objectName": "Account",
-              "valueType": "STRING",
-              "aggregation": "",
-              "label": "Account ➝ Account Name"
-            },
+            "name": "Copilot Automation",
             "emailId": "agrandhi@gainsight.com",
-            "replyTo": "agrandhi@gainsight.com"
+            "replyTo": ""
           },
           "copyToAddress": [],
           "tokenMapping": {
@@ -36,16 +27,16 @@
                 "name": "embd::6fd5ef90-9baa-4cd7-a132-c7db6f2ad714",
                 "value": {
                   "type": "field",
-                  "field": "JBCXM__CustomerInfo__r.p_c_Email__c",
-                  "fieldName": "p_c_Email__c",
+                  "field": "Name",
+                  "fieldName": "Name",
                   "entity": "Account",
                   "alias": "",
-                  "fieldType": "EMAIL",
-                  "label": "p_c_Email",
+                  "fieldType": "STRING",
+                  "label": "Account Name",
                   "aggregation": "",
                   "valueType": "STRING",
-                  "fieldLabel": "Customer Info ➝ p_c_Email",
-                  "objectName": "JBCXM__CustomerInfo__c"
+                  "fieldLabel": "Account ➝ Account Name",
+                  "objectName": "Account"
                 }
               },
               {
@@ -68,16 +59,16 @@
                 "name": "subj::43e4a77a-ea21-4962-a69a-dc57203dbe03",
                 "value": {
                   "type": "field",
-                  "field": "Name",
-                  "fieldName": "Name",
+                  "field": "JBCXM__CustomerInfo__r.Copilot_Customer_Email__c",
+                  "fieldName": "Copilot_Customer_Email__c",
                   "entity": "Account",
                   "alias": "",
-                  "fieldType": "STRING",
-                  "label": "Account Name",
+                  "fieldType": "EMAIL",
+                  "label": "Copilot_Customer_Email",
                   "aggregation": "",
                   "valueType": "STRING",
-                  "fieldLabel": "Account ➝ Account Name",
-                  "objectName": "Account"
+                  "fieldLabel": "Customer Info ➝ Copilot_Customer_Email",
+                  "objectName": "JBCXM__CustomerInfo__c"
                 }
               },
               {
@@ -110,6 +101,7 @@
     "STANDARD"
   ],
   "preventDuplicateDays": 90,
+  "logActivity": false,
   "cascadeDelete": false,
   "published": false,
   "reportTokenMappings": []

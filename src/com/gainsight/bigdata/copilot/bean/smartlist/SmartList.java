@@ -2,7 +2,7 @@ package com.gainsight.bigdata.copilot.bean.smartlist;
 
 import com.gainsight.bigdata.pojo.Schedule;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
-
+import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import java.util.List;
 
 /**
@@ -10,6 +10,7 @@ import java.util.List;
  * Updated by Giribabu on 05/12/15.
  */
 @JsonSerialize(include = JsonSerialize.Inclusion.NON_DEFAULT)
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class SmartList {
 
 	private String createdBy;
