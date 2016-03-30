@@ -14,9 +14,16 @@ import java.util.List;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class TokenMapping {
 
-    private List<Token> tokens;
+    @JsonProperty("isNotNullable")
     private boolean notNullable;
+    private List<Token> tokens;
 
+    @JsonProperty("isNotNullable")
+    public boolean isNotNullable() {
+        return notNullable;
+    }
+
+    @JsonProperty("isNotNullable")
     public void setNotNullable(boolean notNullable) {
         this.notNullable = notNullable;
     }
