@@ -19,7 +19,7 @@ public class SfdcConfigProvider extends AbstractConfigProvider<SfdcConfig> {
 
     @Override
     public SfdcConfig getConfig() {
-        String profileName = System.getProperty("sfdc_env" , "default");
+        String profileName = System.getProperty("sfdc_env" , "marvels");
         return getConfig(profileName);
     }
 

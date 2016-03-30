@@ -8,8 +8,8 @@ if(stdUserCount<1){
 	                                            'RajeshY' => 'ryaddanapalli@gainsight.com',
 	                                            'SaiRamP' => 'spulluri@gainsight.com',
 	                                            'SivaPrasadN' => 'snasika@gainsight.com',
-	                                            'RamyaK' => 'rkalisipudi@gainsight.com',
-	                                            'HiteshS' => 'hsharma@gainsight.com',
+	                                            'Lalit' => 'ldas@gainsight.com',
+	                                            'Sreejith' => 'skunchu@gainsight.com',
 	                                            'SunandP' => 'spadmanabhan@gainsight.com'};
 	List<User> extuser= [SELECT id, isActive, Username, Lastname, Alias,
 	                     ProfileId FROM User WHERE Lastname In : userNamesMap.keySet() AND Alias = 'Auto' AND
