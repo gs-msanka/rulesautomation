@@ -1,0 +1,75 @@
+delete [select id from jbcxm__playbook__c];
+
+//Create Playbooks in each types in Playbook__c object
+
+List<JBCXM__playbook__c> pb = new List<JBCXM__playbook__c>();
+integer totalpb = 45;
+for(integer i=1; i<=4 ; i++) 
+{
+	if(i==1)
+	{
+List<JBCXM__CTATypes__c> CTAtypes = [SELECT id FROM JBCXM__CTATypes__c where JBCXM__Type__c like 'Objective%']; //Create Playbooks in Objective type
+	for ( integer j =1; j<=totalpb;j++)
+	  {
+		JBCXM__playbook__c pb1 = new JBCXM__playbook__c (
+		JBCXM__CTAType__c	=	CTAtypes.get(0).id,
+		JBCXM__Tasks_Count__c = 5.0,
+		JBCXM__Type__c = 'All',
+		Name = 'Objective__Playbook__'+j
+		);
+
+		pb.add(pb1);
+	  }
+    }
+
+
+	if(i==2)
+	{
+List<JBCXM__CTATypes__c> CTAtypes = [SELECT id FROM JBCXM__CTATypes__c where JBCXM__Type__c like 'Risk%']; //Create Playbooks in Risk type
+	for ( integer j =1; j<=totalpb;j++)
+	  {
+		JBCXM__playbook__c pb2 = new JBCXM__playbook__c (
+		JBCXM__CTAType__c	=	CTAtypes.get(0).id,
+		JBCXM__Tasks_Count__c = 5.0,
+		JBCXM__Type__c = 'All',
+		Name = 'Risk__Playbook__'+j
+		);
+
+		pb.add(pb2);
+	  }
+   }
+ 
+
+ if(i==3)
+	{
+List<JBCXM__CTATypes__c> CTAtypes = [SELECT id FROM JBCXM__CTATypes__c where JBCXM__Type__c like 'Opportunity%']; //Create Playbooks in Opportunity type
+	for ( integer j =1; j<=totalpb;j++)
+	  {
+		JBCXM__playbook__c pb3 = new JBCXM__playbook__c (
+		JBCXM__CTAType__c	=	CTAtypes.get(0).id,
+		JBCXM__Tasks_Count__c = 5.0,
+		JBCXM__Type__c = 'All',
+		Name = 'Opportunity__Playbook__'+j
+		);
+
+		pb.add(pb3);
+	  }
+   }
+ 
+if(i==4)
+{
+List<JBCXM__CTATypes__c> CTAtypes = [SELECT id FROM JBCXM__CTATypes__c where JBCXM__Type__c like 'Event%']; //Create Playbooks in Event type
+	for ( integer j =1; j<=totalpb;j++)
+	  {
+		JBCXM__playbook__c pb4 = new JBCXM__playbook__c (
+		JBCXM__CTAType__c	=	CTAtypes.get(0).id,
+		JBCXM__Tasks_Count__c = 5.0,
+		JBCXM__Type__c = 'All',
+		Name = 'Event__Playbook__'+j
+		);
+
+		pb.add(pb4);
+	  }
+   }
+ }
+insert pb;

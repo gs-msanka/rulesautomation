@@ -1,0 +1,84 @@
+delete [select id from jbcxm__playbooktasks__c];
+
+// Create Playbook Tasks for Objective Type Playbooks
+
+List<JBCXM__GSMetaInfo__c> soid = [SELECT id FROM JBCXM__GSMetaInfo__c where JBCXM__SystemName__c like 'Skip_weekend_if_due_on_a_weekend%'];
+List<JBCXM__GSMetaInfo__c> ddsid = [SELECT id,JBCXM__SystemName__c FROM JBCXM__GSMetaInfo__c where JBCXM__SystemName__c  in ('Assign_Date','CTA_DUE_DATE','NONE','TASK_CLOSE_DATE','TASK_DUE_DATE') ORDER BY JBCXM__SystemName__c ASC NULLS FIRST];
+List<JBCXM__playbook__c> pbidforobjective = [SELECT id FROM JBCXM__playbook__c where JBCXM__CTAType__r.name='Objective' limit 45];
+integer noofplaybboktask_Objective =1;
+
+for (JBCXM__playbook__c pidobjective : pbidforobjective) {
+	List<JBCXM__playbooktasks__c> pbtaskList1to3_Objective = new List<JBCXM__playbooktasks__c>();
+	List<JBCXM__playbooktasks__c> pbtaskList4_Objective = new List<JBCXM__playbooktasks__c>();
+	List<JBCXM__playbooktasks__c> pbtaskList5_Objective = new List<JBCXM__playbooktasks__c>();
+
+    integer randomNum = -30 + (integer)(Math.random() * (50 - (-30)));
+	JBCXM__playbooktasks__c pbtask1_Objective = new JBCXM__playbooktasks__c (   //Task having Assign date as Date source Option
+		JBCXM__PlaybookId__c = pidobjective.id,
+		JBCXM__DueDateSrc__c	=	ddsid.get(0).id,
+		JBCXM__SkipOption__c = soid.get(0).id,
+		JBCXM__DeltaDays__c = randomNum+.0,
+		JBCXM__DisplayOrder__c = 1.0,
+		JBCXM__Priority__c = 'High',
+		JBCXM__Status__c = 'Open',
+		JBCXM__Subject__c = 'ASSIGN_DATE_Skip_weekend_if_due_on_a_weekend_Objective_Playbook_'+(noofplaybboktask_Objective)
+		);
+		pbtaskList1to3_Objective.add(pbtask1_Objective);
+
+	integer randomNum1 = 0 + (integer)(Math.random() * (10 - 0));
+	JBCXM__playbooktasks__c pbtask2_Objective = new JBCXM__playbooktasks__c (    //Task having CTA due date as Date source Option
+		JBCXM__PlaybookId__c = pidobjective.id,
+		JBCXM__DueDateSrc__c	=	ddsid.get(1).id,
+		JBCXM__SkipOption__c = soid.get(0).id,
+		JBCXM__DeltaDays__c = randomNum1+.0,
+		JBCXM__DisplayOrder__c = 2.0,
+		JBCXM__Priority__c = 'Medium',
+		JBCXM__Status__c = 'Open',
+		JBCXM__Subject__c = 'CTA_DUE_DATE_Skip_weekend_if_due_on_a_weekend_Objective_Playbook_'+(noofplaybboktask_Objective)
+		);
+		pbtaskList1to3_Objective.add(pbtask2_Objective);
+
+	JBCXM__playbooktasks__c pbtask3_Objective = new JBCXM__playbooktasks__c (    //Task having None as Date source Option
+		JBCXM__PlaybookId__c = pidobjective.id,
+		JBCXM__DueDateSrc__c	=	ddsid.get(2).id,
+		JBCXM__DisplayOrder__c = 5.0,
+		JBCXM__Priority__c = 'Low',
+		JBCXM__Status__c = 'Open',
+		JBCXM__Subject__c = 'NONE_Objective_Playbook_'+(noofplaybboktask_Objective)
+		);
+		pbtaskList1to3_Objective.add(pbtask3_Objective);
+  insert pbtaskList1to3_Objective;
+
+
+	List<JBCXM__playbooktasks__c> parentid = [SELECT id FROM JBCXM__playbooktasks__c where JBCXM__Subject__c =:pbtask2_Objective.JBCXM__Subject__c];
+	JBCXM__playbooktasks__c pbtask4_Objective = new JBCXM__playbooktasks__c (    //Task having Task Due date as Date source Option and having dependancy on CTA due date 
+		JBCXM__PlaybookId__c = pidobjective.id,
+		JBCXM__DueDateSrc__c	=	ddsid.get(3).id,
+		JBCXM__SkipOption__c = soid.get(0).id,
+		JBCXM__DeltaDays__c = 3.0,
+		JBCXM__DisplayOrder__c = 3.0,
+		JBCXM__Priority__c = 'High',
+		JBCXM__Status__c = 'Open',
+		JBCXM__Subject__c = 'TASK_DUE_DATE_Skip_weekend_if_due_on_a_weekend_Objective_Playbook_'+(noofplaybboktask_Objective),
+		JBCXM__Parent__c = parentid.get(0).id
+		);
+		pbtaskList4_Objective.add(pbtask4_Objective);
+  insert pbtaskList4_Objective;
+
+
+	List<JBCXM__playbooktasks__c> parentid1 = [SELECT id FROM JBCXM__playbooktasks__c where JBCXM__Subject__c =:pbtask4_Objective.JBCXM__Subject__c];
+	JBCXM__playbooktasks__c pbtask5_Objective = new JBCXM__playbooktasks__c (   //Task having Task Close date as Date source Option and having dependancy on Task due date 
+		JBCXM__PlaybookId__c = pidobjective.id,
+		JBCXM__DueDateSrc__c	=	ddsid.get(4).id,
+		JBCXM__SkipOption__c = soid.get(0).id,
+		JBCXM__DeltaDays__c = 1.0,
+		JBCXM__DisplayOrder__c = 4.0,
+		JBCXM__Priority__c = 'Medium',
+		JBCXM__Status__c = 'Open',
+		JBCXM__Subject__c = 'TASK_CLOSE_DATE_Skip_weekend_if_due_on_a_weekend_Objective_Playbook_'+(noofplaybboktask_Objective),
+		JBCXM__Parent__c = parentid1.get(0).id
+		);
+	noofplaybboktask_Objective++;
+	pbtaskList5_Objective.add(pbtask5_Objective);
+  insert pbtaskList5_Objective;
+}
