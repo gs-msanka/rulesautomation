@@ -1,6 +1,6 @@
 
-delete[select id from JBCXM__CTA__c];
-delete[select id from JBCXM__CSTask__c];
+delete[select id, JBCXM__Account__r.Data_ExternalId__c from JBCXM__CTA__c where JBCXM__Account__r.Data_ExternalId__c like 'Sreejith%'];
+delete[select id, JBCXM__Account__r.Data_ExternalId__c from JBCXM__CSTask__c where JBCXM__Account__r.Data_ExternalId__c like 'Sreejith%'];
 
 //Create Relationship CTA's 
 List <JBCXM__CTA__c> CTAList = new List <JBCXM__CTA__c>();

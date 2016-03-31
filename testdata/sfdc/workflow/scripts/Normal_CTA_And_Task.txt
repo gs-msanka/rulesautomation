@@ -1,7 +1,7 @@
 // Create CTA's
 
 List <JBCXM__CTA__c> CTAList = new List <JBCXM__CTA__c>();
-List<JBCXM__CustomerInfo__c> AccountList = [SELECT JBCXM__Account__c, JBCXM__Account__r.name FROM JBCXM__CustomerInfo__c ];
+List<JBCXM__CustomerInfo__c> AccountList = [SELECT JBCXM__Account__c, JBCXM__Account__r.name, JBCXM__Account__r.Data_ExternalId__c FROM JBCXM__CustomerInfo__c where JBCXM__Account__r.Data_ExternalId__c like 'Sreejith%'];
 List<JBCXM__PickList__c> priorityid = [Select id FROM JBCXM__PickList__c where JBCXM__SystemName__c in ('High','Medium','Low')];
 List<User> OwnerList = [SELECT Id,name FROM User ORDER BY CreatedDate ASC NULLS FIRST];
 List<JBCXM__PickList__c> reasonid = [Select id FROM JBCXM__PickList__c where JBCXM__Category__c = 'Alert Reason'];

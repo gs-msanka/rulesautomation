@@ -1,4 +1,4 @@
-delete[SELECT Id FROM account];
+delete[SELECT Id FROM account where Data_ExternalId__c like 'Sreejith%'];
 Map<String, Account> accounts = new Map<String, Account>();
         List<String> accountRecords = new List<String>();
         accountRecords.add('AAR Corp Hardware Abscoa Division,Miami,FL,SF100001,Distribution');
@@ -119,7 +119,7 @@ Map<String, Account> accounts = new Map<String, Account>();
         accountRecords.add('Yesterday Productions Corp.,Jackson,MI,SF100117,Manufacturing');
         accountRecords.add('Ziff-Davis Labs,Olathe,KS,SF100118,Manufacturing');
         accountRecords.add('Zoo Gift Shop,Downers Grove,IL,SF100119,Manufacturing');
-
+        integer i = 0;
 		//Loop through the List of accountRecords, create a reacord for each item in the list.
         for(String accountRecord : accountRecords) 
         {
@@ -128,15 +128,16 @@ Map<String, Account> accounts = new Map<String, Account>();
                                                  BillingCity    = values[1],
                                                  BillingState   = values[2],
                                                  AccountNumber  = values[3],
+                                                 Data_ExternalId__c = 'Sreejith'+i,
                                                  Industry       = (values[4].startsWith('"') && values[4].endsWith('"')) ? values[4].substring(1, values[4].length()-1):values[4],
                                                  Site		    = 'SampleData');
             accounts.put(values[0], sampleAccount);		
-
+            i++;
         }
         upsert accounts.values();  
 
 
-        delete[SELECT Id FROM JBCXM__CustomerInfo__c];
+        delete[SELECT Id, JBCXM__Account__r.Data_ExternalId__c FROM JBCXM__CustomerInfo__c where JBCXM__Account__r.Data_ExternalId__c like 'Sreejith%'];
         Map<String, JBCXM__CustomerInfo__c> customerInfoData = new Map<String, JBCXM__CustomerInfo__c>();
         List<String> CustomerInfoRecords = new List<String>();
 
@@ -262,21 +263,21 @@ Map<String, Account> accounts = new Map<String, Account>();
         Account accountValue = new Account();
         Map<String, JBCXM__PickList__c> stageValues = new Map<String, JBCXM__PickList__c>();
         Map<String, JBCXM__PickList__c> statusValues = new Map<String, JBCXM__PickList__c>();
-        for(JBCXM__PickList__c statusd : [SELECT Id, JBCXM__SystemName__c FROM JBCXM__PickList__c WHERE JBCXM__Category__c = 'Customer Status']) 
+        for(JBCXM__PickList__c statusd : [SELECT Id, JBCXM__SystemName__c FROM JBCXM__PickList__c WHERE JBCXM__Category__c = 'Customer Status'])
         {
             statusValues.put(statusd.JBCXM__SystemName__c, statusd);
         }
 
-        for(JBCXM__PickList__c staged : [SELECT Id, JBCXM__SystemName__c FROM JBCXM__PickList__c WHERE JBCXM__Category__c = 'Customer Stage']) 
+        for(JBCXM__PickList__c staged : [SELECT Id, JBCXM__SystemName__c FROM JBCXM__PickList__c WHERE JBCXM__Category__c = 'Customer Stage'])
         {
             stageValues.put(staged.JBCXM__SystemName__c, staged);
         }
 
-        
-        for(String CustomerInfoRecord : CustomerInfoRecords) 
+
+        for(String CustomerInfoRecord : CustomerInfoRecords)
         {
-            List<String> values = CustomerInfoRecord.split(',', 0); 
-            accountValue = accounts.get(values[0]);         
+            List<String> values = CustomerInfoRecord.split(',', 0);
+            accountValue = accounts.get(values[0]);
             JBCXM__CustomerInfo__c customerInfo = new JBCXM__CustomerInfo__c( JBCXM__Account__c = accountValue.Id,
                                                                 JBCXM__Status__c  = statusValues.get(values[1]).Id,
                                                                 JBCXM__Stage__c   = stageValues.get(values[2]).Id,
@@ -288,7 +289,7 @@ Map<String, Account> accounts = new Map<String, Account>();
                                                                 JBCXM__OriginalContractNumber__c = '',
                                                                 JBCXM__Users__c = 0,
                                                                 JBCXM__Comments__c = '');
-            customerInfoData.put(values[0], customerInfo);  
-           
+            customerInfoData.put(values[0], customerInfo);
+
         }
         Upsert customerInfoData.values();

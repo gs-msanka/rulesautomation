@@ -3,6 +3,7 @@ package com.gainsight.sfdc.workflow.tests;
 import com.gainsight.bigdata.NSTestBase;
 import com.gainsight.sfdc.SalesforceConnector;
 import com.gainsight.sfdc.tests.BaseTest;
+import com.gainsight.util.MetaDataUtil;
 import com.gainsight.util.config.SfdcConfig;
 import com.gainsight.utils.config.ConfigProviderFactory;
 import org.testng.Assert;
@@ -45,19 +46,20 @@ public class MarvelsDataLoad {
     public static SalesforceConnector sfdc;
     public static SfdcConfig sfdcConfig = ConfigProviderFactory.getConfig(SfdcConfig.class);
     NSTestBase nsTestBase=null;
-
+    public static MetaDataUtil metaUtil = new MetaDataUtil();
     @BeforeClass
     public void loadAccount_And_Customer() throws Exception{
 
         sfdc = new SalesforceConnector(sfdcConfig.getSfdcUsername(), sfdcConfig.getSfdcPassword()+ sfdcConfig.getSfdcStoken(),
                 sfdcConfig.getSfdcPartnerUrl(), sfdcConfig.getSfdcApiVersion());
         nsTestBase=new NSTestBase();
+        nsTestBase.init();
         Assert.assertTrue(sfdc.connect());
+        NSTestBase.metaUtil.createExtIdFieldOnAccount(sfdc);
         sfdc.runApexCode(nsTestBase.resolveStrNameSpace(LOAD_SETUP_DATA_SCRIPT_FOR_MARVELSDATALOADER));
         sfdc.runApexCode(nsTestBase.getNameSpaceResolvedFileContents(CREATE_ACCOUNT_CUSTOMER));
 
     }
-
 
 
     @Test(priority = 0)

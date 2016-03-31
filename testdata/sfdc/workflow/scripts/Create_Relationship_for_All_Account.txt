@@ -72,7 +72,7 @@ insert Section5;
 
 
 //Relationship Creation
-List<JBCXM__CustomerInfo__c> accList = [SELECT JBCXM__Account__c FROM JBCXM__CustomerInfo__c ];
+List<JBCXM__CustomerInfo__c> accList = [SELECT JBCXM__Account__c, JBCXM__Account__r.Data_ExternalId__c FROM JBCXM__CustomerInfo__c where JBCXM__Account__r.Data_ExternalId__c like 'Sreejith%' ];
 JBCXM__GSRelationshipType__c relationType = [select id from JBCXM__GSRelationshipType__c];
 List <JBCXM__GSRelationship__c> Relationship = new List <JBCXM__GSRelationship__c>();
 integer i =0;

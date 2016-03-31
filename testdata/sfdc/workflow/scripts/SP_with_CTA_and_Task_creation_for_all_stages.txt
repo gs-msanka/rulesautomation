@@ -1,8 +1,8 @@
-Delete [Select id From JBCXM__CTAGroup__c];
+Delete [Select id, JBCXM__Account__r.Data_ExternalId__c From JBCXM__CTAGroup__c where JBCXM__Account__r.Data_ExternalId__c like 'Sreejith%'];
 
 // Create Success Plan, CTA and Task 
 List <JBCXM__CTAGroup__c> CTAGroupList = new List <JBCXM__CTAGroup__c>();
-List<JBCXM__CustomerInfo__c> AccountList = [SELECT JBCXM__Account__c FROM JBCXM__CustomerInfo__c limit 10];
+List<JBCXM__CustomerInfo__c> AccountList = [SELECT JBCXM__Account__c, JBCXM__Account__r.name, JBCXM__Account__r.Data_ExternalId__c FROM JBCXM__CustomerInfo__c where JBCXM__Account__r.Data_ExternalId__c like 'Sreejith%' limit 10];
 List<JBCXM__GSMetaInfo__c> CTAGroupCategoryList = [SELECT Id,Name FROM JBCXM__GSMetaInfo__c WHERE JBCXM__Category__c = 'CTA_GROUP_CATEGORY'];
 List<User> OwnerList = [SELECT Id,name FROM User ORDER BY CreatedDate ASC NULLS FIRST];
 List<JBCXM__GSMetaInfo__c> SuccessPlanTypeList = [SELECT Id,Name FROM JBCXM__GSMetaInfo__c WHERE JBCXM__Category__c = 'SUCCESS_PLAN_TYPE' limit 2];
@@ -49,7 +49,7 @@ integer j = 1;
 
 
 // Create 5 CTA's for each Success Plan
-List<JBCXM__CustomerInfo__c> AccountList1 = [SELECT JBCXM__Account__c FROM JBCXM__CustomerInfo__c limit 10];
+List<JBCXM__CustomerInfo__c> AccountList1 = [SELECT JBCXM__Account__c, JBCXM__Account__r.name, JBCXM__Account__r.Data_ExternalId__c FROM JBCXM__CustomerInfo__c where JBCXM__Account__r.Data_ExternalId__c like 'Sreejith%' limit 10];
 List <JBCXM__CTA__c> CTAList = new List <JBCXM__CTA__c>();
 List<JBCXM__PickList__c> priorityid = [Select id FROM JBCXM__PickList__c where JBCXM__SystemName__c = 'Medium'];
 List<JBCXM__GSMetaInfo__c> categoryid = [Select id FROM JBCXM__GSMetaInfo__c where 	JBCXM__SystemName__c = 'Object Category 1'];
