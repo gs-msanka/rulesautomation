@@ -14,7 +14,6 @@ List<JBCXM__Playbook__c> playbookid = [Select id,JBCXM__CTAType__c FROM JBCXM__P
 integer totalpb = 45;
 integer i = 0; 
 
-
 Map<string,string> Uniqueplaybookid = new Map<string,string>();
 for (JBCXM__Playbook__c playid : playbookid)
 {

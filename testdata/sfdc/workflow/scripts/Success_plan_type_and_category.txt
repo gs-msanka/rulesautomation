@@ -73,6 +73,3 @@ For (JBCXM__C360Sections__c C360Sections :  C360SectionsList){
 }
 update C360SectionsList;
 
-
-
-

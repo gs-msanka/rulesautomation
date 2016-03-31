@@ -136,7 +136,6 @@ Map<String, Account> accounts = new Map<String, Account>();
         }
         upsert accounts.values();  
 
-
         delete[SELECT Id, JBCXM__Account__r.Data_ExternalId__c FROM JBCXM__CustomerInfo__c where JBCXM__Account__r.Data_ExternalId__c like 'MarvelsTestData%'];
         Map<String, JBCXM__CustomerInfo__c> customerInfoData = new Map<String, JBCXM__CustomerInfo__c>();
         List<String> CustomerInfoRecords = new List<String>();
