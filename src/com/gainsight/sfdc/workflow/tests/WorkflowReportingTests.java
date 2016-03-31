@@ -15,14 +15,12 @@ import com.gainsight.sfdc.util.datagen.DataETL;
 import com.gainsight.sfdc.util.datagen.JobInfo;
 import com.gainsight.sfdc.workflow.pages.WorkFlowReportingPage;
 
-import static com.gainsight.testdriver.Application.basedir;
-
-	public class WorkflowReportingTests extends BaseTest {
-	private final String LEADERBOARD_DATAGEN_SCRIPT = basedir
+public class WorkflowReportingTests extends BaseTest {
+	private final String LEADERBOARD_DATAGEN_SCRIPT = env.basedir
 			+ "/testdata/sfdc/workflow/scripts/CreateCTAs_ForLeaderBoard.txt";
-	private final String CREATE_USERS_SCRIPT = basedir
+	private final String CREATE_USERS_SCRIPT = env.basedir
 			+ "/testdata/sfdc/workflow/scripts/CreateUsers.txt";
-	private final String CREATE_ACCS = basedir
+	private final String CREATE_ACCS = env.basedir
 			+ "/testdata/sfdc/workflow/scripts/Create_Accounts_Customers_For_CTA.txt";
 	private final String CLEANUP_SCRIPT = "Delete [Select id from JBCXM__CTA__c];"
 			+ "Delete [select id from JBCXM__CSTask__c];"
@@ -43,13 +41,13 @@ import static com.gainsight.testdriver.Application.basedir;
 		sfdc.runApexCode(getNameSpaceResolvedFileContents(CREATE_USERS_SCRIPT));
 		sfdc.runApexCode(resolveStrNameSpace(CLEANUP_SCRIPT));
 		metaUtil.createExternalIdFieldOnCTA(sfdc);
-		JobInfo loadCTAs = mapper.readValue(resolveNameSpace(basedir
+		JobInfo loadCTAs = mapper.readValue(resolveNameSpace(env.basedir
 				+ "/testdata/sfdc/workflow/jobs/Job_leaderboard_DataLoad.txt"),
 				JobInfo.class);
 		dataLoader.execute(loadCTAs);
 		JobInfo loadCSTasks = mapper
 				.readValue(
-						resolveNameSpace(basedir
+						resolveNameSpace(env.basedir
 								+ "/testdata/sfdc/workflow/jobs/Job_leaderboard_DataLoad_Tasks.txt"),
 						JobInfo.class);
 		dataLoader.execute(loadCSTasks);

@@ -95,10 +95,10 @@ public class BaseTest {
             } else {
                 sfdc.runApexCode("AdminHandler.assignPermissionToallGainsightObject();");
             }
-         //   packageUtil.deployPermissionSetCode();
-        //    metaUtil.setupPermissionsToStandardObjectAndFields(sfdcInfo);
+            packageUtil.deployPermissionSetCode();
+            metaUtil.setupPermissionsToStandardObjectAndFields(sfdcInfo);
         }
-      //  addNSURLToRemoteSiteSettings();
+        addNSURLToRemoteSiteSettings();
         Log.info("Sfdc Info : " +sfdc.getLoginResult().getUserInfo().getUserFullName());
         USER_DATE_FORMAT = DateUtil.localMapValues().containsKey(sfdcInfo.getUserLocale()) ? DateUtil.localMapValues().get(sfdcInfo.getUserLocale()).split(" ")[0] : "yyyy-mm-dd";
         userTimezone = TimeZone.getTimeZone(sfdcInfo.getUserTimeZone());
@@ -116,7 +116,7 @@ public class BaseTest {
         }
     }
 
-   // @AfterSuite
+    @AfterSuite
     public void fini() {
         env.stop();
     }
