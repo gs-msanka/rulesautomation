@@ -5,6 +5,7 @@ import com.gainsight.sfdc.SalesforceConnector;
 import com.gainsight.sfdc.tests.BaseTest;
 import com.gainsight.util.config.SfdcConfig;
 import com.gainsight.utils.config.ConfigProviderFactory;
+import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
@@ -51,7 +52,7 @@ public class MarvelsDataLoad {
         sfdc = new SalesforceConnector(sfdcConfig.getSfdcUsername(), sfdcConfig.getSfdcPassword()+ sfdcConfig.getSfdcStoken(),
                 sfdcConfig.getSfdcPartnerUrl(), sfdcConfig.getSfdcApiVersion());
         nsTestBase=new NSTestBase();
-        sfdc.connect();
+        Assert.assertTrue(sfdc.connect());
         sfdc.runApexCode(nsTestBase.resolveStrNameSpace(LOAD_SETUP_DATA_SCRIPT_FOR_MARVELSDATALOADER));
         sfdc.runApexCode(nsTestBase.getNameSpaceResolvedFileContents(CREATE_ACCOUNT_CUSTOMER));
 
@@ -87,8 +88,4 @@ public class MarvelsDataLoad {
         sfdc.runApexCode(nsTestBase.getNameSpaceResolvedFileContents(CREATE_NORMAL_CTA));
     }
 
-    @Test
-    public void loadSurveys() {
-
-    }
 }
