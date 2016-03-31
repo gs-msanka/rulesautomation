@@ -1,10 +1,10 @@
-delete [select id from jbcxm__playbooktasks__c];
+delete [select id, JBCXM__PlaybookId__r.name from jbcxm__playbooktasks__c where JBCXM__PlaybookId__r.name like '%__Playbook__%'];
 
 // Create Playbook Tasks for Objective Type Playbooks
 
 List<JBCXM__GSMetaInfo__c> soid = [SELECT id FROM JBCXM__GSMetaInfo__c where JBCXM__SystemName__c like 'Skip_weekend_if_due_on_a_weekend%'];
 List<JBCXM__GSMetaInfo__c> ddsid = [SELECT id,JBCXM__SystemName__c FROM JBCXM__GSMetaInfo__c where JBCXM__SystemName__c  in ('Assign_Date','CTA_DUE_DATE','NONE','TASK_CLOSE_DATE','TASK_DUE_DATE') ORDER BY JBCXM__SystemName__c ASC NULLS FIRST];
-List<JBCXM__playbook__c> pbidforobjective = [SELECT id FROM JBCXM__playbook__c where JBCXM__CTAType__r.name='Objective' limit 45];
+List<JBCXM__playbook__c> pbidforobjective = [SELECT id FROM JBCXM__playbook__c where name like 'Objective__Playbook__%' limit 45];
 integer noofplaybboktask_Objective =1;
 
 for (JBCXM__playbook__c pidobjective : pbidforobjective) {

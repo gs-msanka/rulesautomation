@@ -1,4 +1,4 @@
-delete [select id from jbcxm__playbook__c];
+delete [select id from jbcxm__playbook__c where name like '%__Playbook__%'];
 
 //Create Playbooks in each types in Playbook__c object
 

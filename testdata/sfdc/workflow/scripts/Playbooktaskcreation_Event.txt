@@ -2,7 +2,7 @@
 
 List<JBCXM__GSMetaInfo__c> soid = [SELECT id FROM JBCXM__GSMetaInfo__c where JBCXM__SystemName__c like 'Skip_weekend_if_due_on_a_weekend%'];
 List<JBCXM__GSMetaInfo__c> ddsid = [SELECT id,JBCXM__SystemName__c FROM JBCXM__GSMetaInfo__c where JBCXM__SystemName__c  in ('Assign_Date','CTA_DUE_DATE','NONE','TASK_CLOSE_DATE','TASK_DUE_DATE') ORDER BY JBCXM__SystemName__c ASC NULLS FIRST];
-List<JBCXM__playbook__c> pbidforevent = [SELECT id FROM JBCXM__playbook__c where JBCXM__CTAType__r.name='Event' limit 45];
+List<JBCXM__playbook__c> pbidforevent = [SELECT id FROM JBCXM__playbook__c where name like 'Event__Playbook__%' limit 45];
 integer noofplaybboktask_Event =1;
 
 for (JBCXM__playbook__c pidevent : pbidforevent) {
