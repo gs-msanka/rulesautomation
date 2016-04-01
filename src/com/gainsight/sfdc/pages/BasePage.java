@@ -72,7 +72,7 @@ public class BasePage extends WebPage implements Constants {
 		}
 		field.clearAndSetText("username", sfdcConfig.getSfdcUsername());
 		field.clearAndSetText("password", sfdcConfig.getSfdcPassword());
-		element.mouseOverAndClickOnIdentifier("Login");
+		item.doubleClick("login");
         try {
             wait.waitTillElementPresent(USERNAVBUTTON, MIN_TIME, MAX_TIME);
         } catch (Exception e) {
