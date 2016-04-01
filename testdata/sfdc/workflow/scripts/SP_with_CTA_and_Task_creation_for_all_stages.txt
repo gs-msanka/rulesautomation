@@ -1,0 +1,283 @@
+Delete [Select id, JBCXM__Account__r.Data_ExternalId__c From JBCXM__CTAGroup__c where JBCXM__Account__r.Data_ExternalId__c like 'MarvelsTestData%'];
+
+// Create Success Plan, CTA and Task 
+List <JBCXM__CTAGroup__c> CTAGroupList = new List <JBCXM__CTAGroup__c>();
+List<JBCXM__CustomerInfo__c> AccountList = [SELECT JBCXM__Account__c, JBCXM__Account__r.name, JBCXM__Account__r.Data_ExternalId__c FROM JBCXM__CustomerInfo__c where JBCXM__Account__r.Data_ExternalId__c like 'MarvelsTestData%' limit 10];
+List<JBCXM__GSMetaInfo__c> CTAGroupCategoryList = [SELECT Id,Name FROM JBCXM__GSMetaInfo__c WHERE JBCXM__Category__c = 'CTA_GROUP_CATEGORY'];
+List<User> OwnerList = [SELECT Id,name FROM User ORDER BY CreatedDate ASC NULLS FIRST];
+List<JBCXM__GSMetaInfo__c> SuccessPlanTypeList = [SELECT Id,Name FROM JBCXM__GSMetaInfo__c WHERE JBCXM__Category__c = 'SUCCESS_PLAN_TYPE' limit 2];
+List<JBCXM__GSMetaInfo__c> StatusList = [SELECT Id,Name FROM JBCXM__GSMetaInfo__c WHERE JBCXM__Category__c = 'SUCCESS_PLAN_STATUS' and JBCXM__SystemName__c in ('Draft','Active','Closed')];
+List<Date> nDateList = new List<Date> { Date.today()+90,Date.today()+80,(Date.today()+70)};
+Integer datecounter =0;
+Integer StatusCounter =0;
+Integer Count =0;
+
+for (JBCXM__CustomerInfo__c Cust : AccountList) {      //Create SP in all status 
+integer k = 0;
+			for (JBCXM__GSMetaInfo__c SuccessPlanType : SuccessPlanTypeList){
+				string Name = 'Template '+k;
+				List<JBCXM__SuccessPlanTemplate__c> templateid = [select id from JBCXM__SuccessPlanTemplate__c WHERE Name like :Name];
+				for (JBCXM__GSMetaInfo__c slist :StatusList)
+				{
+				for(JBCXM__SuccessPlanTemplate__c tempid:templateid)
+				{
+					string planName					= 'Success Plan '+string.valueof(Count);
+					JBCXM__CTAGroup__c ctag 		= new JBCXM__CTAGroup__c
+					(
+						Name						= planName,
+						JBCXM__Account__c			= Cust.JBCXM__Account__c,
+						JBCXM__CTAGroupCategory__c	=CTAGroupCategoryList.get(0).Id,
+						JBCXM__DueDate__c			=nDateList.get(datecounter),
+						JBCXM__Owner__c				=OwnerList.get(0).Id,
+						JBCXM__Status__c			=slist.id,
+						JBCXM__SuccessPlanType__c	=SuccessPlanType.id,
+						JBCXM__Template__c			=tempid.id
+					);
+				
+					CTAGroupList.add(ctag);
+					datecounter++;
+					Count++;
+					
+					if(nDateList.size()==datecounter) datecounter=0;
+				k=k+5;	
+			   }
+			   }
+			}
+}
+insert CTAGroupList;
+integer j = 1;
+
+
+// Create 5 CTA's for each Success Plan
+List<JBCXM__CustomerInfo__c> AccountList1 = [SELECT JBCXM__Account__c, JBCXM__Account__r.name, JBCXM__Account__r.Data_ExternalId__c FROM JBCXM__CustomerInfo__c where JBCXM__Account__r.Data_ExternalId__c like 'MarvelsTestData%' limit 10];
+List <JBCXM__CTA__c> CTAList = new List <JBCXM__CTA__c>();
+List<JBCXM__PickList__c> priorityid = [Select id FROM JBCXM__PickList__c where JBCXM__SystemName__c = 'Medium'];
+List<JBCXM__GSMetaInfo__c> categoryid = [Select id FROM JBCXM__GSMetaInfo__c where 	JBCXM__SystemName__c = 'Object Category 1'];
+List<JBCXM__PickList__c> stageid = [Select id FROM JBCXM__PickList__c where JBCXM__SystemName__c in('New','1')];
+List<JBCXM__CTATypes__c> typeid = [Select id FROM JBCXM__CTATypes__c where name = 'Objective'];
+List<JBCXM__CTAGroup__c> CTAgroupid = [Select id,JBCXM__Status__r.name,JBCXM__Account__c ,JBCXM__Account__r.name FROM JBCXM__CTAGroup__c where Name like 'Success%'];
+List<JBCXM__Playbook__c> playbookid = [Select id FROM JBCXM__Playbook__c where Name like 'Objective%'];
+ for ( JBCXM__CTAGroup__c CTAgpid :CTAgroupid) {
+  integer pbindex = 0;
+  string a = CTAgpid.JBCXM__Account__r.name;
+  if (CTAgpid.JBCXM__Status__r.name == 'Draft')
+  {
+ 
+    for (integer y=1; y<=5;y++)
+    {
+     integer randomNum = 50 + (integer)(Math.random() * (69 - 50));
+ 	JBCXM__CTA__c clist 		= new JBCXM__CTA__c (
+
+					JBCXM__Account__c			= CTAgpid.JBCXM__Account__c,
+					JBCXM__Assignee__c				= OwnerList.get(0).Id,
+					JBCXM__Category__c 			= categoryid.get(0).id,
+					JBCXM__CTAGroup__c 			= CTAgpid.id,
+					JBCXM__Draft__c 			= true,
+					JBCXM__DynamicData__c 		= '{"UID":1458455999999,"datesToAdd":"10","dueDateType":"Skip_weekend_if_due_on_a_weekend"}',
+					JBCXM__OpenTaskCount__c = 5.0,
+					JBCXM__Playbook__c = playbookid.get(pbindex).id,
+					JBCXM__Priority__c = priorityid.get(0).id,
+					JBCXM__Source__c = 'Manual',
+					JBCXM__Stage__c = stageid.get(1).id,
+					JBCXM__TaskCount__c = 5.0,
+					JBCXM__Type__c = typeid.get(0).id,
+					Name = 'Draft_Objective' +j +'_' +CTAgpid.JBCXM__Account__r.name,
+					JBCXM__DueDate__c = Date.today()+randomNum
+					);
+				j++;
+				pbindex++;
+CTAList.add(clist);
+}
+}
+  if (CTAgpid.JBCXM__Status__r.name == 'Active')
+  {
+
+    for (integer y=1; y<=5;y++)
+    {
+    if (y==4)
+    {
+    integer randomNum = -25 + (integer)(Math.random() * (-2 - (-25)));
+ 	JBCXM__CTA__c clist 		= new JBCXM__CTA__c (
+					JBCXM__Account__c			= CTAgpid.JBCXM__Account__c,
+					JBCXM__Assignee__c				= OwnerList.get(0).Id,
+					JBCXM__Category__c 			= categoryid.get(0).id,
+					JBCXM__CTAGroup__c 			= CTAgpid.id,
+					JBCXM__Draft__c 			= false,
+					JBCXM__DynamicData__c 		= '{"UID":1458455999999,"datesToAdd":"10","dueDateType":"Skip_weekend_if_due_on_a_weekend"}',
+					JBCXM__OpenTaskCount__c = 5.0,
+					JBCXM__Playbook__c = playbookid.get(pbindex).id,
+					JBCXM__Priority__c = priorityid.get(0).id,
+					JBCXM__Source__c = 'Manual',
+					JBCXM__Stage__c = stageid.get(1).id,
+					JBCXM__TaskCount__c = 5.0,
+					JBCXM__Type__c = typeid.get(0).id,
+					Name = 'Active_Objective' +j +'_' +CTAgpid.JBCXM__Account__r.name,
+					JBCXM__DueDate__c = Date.today()+randomNum
+					);
+				j++;
+				pbindex++;
+				CTAList.add(clist);
+				}
+
+	else
+	{
+	    integer randomNum = 50 + (integer)(Math.random() * (69 - 50));
+		JBCXM__CTA__c clist 		= new JBCXM__CTA__c (
+					JBCXM__Account__c			= CTAgpid.JBCXM__Account__c,
+					JBCXM__Assignee__c				= OwnerList.get(0).Id,
+					JBCXM__Category__c 			= categoryid.get(0).id,
+					JBCXM__CTAGroup__c 			= CTAgpid.id,
+					JBCXM__Draft__c 			= false,
+					JBCXM__DynamicData__c 		= '{"UID":1458455999999,"datesToAdd":"10","dueDateType":"Skip_weekend_if_due_on_a_weekend"}',
+					JBCXM__OpenTaskCount__c = 5.0,
+					JBCXM__Playbook__c = playbookid.get(pbindex).id,
+					JBCXM__Priority__c = priorityid.get(0).id,
+					JBCXM__Source__c = 'Manual',
+					JBCXM__Stage__c = stageid.get(1).id,
+					JBCXM__TaskCount__c = 5.0,
+					JBCXM__Type__c = typeid.get(0).id,
+					Name = 'Active_Objective' +j +'_' +CTAgpid.JBCXM__Account__r.name,
+					JBCXM__DueDate__c = Date.today()+randomNum
+					);
+				j++;
+				pbindex++;
+			CTAList.add(clist);
+	}
+}
+}
+
+if (CTAgpid.JBCXM__Status__r.name == 'Closed')
+  {
+
+    for (integer y=1; y<=5;y++)
+    {
+    integer randomNum = 50 + (integer)(Math.random() * (69 - 50));
+ 	JBCXM__CTA__c clist 		= new JBCXM__CTA__c (
+					JBCXM__Account__c			= CTAgpid.JBCXM__Account__c,
+					JBCXM__Assignee__c				= OwnerList.get(0).Id,
+					JBCXM__Category__c 			= categoryid.get(0).id,
+					JBCXM__CTAGroup__c 			= CTAgpid.id,
+					JBCXM__Draft__c 			= false,
+					JBCXM__DynamicData__c 		= '{"UID":1458455999999,"datesToAdd":"10","dueDateType":"Skip_weekend_if_due_on_a_weekend"}',
+					JBCXM__OpenTaskCount__c = 0.0,
+					JBCXM__Playbook__c = playbookid.get(pbindex).id,
+					JBCXM__Priority__c = priorityid.get(0).id,
+					JBCXM__Source__c = 'Manual',
+					JBCXM__Stage__c = stageid.get(0).id,
+					JBCXM__TaskCount__c = 5.0,
+					JBCXM__Type__c = typeid.get(0).id,
+					Name = 'Closed_Objective' +j +'_' +CTAgpid.JBCXM__Account__r.name,
+					JBCXM__DueDate__c = Date.today()+randomNum
+					);
+				j++;
+				pbindex++;
+CTAList.add(clist);
+}
+}
+}
+insert CTAList;
+
+
+//Create Tasks for each CTA's
+List <JBCXM__CSTask__c> CstaskList = new List <JBCXM__CSTask__c>();
+List<JBCXM__CTA__c> CTAid = [Select id,JBCXM__Account__c,JBCXM__Stage__r.JBCXM__SystemName__c,JBCXM__DueDate__c FROM JBCXM__CTA__c where Name like '%Objective%'];
+List<JBCXM__PlaybookTasks__c> delta = [Select JBCXM__DeltaDays__c FROM JBCXM__PlaybookTasks__c ORDER BY Id ASC NULLS FIRST];
+List<JBCXM__PlaybookTasks__c> displayorder = [Select JBCXM__DisplayOrder__c FROM JBCXM__PlaybookTasks__c ORDER BY Id ASC NULLS FIRST];
+List<JBCXM__PlaybookTasks__c> duedatesrc = [Select JBCXM__DueDateSrc__c FROM JBCXM__PlaybookTasks__c ORDER BY Id ASC NULLS FIRST];
+List<JBCXM__PlaybookTasks__c> playbook = [Select JBCXM__PlaybookId__c FROM JBCXM__PlaybookTasks__c ORDER BY Id ASC NULLS FIRST];
+List<JBCXM__PlaybookTasks__c> priority = [Select JBCXM__Priority__c FROM JBCXM__PlaybookTasks__c ORDER BY Id ASC NULLS FIRST];
+List<JBCXM__PlaybookTasks__c> skipoption = [Select JBCXM__SkipOption__c FROM JBCXM__PlaybookTasks__c ORDER BY Id ASC NULLS FIRST];
+List<JBCXM__PlaybookTasks__c> status = [Select JBCXM__Status__c FROM JBCXM__PlaybookTasks__c ORDER BY Id ASC NULLS FIRST];
+List<JBCXM__PlaybookTasks__c> subject = [Select JBCXM__Subject__c FROM JBCXM__PlaybookTasks__c ORDER BY Id ASC NULLS FIRST];
+List<JBCXM__PlaybookTasks__c> uid = [Select Id FROM JBCXM__PlaybookTasks__c ORDER BY Id ASC NULLS FIRST];
+
+integer ctacount = 0;
+
+for (integer totalSuccessPlan =0; totalSuccessPlan<60; totalSuccessPlan++)
+{
+
+integer i = 0;
+for (integer totalObjective = 0; totalObjective<5; totalObjective++)
+{
+   if(CTAid.get(ctacount).JBCXM__Stage__r.JBCXM__SystemName__c =='1')
+					{
+	for ( integer totalTask = 0 ; totalTask <5 ; totalTask ++)
+	{
+JBCXM__CSTask__c cslist 		= new JBCXM__CSTask__c (
+					JBCXM__Account__c		= CTAid.get(ctacount).JBCXM__Account__c,
+					JBCXM__Assigned__c		= OwnerList.get(0).Id,
+					JBCXM__CTA__c = CTAid.get(ctacount).id,
+					JBCXM__Date__c = Date.today()+(delta.get(i).JBCXM__DeltaDays__c).intValue(),
+					JBCXM__DeltaDays__c = delta.get(i).JBCXM__DeltaDays__c,
+					JBCXM__DisplayOrder__c = displayorder.get(i).JBCXM__DisplayOrder__c,
+					JBCXM__DueDateSrc__c = duedatesrc.get(i).JBCXM__DueDateSrc__c,
+					JBCXM__Playbook__c = playbook.get(i).JBCXM__PlaybookId__c,
+					JBCXM__Priority__c = priority.get(i).JBCXM__Priority__c,
+					JBCXM__SkipOption__c = skipoption.get(i).JBCXM__SkipOption__c,
+					JBCXM__Status__c = 'Closed',
+					JBCXM__ClosedDate__c = Date.today(),
+					JBCXM__Subject__c = subject.get(i).JBCXM__Subject__c,
+					JBCXM__UID__c = uid.get(i).Id
+					);
+i++;
+CstaskList.add(cslist);
+}
+}
+else
+{
+if (CTAid.get(ctacount).JBCXM__DueDate__c < Date.today())
+{
+for ( integer totalTask = 0 ; totalTask <5 ; totalTask ++)
+	{
+integer randomNum = -100 + (integer)(Math.random() * ((-30) - (-100)));
+List<Date> nDateList1 = new List<Date> { Date.today()+randomNum};
+JBCXM__CSTask__c cslist 		= new JBCXM__CSTask__c (
+					JBCXM__Account__c		= CTAid.get(ctacount).JBCXM__Account__c,
+					JBCXM__Assigned__c		= OwnerList.get(0).Id,
+					JBCXM__CTA__c = CTAid.get(ctacount).id,
+					JBCXM__Date__c = nDateList1.get(0),
+					JBCXM__DeltaDays__c = randomNum+.0,
+					JBCXM__DisplayOrder__c = displayorder.get(i).JBCXM__DisplayOrder__c,
+					JBCXM__DueDateSrc__c = duedatesrc.get(i).JBCXM__DueDateSrc__c,
+					JBCXM__Playbook__c = playbook.get(i).JBCXM__PlaybookId__c,
+					JBCXM__Priority__c = priority.get(i).JBCXM__Priority__c,
+					JBCXM__SkipOption__c = skipoption.get(i).JBCXM__SkipOption__c,
+					JBCXM__Status__c = status.get(i).JBCXM__Status__c,
+					JBCXM__Subject__c = subject.get(i).JBCXM__Subject__c,
+					JBCXM__UID__c = uid.get(i).Id
+					);
+i++;
+CstaskList.add(cslist);
+}
+}
+else 
+{
+for ( integer totalTask = 0 ; totalTask <5 ; totalTask ++)
+	{
+JBCXM__CSTask__c cslist 		= new JBCXM__CSTask__c (
+					JBCXM__Account__c		= CTAid.get(ctacount).JBCXM__Account__c,
+					JBCXM__Assigned__c		= OwnerList.get(0).Id,
+					JBCXM__CTA__c = CTAid.get(ctacount).id,
+					JBCXM__Date__c = Date.today()+(delta.get(i).JBCXM__DeltaDays__c).intValue(),
+					JBCXM__DeltaDays__c = delta.get(i).JBCXM__DeltaDays__c,
+					JBCXM__DisplayOrder__c = displayorder.get(i).JBCXM__DisplayOrder__c,
+					JBCXM__DueDateSrc__c = duedatesrc.get(i).JBCXM__DueDateSrc__c,
+					JBCXM__Playbook__c = playbook.get(i).JBCXM__PlaybookId__c,
+					JBCXM__Priority__c = priority.get(i).JBCXM__Priority__c,
+					JBCXM__SkipOption__c = skipoption.get(i).JBCXM__SkipOption__c,
+					JBCXM__Status__c = status.get(i).JBCXM__Status__c,
+					JBCXM__Subject__c = subject.get(i).JBCXM__Subject__c,
+					JBCXM__UID__c = uid.get(i).Id
+					);
+i++;
+CstaskList.add(cslist);
+}
+}
+}
+ctacount++;	
+}
+
+}
+
+insert(CstaskList);
+

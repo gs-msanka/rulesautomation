@@ -1,0 +1,28 @@
+
+List<JBCXM__SuccessPlanTemplate__c> parentid = [Select id FROM JBCXM__SuccessPlanTemplate__c WHERE Name LIKE 'T%'];
+List<JBCXM__PickList__c> priorityid = [Select id FROM JBCXM__PickList__c where JBCXM__SystemName__c = 'Medium'];
+List<JBCXM__PickList__c> stageid = [Select id FROM JBCXM__PickList__c where JBCXM__SystemName__c ='New'];
+List<JBCXM__CTATypes__c> typeid = [Select id FROM JBCXM__CTATypes__c where name = 'Objective'];
+List<JBCXM__GSMetaInfo__c> categoryid = [Select id FROM JBCXM__GSMetaInfo__c where 	JBCXM__SystemName__c = 'Object Category 1'];
+List<JBCXM__GSMetaInfo__c> groupid = [Select id FROM JBCXM__GSMetaInfo__c where JBCXM__Category__c = 'CTA_GROUP_CATEGORY'];
+List<JBCXM__Playbook__c> playbookid = [Select id FROM JBCXM__Playbook__c where Name like 'Objective%'];
+List<User> OwnerList = [SELECT Id,name FROM User ORDER BY CreatedDate ASC NULLS FIRST ];
+
+
+for(integer j =0; j<25; j++)
+{
+for (integer i=1; i<=5;i++)
+  {
+
+	string name = 'Objective'+i;
+	List <JBCXM__SuccessPlanTemplate__c> SuccessPlanTemplateobjective = new List <JBCXM__SuccessPlanTemplate__c>();
+	JBCXM__SuccessPlanTemplate__c Objective = new JBCXM__SuccessPlanTemplate__c (
+	JBCXM__Objective__c = '{"Name":"'+name+'","JBCXM__IsRecurring__c":false,"JBCXM__Priority__c":"'+priorityid.get(0).id+'","JBCXM__Stage__c":"'+stageid.get(0).id+'","JBCXM__Type__c":"'+typeid.get(0).id+'","JBCXM__Assignee__c":"'+OwnerList.get(0).id+'","JBCXM__DynamicData__c":"{\\"UID\\":1458455999999,\\"datesToAdd\\":\\"50\\",\\"dueDateType\\":\\"Skip_weekend_if_due_on_a_weekend\\"}","JBCXM__Comments__c":"","JBCXM__SuccessCriteria__c":"","JBCXM__Category__c":"'+categoryid.get(0).id+'","JBCXM__CTAGroup__c":"'+groupid.get(0).id+'","JBCXM__Draft__c":true}',
+	JBCXM__Parent__c = parentid.get(j).id,
+	JBCXM__Playbook__c = playbookid.get(i-1).id
+	);
+	SuccessPlanTemplateobjective.add(Objective);
+	insert SuccessPlanTemplateobjective;
+
+  }
+}

@@ -1,0 +1,294 @@
+delete[SELECT Id FROM account where Data_ExternalId__c like 'MarvelsTestData%'];
+Map<String, Account> accounts = new Map<String, Account>();
+        List<String> accountRecords = new List<String>();
+        accountRecords.add('AAR Corp Hardware Abscoa Division,Miami,FL,SF100001,Distribution');
+        accountRecords.add('Abacus Programming Corporation,Chicago,IL,SF100002,Oil & Gas & Energy');
+        accountRecords.add('Abberley Kooiman,Pleasanton,CA,SF100003,Technology');
+        accountRecords.add('Abbett Electric Corp,-NA-,-NA-,SF100004,Others');
+        accountRecords.add('Abbey Press Inc,Addison,TX,SF100005,Manufacturing');
+        accountRecords.add('Bachman Information System Inc.,Winston Salem,NC,SF100006,Finance');
+        accountRecords.add('Back Stage Magazine,Irving,TX,SF100007,Technology');
+        accountRecords.add('Baker & McKenzie,New York,NY,SF100008,Technology');
+        accountRecords.add('Balfour Maclaine International,Jacksonville,FL,SF100009,Healthcare');
+        accountRecords.add('Ball & Socket Mfg Co,St Louis,MO,SF100010,Chemicals');
+        accountRecords.add('Caco-Pacific Corp.,Englewood,CO,SF100011,Medical Equipment & Supplies');
+        accountRecords.add('CADAM Inc.,Cleveland,OH,SF100012,Manufacturing');
+        accountRecords.add('Cadbury Beverages Div Cadbury,Milwaukee,WI,SF100013,Healthcare');
+        accountRecords.add('Cahn Instruments Inc,Birmingham,AL,SF100014,Retail');
+        accountRecords.add('Cal-Pac Roofing Inc,Bakersfield,CA,SF100015,Energy');
+        accountRecords.add('Dai-Ichi Kangyo Bank,Auburn Hills,MI,SF100016,Manufacturing');
+        accountRecords.add('Daisy of California,San Francisco,CA,SF100017,Technology');
+        accountRecords.add('Daley Business Forms,St Louis,MO,SF100018,Chemicals');
+        accountRecords.add('Dame Belts & Bag Co Inc,Cincinnati,OH,SF100019,Manufacturing');
+        accountRecords.add('Dana Marketing Inc,Cleveland,TN,SF100020,Finance');
+        accountRecords.add('East Bay Brass Foundry,Vancouver,WA,SF100021,Government');
+        accountRecords.add('East Coast Traders,Chicago,IL,SF100022,Manufacturing');
+        accountRecords.add('East/West Computers Inc,Bridgeton,MO,SF100023,Shipping');
+        accountRecords.add('Eastern Municipal Water Distri,Fort Recovery,OH,SF100024,Food & Beverage');
+        accountRecords.add('Eastman Kodak Company Health Sciences Division,Creve Coeur,MO,SF100025,Healthcare');
+        accountRecords.add('Facts on File Newsletter,Niwot,CO,SF100026,Apparel');
+        accountRecords.add('Family Magazine,Tempe,AZ,SF100027,Service');
+        accountRecords.add('Fedder RP Corp,San Francisco,CA,SF100028,"Television Cable, & Broadcast Network"');
+        accountRecords.add('Fell David H & Company Inc,Austin,TX,SF100029,Finance');
+        accountRecords.add('Ferrara Foods & Confections,St. Louis,MO,SF100030,Manufacturing');
+        accountRecords.add('G Group,Oak Brook,IL,SF100031,Manufacturing');
+        accountRecords.add('G-L Veneer Co Inc.,Germantown,WI,SF100032,Chemicals');
+        accountRecords.add('Galbreath Co,Erie,PA,SF100033,Government');
+        accountRecords.add('Gallo Ernst & Julio Winery,Ansonia,CT,SF100034,Machinery');
+        accountRecords.add('Gamblers Anonymous,Charlotte,NC,SF100035,Manufacturing');
+        accountRecords.add('Halcyon Assoc,Steubenville,OH,SF100036,Education');
+        accountRecords.add('Hambro International Venture F,Carlsbad,CA,SF100037,Medical & Dental Laboratories');
+        accountRecords.add('Hardy James G & Co,Louisville,CO,SF100038,Medical Products');
+        accountRecords.add('Harkavy Information Service,Bloomington,IL,SF100039,Agriculture');
+        accountRecords.add('Harken Marketing Co,Toledo,OH,SF100040,Healthcare');
+        accountRecords.add('IBIS Systems Inc.,El Paso,TX,SF100041,Retail');
+        accountRecords.add('IBK Capital Inc,Oak Brook,IL,SF100042,Service');
+        accountRecords.add('IBM Corp Data Systems Div,Seattle,WA,SF100043,Fish & Seafood');
+        accountRecords.add('ICM Corp,New York,NY,SF100044,Finance');
+        accountRecords.add('ImageTek Corp,Alpharetta,GA,SF100045,Education');
+        accountRecords.add('Jadow B & Sons Inc,Kenosha,WI,SF100046,Manufacturing');
+        accountRecords.add('Jaff Brothers Woodworks Inc,Raleigh,NC,SF100047,Food & Beverage');
+        accountRecords.add('Jandel Scientific Inc.,San Francisco,CA,SF100049,Retail');
+        accountRecords.add('Japanese American Citizens Lea,McLean,VA,SF100050,Industrial Manufacturing & Services');
+        accountRecords.add('K & S Contractors Supply Co,Hoboken,NJ,SF100051,Insurance');
+        accountRecords.add('Kahlert Assoc Inc,Irvine,CA,SF100052,Healthcare');
+        accountRecords.add('Kaiser Steel Resources Inc,San Marcos,TX,SF100053,Retail');
+        accountRecords.add('Karabelas Furs Inc,MISSION,TX,SF100054,Healthcare');
+        accountRecords.add('Karpen & Steel Products Inc,Winslow,IL,SF100055,Manufacturing');
+        accountRecords.add('La Costa Hotel & Spa,Muscatine,IA,SF100056,Utilities');
+        accountRecords.add('Lafferty RF & Co Inc,Broomfield,CO,SF100057,Engineering');
+        accountRecords.add('Lake County,Washington,DC,SF100058,Oil & Gas & Energy');
+        accountRecords.add('Lakeland Village,Calgary,Alberta,SF100059,Service');
+        accountRecords.add('Lexidata Corporation,Duluth,GA,SF100060,Hospitality');
+        accountRecords.add('Madonna Construction Co,Santa Cruz,CA,SF100061,Retail');
+        accountRecords.add('Magma Power Co,Helena,MT,SF100062,Non-profit');
+        accountRecords.add('Magna Mill Products,San Leandro,CA,SF100063,Food & Beverage');
+        accountRecords.add('Majestic Entertainment,Bakersfield,CA,SF100064,Agriculture');
+        accountRecords.add('Mall Side Sports,Newark,CA,SF100065,Finance');
+        accountRecords.add('N/S Corp,Denver,CO,SF100066,Oil & Gas Exploration & Production');
+        accountRecords.add('Nardon Mfg Company Incorporated,Stamford,CT,SF100067,Manufacturing');
+        accountRecords.add('Nash Direct,Stamford,CT,SF100068,Manufacturing');
+        accountRecords.add('National Assn of Printing Ink,Latham,NY,SF100069,Manufacturing');
+        accountRecords.add('Nixdorf Computer,Ponca City,OK,SF100070,Government');
+        accountRecords.add('OKeeffes Inc,Cincinnati,OH,SF100071,Manufacturing');
+        accountRecords.add('O-Cel-O Div General Mills Inc.,Herndon,VA,SF100072,Service');
+        accountRecords.add('Oakland Carbide Engineering &,Union City,CA,SF100073,Healthcare');
+        accountRecords.add('Ocean Sports,Cinneminson,NJ,SF100074,Manufacturing');
+        accountRecords.add('Ocean Sports Wear,Burr Ridge,IL,SF100075,Consumer Services');
+        accountRecords.add('P & C Food Markets Inc,Columbus,OH,SF100076,Hospitality');
+        accountRecords.add('P.S.C.,Oro Valley,AZ,SF100077,Consulting');
+        accountRecords.add('PacDevco Inc,Boca Raton,FL,SF100078,Telecommunications');
+        accountRecords.add('Pace Press Inc,St Simons Island,GA,SF100079,Hospitality');
+        accountRecords.add('Purity-Supreme Inc.,San Marcos,CA,SF100080,Manufacturing');
+        accountRecords.add('Quadrex Corp,Westford,MA,SF100081,Telecommunications');
+        accountRecords.add('Quaker Fashions,Issaquah,WA,SF100082,Healthcare');
+        accountRecords.add('Queensborough Public Library,Irvine,CA,SF100083,Manufacturing');
+        accountRecords.add('Quinn/Brein Inc,San Jose,CA,SF100084,Manufacturing');
+        accountRecords.add('Quota Systems Inc.,Hazelwood,MO,SF100085,Construction');
+        accountRecords.add('R-F Industries Inc,Tulsa,OK,SF100086,Bakery Products');
+        accountRecords.add('Raceway Engines,Kettering,OH,SF100087,Technology');
+        accountRecords.add('Raleigh Active Wear,Seymour,CT,SF100088,Manufacturing');
+        accountRecords.add('Raleigh Co.,Oakbrook Terrace,IL,SF100089,Technology');
+        accountRecords.add('Ralston Inc.,Frisco,TX,SF100090,Transportation');
+        accountRecords.add('Sabena-Belgian World Airlines,Circleville,Ohio,SF100091,Manufacturing');
+        accountRecords.add('Safeway Plumbing & Heating Inc,Washington,DC,SF100092,Consulting');
+        accountRecords.add('Saint Johns University Staten,Boulder,CO,SF100093,Software & Programming');
+        accountRecords.add('Star Markets,Livermore,CA,SF100094,Food & Beverage');
+        accountRecords.add('State House Active Wear,South Portland,ME,SF100095,Service');
+        accountRecords.add('Tapecon Inc,Andover,MA,SF100096,Service');
+        accountRecords.add('TDA Industries Inc,Santa Clara,CA,SF100097,Medical Devices');
+        accountRecords.add('TEAC Corp. of America,Glenn Allen,VA,SF100098,Service');
+        accountRecords.add('Tech Fire & Safety Company,Boulder,CO,SF100099,Biotechnology ');
+        accountRecords.add('Teradyne,London,England,SF100100,Finance');
+        accountRecords.add('UBAF Arab American Bank,Dubai,,SF100101,Hospitality');
+        accountRecords.add('UniAmerica Inc,-NA-,-NA-,SF100102,Healthcare');
+        accountRecords.add('Union Flights,-NA-,-NA-,SF100103,Technology');
+        accountRecords.add('United Artists Theater Circuit,Russellville,AR,SF100104,Service');
+        accountRecords.add('United Can Co.,Winston-Salem,NC,SF100105,Government');
+        accountRecords.add('Veritas Software,Sarasota,FI,SF100106,Non-profit');
+        accountRecords.add('Via Systems,Omaha,NE,SF100107,Telecommunications');
+        accountRecords.add('Vicor,Wesport,CT,SF100108,Non-profit');
+        accountRecords.add('Volga Boats,Bellevue,WA,SF100109,Technology');
+        accountRecords.add('Vyrex,Omaha,NE,SF100110,Retail');
+        accountRecords.add('Wallys World,St. Louis,MO,SF100111,Technology');
+        accountRecords.add('Westend Dealers,Boston,MA,SF100112,Service');
+        accountRecords.add('Westinghouse Corporation,Louisville,KY,SF100113,Manufacturing');
+        accountRecords.add('Wind & Rain,Irvine,CA,SF100114,Others');
+        accountRecords.add('Wyse Corp.,Austin,TX,SF100115,Technology');
+        accountRecords.add('Xerox,West Caldwell,NJ,SF100116,Others');
+        accountRecords.add('Yesterday Productions Corp.,Jackson,MI,SF100117,Manufacturing');
+        accountRecords.add('Ziff-Davis Labs,Olathe,KS,SF100118,Manufacturing');
+        accountRecords.add('Zoo Gift Shop,Downers Grove,IL,SF100119,Manufacturing');
+        integer i = 0;
+		//Loop through the List of accountRecords, create a reacord for each item in the list.
+        for(String accountRecord : accountRecords) 
+        {
+            List<String> values = accountRecord.split(',(?=([^\"]*\"[^\"]*\")*[^\"]*$)', 0); 
+            Account sampleAccount = new Account( Name           = values[0],
+                                                 BillingCity    = values[1],
+                                                 BillingState   = values[2],
+                                                 AccountNumber  = values[3],
+                                                 Data_ExternalId__c = 'MarvelsTestData'+i,
+                                                 Industry       = (values[4].startsWith('"') && values[4].endsWith('"')) ? values[4].substring(1, values[4].length()-1):values[4],
+                                                 Site		    = 'SampleData');
+            accounts.put(values[0], sampleAccount);		
+            i++;
+        }
+        upsert accounts.values();  
+
+        delete[SELECT Id, JBCXM__Account__r.Data_ExternalId__c FROM JBCXM__CustomerInfo__c where JBCXM__Account__r.Data_ExternalId__c like 'MarvelsTestData%'];
+        Map<String, JBCXM__CustomerInfo__c> customerInfoData = new Map<String, JBCXM__CustomerInfo__c>();
+        List<String> CustomerInfoRecords = new List<String>();
+
+        CustomerInfoRecords.add('AAR Corp Hardware Abscoa Division,ActiveCustomer,stage1');
+        CustomerInfoRecords.add('Abacus Programming Corporation,ActiveCustomer,stage2');
+        CustomerInfoRecords.add('Abberley Kooiman,ActiveCustomer,stage3');
+        CustomerInfoRecords.add('Abbett Electric Corp,ActiveCustomer,stage4');
+        CustomerInfoRecords.add('Abbey Press Inc,ActiveCustomer,stage1');
+        CustomerInfoRecords.add('Bachman Information System Inc.,ActiveCustomer,stage2');
+        CustomerInfoRecords.add('Back Stage Magazine,ActiveCustomer,stage3');
+        CustomerInfoRecords.add('Baker & McKenzie,ActiveCustomer,stage4');
+        CustomerInfoRecords.add('Balfour Maclaine International,ActiveCustomer,stage1');
+        CustomerInfoRecords.add('Ball & Socket Mfg Co,ActiveCustomer,stage2');
+        CustomerInfoRecords.add('Caco-Pacific Corp.,ActiveCustomer,stage3');
+        CustomerInfoRecords.add('CADAM Inc.,ActiveCustomer,stage4');
+        CustomerInfoRecords.add('Cadbury Beverages Div Cadbury,ActiveCustomer,stage1');
+        CustomerInfoRecords.add('Cahn Instruments Inc,ActiveCustomer,stage2');
+        CustomerInfoRecords.add('Cal-Pac Roofing Inc,ActiveCustomer,stage3');
+        CustomerInfoRecords.add('Dai-Ichi Kangyo Bank,ActiveCustomer,stage4');
+        CustomerInfoRecords.add('Daisy of California,ActiveCustomer,stage1');
+        CustomerInfoRecords.add('Daley Business Forms,ActiveCustomer,stage2');
+        CustomerInfoRecords.add('Dame Belts & Bag Co Inc,ActiveCustomer,stage3');
+        CustomerInfoRecords.add('Dana Marketing Inc,ActiveCustomer,stage4');
+        CustomerInfoRecords.add('East Bay Brass Foundry,ActiveCustomer,stage1');
+        CustomerInfoRecords.add('East Coast Traders,ActiveCustomer,stage2');
+        CustomerInfoRecords.add('East/West Computers Inc,ActiveCustomer,stage3');
+        CustomerInfoRecords.add('Eastern Municipal Water Distri,ActiveCustomer,stage4');
+        CustomerInfoRecords.add('Eastman Kodak Company Health Sciences Division,ActiveCustomer,stage1');
+        CustomerInfoRecords.add('Facts on File Newsletter,ActiveCustomer,stage2');
+        CustomerInfoRecords.add('Family Magazine,ActiveCustomer,stage3');
+        CustomerInfoRecords.add('Fedder RP Corp,ActiveCustomer,stage4');
+        CustomerInfoRecords.add('Fell David H & Company Inc,ActiveCustomer,stage1');
+        CustomerInfoRecords.add('Ferrara Foods & Confections,ActiveCustomer,stage2');
+        CustomerInfoRecords.add('G Group,ActiveCustomer,stage3');
+        CustomerInfoRecords.add('G-L Veneer Co Inc.,ActiveCustomer,stage4');
+        CustomerInfoRecords.add('Galbreath Co,ActiveCustomer,stage1');
+        CustomerInfoRecords.add('Gallo Ernst & Julio Winery,ActiveCustomer,stage2');
+        CustomerInfoRecords.add('Gamblers Anonymous,ActiveCustomer,stage3');
+        CustomerInfoRecords.add('Halcyon Assoc,ActiveCustomer,stage4');
+        CustomerInfoRecords.add('Hambro International Venture F,ActiveCustomer,stage1');
+        CustomerInfoRecords.add('Hardy James G & Co,ActiveCustomer,stage2');
+        CustomerInfoRecords.add('Harkavy Information Service,ActiveCustomer,stage3');
+        CustomerInfoRecords.add('Harken Marketing Co,ActiveCustomer,stage4');
+        CustomerInfoRecords.add('IBIS Systems Inc.,ActiveCustomer,stage1');
+        CustomerInfoRecords.add('IBK Capital Inc,ActiveCustomer,stage2');
+        CustomerInfoRecords.add('IBM Corp Data Systems Div,ActiveCustomer,stage3');
+        CustomerInfoRecords.add('ICM Corp,ActiveCustomer,stage4');
+        CustomerInfoRecords.add('ImageTek Corp,ActiveCustomer,stage1');
+        CustomerInfoRecords.add('Jadow B & Sons Inc,ActiveCustomer,stage2');
+        CustomerInfoRecords.add('Jaff Brothers Woodworks Inc,ActiveCustomer,stage3');
+        CustomerInfoRecords.add('Jandel Scientific Inc.,ActiveCustomer,stage1');
+        CustomerInfoRecords.add('Japanese American Citizens Lea,ActiveCustomer,stage2');
+        CustomerInfoRecords.add('K & S Contractors Supply Co,ActiveCustomer,stage3');
+        CustomerInfoRecords.add('Kahlert Assoc Inc,ActiveCustomer,stage4');
+        CustomerInfoRecords.add('Kaiser Steel Resources Inc,ActiveCustomer,stage1');
+        CustomerInfoRecords.add('Karabelas Furs Inc,ActiveCustomer,stage2');
+        CustomerInfoRecords.add('Karpen & Steel Products Inc,ActiveCustomer,stage3');
+        CustomerInfoRecords.add('La Costa Hotel & Spa,ActiveCustomer,stage4');
+        CustomerInfoRecords.add('Lafferty RF & Co Inc,ActiveCustomer,stage1');
+        CustomerInfoRecords.add('Lake County,ActiveCustomer,stage2');
+        CustomerInfoRecords.add('Lakeland Village,ActiveCustomer,stage3');
+        CustomerInfoRecords.add('Lexidata Corporation,ActiveCustomer,stage4');
+        CustomerInfoRecords.add('Madonna Construction Co,ActiveCustomer,stage1');
+        CustomerInfoRecords.add('Magma Power Co,ActiveCustomer,stage2');
+        CustomerInfoRecords.add('Magna Mill Products,ActiveCustomer,stage3');
+        CustomerInfoRecords.add('Majestic Entertainment,ActiveCustomer,stage4');
+        CustomerInfoRecords.add('Mall Side Sports,ActiveCustomer,stage1');
+        CustomerInfoRecords.add('N/S Corp,ActiveCustomer,stage2');
+        CustomerInfoRecords.add('Nardon Mfg Company Incorporated,ActiveCustomer,stage3');
+        CustomerInfoRecords.add('Nash Direct,ActiveCustomer,stage4');
+        CustomerInfoRecords.add('National Assn of Printing Ink,ActiveCustomer,stage1');
+        CustomerInfoRecords.add('Nixdorf Computer,ActiveCustomer,stage2');
+        CustomerInfoRecords.add('OKeeffes Inc,ActiveCustomer,stage3');
+        CustomerInfoRecords.add('O-Cel-O Div General Mills Inc.,ActiveCustomer,stage4');
+        CustomerInfoRecords.add('Oakland Carbide Engineering &,ActiveCustomer,stage1');
+        CustomerInfoRecords.add('Ocean Sports,ActiveCustomer,stage2');
+        CustomerInfoRecords.add('Ocean Sports Wear,ActiveCustomer,stage3');
+        CustomerInfoRecords.add('P & C Food Markets Inc,ActiveCustomer,stage4');
+        CustomerInfoRecords.add('P.S.C.,ActiveCustomer,stage1');
+        CustomerInfoRecords.add('PacDevco Inc,ActiveCustomer,stage2');
+        CustomerInfoRecords.add('Pace Press Inc,ActiveCustomer,stage3');
+        CustomerInfoRecords.add('Purity-Supreme Inc.,ActiveCustomer,stage4');
+        CustomerInfoRecords.add('Quadrex Corp,ActiveCustomer,stage1');
+        CustomerInfoRecords.add('Quaker Fashions,ActiveCustomer,stage2');
+        CustomerInfoRecords.add('Queensborough Public Library,ActiveCustomer,stage3');
+        CustomerInfoRecords.add('Quinn/Brein Inc,ActiveCustomer,stage4');
+        CustomerInfoRecords.add('Quota Systems Inc.,ActiveCustomer,stage1');
+        CustomerInfoRecords.add('R-F Industries Inc,ActiveCustomer,stage2');
+        CustomerInfoRecords.add('Raceway Engines,ActiveCustomer,stage3');
+        CustomerInfoRecords.add('Raleigh Active Wear,ActiveCustomer,stage4');
+        CustomerInfoRecords.add('Raleigh Co.,ActiveCustomer,stage1');
+        CustomerInfoRecords.add('Ralston Inc.,ActiveCustomer,stage2');
+        CustomerInfoRecords.add('Sabena-Belgian World Airlines,ActiveCustomer,stage3');
+        CustomerInfoRecords.add('Safeway Plumbing & Heating Inc,ActiveCustomer,stage4');
+        CustomerInfoRecords.add('Saint Johns University Staten,ActiveCustomer,stage1');
+        CustomerInfoRecords.add('Star Markets,ActiveCustomer,stage2');
+        CustomerInfoRecords.add('State House Active Wear,ActiveCustomer,stage3');
+        CustomerInfoRecords.add('Tapecon Inc,ActiveCustomer,stage4');
+        CustomerInfoRecords.add('TDA Industries Inc,ActiveCustomer,stage1');
+        CustomerInfoRecords.add('TEAC Corp. of America,ActiveCustomer,stage2');
+        CustomerInfoRecords.add('Tech Fire & Safety Company,ActiveCustomer,stage3');
+        CustomerInfoRecords.add('Teradyne,ActiveCustomer,stage4');
+        CustomerInfoRecords.add('UBAF Arab American Bank,ActiveCustomer,stage1');
+        CustomerInfoRecords.add('UniAmerica Inc,ActiveCustomer,stage2');
+        CustomerInfoRecords.add('Union Flights,ActiveCustomer,stage3');
+        CustomerInfoRecords.add('United Artists Theater Circuit,ActiveCustomer,stage4');
+        CustomerInfoRecords.add('United Can Co.,ActiveCustomer,stage1');
+        CustomerInfoRecords.add('Veritas Software,ActiveCustomer,stage2');
+        CustomerInfoRecords.add('Via Systems,ActiveCustomer,stage3');
+        CustomerInfoRecords.add('Vicor,ActiveCustomer,stage4');
+        CustomerInfoRecords.add('Volga Boats,ActiveCustomer,stage1');
+        CustomerInfoRecords.add('Vyrex,ActiveCustomer,stage2');
+        CustomerInfoRecords.add('Wallys World,ActiveCustomer,stage3');
+        CustomerInfoRecords.add('Westend Dealers,ActiveCustomer,stage4');
+        CustomerInfoRecords.add('Westinghouse Corporation,ActiveCustomer,stage1');
+        CustomerInfoRecords.add('Wind & Rain,ActiveCustomer,stage2');
+        CustomerInfoRecords.add('Wyse Corp.,ActiveCustomer,stage3');
+        CustomerInfoRecords.add('Xerox,ActiveCustomer,stage4');
+        CustomerInfoRecords.add('Yesterday Productions Corp.,ActiveCustomer,stage1');
+        CustomerInfoRecords.add('Ziff-Davis Labs,ActiveCustomer,stage2');
+        CustomerInfoRecords.add('Zoo Gift Shop,ActiveCustomer,stage3');
+
+        Account accountValue = new Account();
+        Map<String, JBCXM__PickList__c> stageValues = new Map<String, JBCXM__PickList__c>();
+        Map<String, JBCXM__PickList__c> statusValues = new Map<String, JBCXM__PickList__c>();
+        for(JBCXM__PickList__c statusd : [SELECT Id, JBCXM__SystemName__c FROM JBCXM__PickList__c WHERE JBCXM__Category__c = 'Customer Status'])
+        {
+            statusValues.put(statusd.JBCXM__SystemName__c, statusd);
+        }
+
+        for(JBCXM__PickList__c staged : [SELECT Id, JBCXM__SystemName__c FROM JBCXM__PickList__c WHERE JBCXM__Category__c = 'Customer Stage'])
+        {
+            stageValues.put(staged.JBCXM__SystemName__c, staged);
+        }
+
+
+        for(String CustomerInfoRecord : CustomerInfoRecords)
+        {
+            List<String> values = CustomerInfoRecord.split(',', 0);
+            accountValue = accounts.get(values[0]);
+            JBCXM__CustomerInfo__c customerInfo = new JBCXM__CustomerInfo__c( JBCXM__Account__c = accountValue.Id,
+                                                                JBCXM__Status__c  = statusValues.get(values[1]).Id,
+                                                                JBCXM__Stage__c   = stageValues.get(values[2]).Id,
+                                                                JBCXM__ASV__c = 0,
+                                                                JBCXM__MRR__c = 0,
+                                                                JBCXM__NextRenewalDate__c = null,
+                                                                JBCXM__OneTimeRevenue__c = 0,
+                                                                JBCXM__OriginalContractDate__c = null,
+                                                                JBCXM__OriginalContractNumber__c = '',
+                                                                JBCXM__Users__c = 0,
+                                                                JBCXM__Comments__c = '');
+            customerInfoData.put(values[0], customerInfo);
+
+        }
+        Upsert customerInfoData.values();

@@ -1,0 +1,75 @@
+Delete [Select id from JBCXM__GSMetaInfo__c where JBCXM__Category__c in('SUCCESS_PLAN_TYPE','OBJECTIVE_CATEGORY')];
+
+// Success plan type and category creation
+List <JBCXM__GSMetaInfo__c> SuccessPlanAdmin = new List <JBCXM__GSMetaInfo__c>();
+for (Integer i= 1 ;i <=5; i++){
+	JBCXM__GSMetaInfo__c SuccessPlanType = new JBCXM__GSMetaInfo__c (
+		Name					=	'Success Plan '+string.valueof(i),
+		JBCXM__Category__c  	=	'SUCCESS_PLAN_TYPE',
+		JBCXM__DisplayOrder__c	=	i,
+		JBCXM__isActive__c		=	true,
+		JBCXM__SystemName__c	=	'SP Type '+string.valueof(i)
+	);
+
+	JBCXM__GSMetaInfo__c ObjectCategory  = new JBCXM__GSMetaInfo__c (
+		Name					=	'Object Category '+string.valueof(i),
+		JBCXM__Category__c  	=	'OBJECTIVE_CATEGORY',
+		JBCXM__DisplayOrder__c	=	i+2,
+		JBCXM__isActive__c		=	true,
+		JBCXM__SystemName__c	=	'Object Category '+string.valueof(i)
+	);
+	
+	SuccessPlanAdmin.add(SuccessPlanType);
+	SuccessPlanAdmin.add(ObjectCategory);
+}
+insert SuccessPlanAdmin;
+
+// Success plan info configurations for each type
+List<JBCXM__GSMetaInfo__c> SuccessPlanTypeList = [SELECT Id,Name FROM JBCXM__GSMetaInfo__c WHERE JBCXM__Category__c = 'SUCCESS_PLAN_TYPE'];
+List <JBCXM__UIViews__c> SuccessPlanTypeUIviews = new List <JBCXM__UIViews__c>();
+
+for (JBCXM__GSMetaInfo__c SuccessPlanType : SuccessPlanTypeList){
+JBCXM__UIViews__c UIviews = new JBCXM__UIViews__c (
+JBCXM__SPType__c = SuccessPlanType.id,
+JBCXM__UITabName__c = 'SuccessPlanAttributes',
+JBCXM__Visibility__c = 'NonDeletable',
+JBCXM__GroupDisplayOrder__c = 	1.0,
+JBCXM__GroupName__c = '	Details',
+JBCXM__ColumnList__c = '[{"column":"1","displayOrder":1,"fieldType":"TEXT","label":"Name","name":"Name","objectName":"JBCXM__CTAGroup__c","visibilityMode":true,"isEditable":true},{"column":"2","displayOrder":1,"fieldType":"REFERENCE","label":"Type","name":"JBCXM__SuccessPlanType__c","objectName":"JBCXM__CTAGroup__c","visibilityMode":true,"isEditable":true},{"column":"1","displayOrder":2,"fieldType":"TEXTAREA","label":"Description","name":"JBCXM__Description__c","objectName":"JBCXM__CTAGroup__c","visibilityMode":true,"isEditable":true},{"column":"2","displayOrder":2,"fieldType":"TEXTAREA","label":"Company Highlights","name":"JBCXM__HighLights__c","objectName":"JBCXM__CTAGroup__c","visibilityMode":true,"isEditable":true},{"column":"1","displayOrder":3,"fieldType":"TEXTAREA","label":"Action Plan","name":"JBCXM__ActionPlan__c","objectName":"JBCXM__CTAGroup__c","visibilityMode":true,"isEditable":true}]'
+);
+SuccessPlanTypeUIviews.add(UIviews);
+}
+insert SuccessPlanTypeUIviews;
+
+
+//Case Setting
+List <JBCXM__C360Sections__c> C360SectionsList= [SELECT Id,JBCXM__InAccountWidget__c,JBCXM__InCustomer360__c
+		,JBCXM__InOpportunityWidget__c,JBCXM__DisplayLabel__c,JBCXM__DisplayOrder__c FROM JBCXM__C360Sections__c];
+For (JBCXM__C360Sections__c C360Sections :  C360SectionsList){
+	if ((C360Sections.JBCXM__DisplayLabel__c == 'Summary') || (C360Sections.JBCXM__DisplayLabel__c == 'Cockpit')
+			|| (C360Sections.JBCXM__DisplayLabel__c == 'Success Plans') || (C360Sections.JBCXM__DisplayLabel__c == 'Usage') || (C360Sections.JBCXM__DisplayLabel__c == 'Relationships')){
+			C360Sections.JBCXM__InAccountWidget__c =true;
+			C360Sections.JBCXM__InCustomer360__c =true;
+			C360Sections.JBCXM__InOpportunityWidget__c=true;
+		}
+	else
+	{
+		C360Sections.JBCXM__InAccountWidget__c =false;
+		C360Sections.JBCXM__InCustomer360__c =false;
+		C360Sections.JBCXM__InOpportunityWidget__c=false;
+	}
+	if (C360Sections.JBCXM__DisplayLabel__c == 'Scorecard')
+		C360Sections.JBCXM__DisplayOrder__c = 5;
+	else if (C360Sections.JBCXM__DisplayLabel__c == 'Cockpit') 
+		C360Sections.JBCXM__DisplayOrder__c = 2;
+	else if (C360Sections.JBCXM__DisplayLabel__c == 'Attributes')
+		C360Sections.JBCXM__DisplayOrder__c = 11;
+	else if (C360Sections.JBCXM__DisplayLabel__c == 'Success Plans')
+		C360Sections.JBCXM__DisplayOrder__c = 1;
+	else if (C360Sections.JBCXM__DisplayLabel__c == 'Summary')
+		C360Sections.JBCXM__DisplayOrder__c = 4;
+	else if (C360Sections.JBCXM__DisplayLabel__c == 'Relationships')
+		C360Sections.JBCXM__DisplayOrder__c = 3;
+}
+update C360SectionsList;
+

@@ -1,0 +1,82 @@
+// Create Playbook Tasks for Event Type Playbooks
+
+List<JBCXM__GSMetaInfo__c> soid = [SELECT id FROM JBCXM__GSMetaInfo__c where JBCXM__SystemName__c like 'Skip_weekend_if_due_on_a_weekend%'];
+List<JBCXM__GSMetaInfo__c> ddsid = [SELECT id,JBCXM__SystemName__c FROM JBCXM__GSMetaInfo__c where JBCXM__SystemName__c  in ('Assign_Date','CTA_DUE_DATE','NONE','TASK_CLOSE_DATE','TASK_DUE_DATE') ORDER BY JBCXM__SystemName__c ASC NULLS FIRST];
+List<JBCXM__playbook__c> pbidforevent = [SELECT id FROM JBCXM__playbook__c where name like 'Event__Playbook__%' limit 45];
+integer noofplaybboktask_Event =1;
+
+for (JBCXM__playbook__c pidevent : pbidforevent) {
+	List<JBCXM__playbooktasks__c> pbtaskList1to3_Event = new List<JBCXM__playbooktasks__c>();
+	List<JBCXM__playbooktasks__c> pbtaskList4_Event = new List<JBCXM__playbooktasks__c>();
+	List<JBCXM__playbooktasks__c> pbtaskList5_Event = new List<JBCXM__playbooktasks__c>();
+    
+    integer randomNum = -30 + (integer)(Math.random() * (50 - (-30)));
+	JBCXM__playbooktasks__c pbtask1_Event = new JBCXM__playbooktasks__c (   //Task having Assign date as Date source Option
+		JBCXM__PlaybookId__c = pidevent.id,
+		JBCXM__DueDateSrc__c	=	ddsid.get(0).id,
+		JBCXM__SkipOption__c = soid.get(0).id,
+		JBCXM__DeltaDays__c = randomNum+.0,
+		JBCXM__DisplayOrder__c = 1.0,
+		JBCXM__Priority__c = 'High',
+		JBCXM__Status__c = 'Open',
+		JBCXM__Subject__c = 'ASSIGN_DATE_Skip_weekend_if_due_on_a_weekend_Event_Playbook_'+(noofplaybboktask_Event)
+		);
+		pbtaskList1to3_Event.add(pbtask1_Event);
+
+	integer randomNum1 = 0 + (integer)(Math.random() * (10 - 0));
+	JBCXM__playbooktasks__c pbtask2_Event = new JBCXM__playbooktasks__c (  //Task having CTA due date as Date source Option
+		JBCXM__PlaybookId__c = pidevent.id,
+		JBCXM__DueDateSrc__c	=	ddsid.get(1).id,
+		JBCXM__SkipOption__c = soid.get(0).id,
+		JBCXM__DeltaDays__c = randomNum1+.0,
+		JBCXM__DisplayOrder__c = 2.0,
+		JBCXM__Priority__c = 'Medium',
+		JBCXM__Status__c = 'Open',
+		JBCXM__Subject__c = 'CTA_DUE_DATE_Skip_weekend_if_due_on_a_weekend_Event_Playbook_'+(noofplaybboktask_Event)
+		);
+		pbtaskList1to3_Event.add(pbtask2_Event);
+
+	JBCXM__playbooktasks__c pbtask3_Event = new JBCXM__playbooktasks__c (  //Task having None as Date source Option
+		JBCXM__PlaybookId__c = pidevent.id,
+		JBCXM__DueDateSrc__c	=	ddsid.get(2).id,
+		JBCXM__DisplayOrder__c = 5.0,
+		JBCXM__Priority__c = 'Low',
+		JBCXM__Status__c = 'Open',
+		JBCXM__Subject__c = 'NONE_Event_Playbook_'+(noofplaybboktask_Event)
+		);
+		pbtaskList1to3_Event.add(pbtask3_Event);
+	insert pbtaskList1to3_Event;
+
+
+	List<JBCXM__playbooktasks__c> parentid = [SELECT id FROM JBCXM__playbooktasks__c where JBCXM__Subject__c =:pbtask2_Event.JBCXM__Subject__c];
+	JBCXM__playbooktasks__c pbtask4_Event = new JBCXM__playbooktasks__c (  //Task having Task Due date as Date source Option and having dependancy on CTA due date
+		JBCXM__PlaybookId__c = pidevent.id,
+		JBCXM__DueDateSrc__c	=	ddsid.get(3).id,
+		JBCXM__SkipOption__c = soid.get(0).id,
+		JBCXM__DeltaDays__c = 3.0,
+		JBCXM__DisplayOrder__c = 3.0,
+		JBCXM__Priority__c = 'High',
+		JBCXM__Status__c = 'Open',
+		JBCXM__Subject__c = 'TASK_DUE_DATE_Skip_weekend_if_due_on_a_weekend_Event_Playbook_'+(noofplaybboktask_Event),
+		JBCXM__Parent__c = parentid.get(0).id
+		);
+		pbtaskList4_Event.add(pbtask4_Event);
+	insert pbtaskList4_Event;
+
+
+	List<JBCXM__playbooktasks__c> parentid1 = [SELECT id FROM JBCXM__playbooktasks__c where JBCXM__Subject__c =:pbtask4_Event.JBCXM__Subject__c];
+	JBCXM__playbooktasks__c pbtask5_Event = new JBCXM__playbooktasks__c (  //Task having Task Close date as Date source Option and having dependancy on Task due date
+		JBCXM__PlaybookId__c = pidevent.id,
+		JBCXM__DueDateSrc__c	=	ddsid.get(4).id,
+		JBCXM__SkipOption__c = soid.get(0).id,
+		JBCXM__DeltaDays__c = 1.0,
+		JBCXM__DisplayOrder__c = 4.0,
+		JBCXM__Priority__c = 'Medium',
+		JBCXM__Status__c = 'Open',
+		JBCXM__Subject__c = 'TASK_CLOSE_DATE_Skip_weekend_if_due_on_a_weekend_Event_Playbook_'+(noofplaybboktask_Event),
+		JBCXM__Parent__c = parentid1.get(0).id
+		);
+		noofplaybboktask_Event++;
+		pbtaskList5_Event.add(pbtask5_Event);
+	insert pbtaskList5_Event;
+}

@@ -1,0 +1,27 @@
+delete[select id from JBCXM__SuccessPlanTemplate__c];
+
+//Creating Success plan template for each type
+integer Numberoftemplate = 5;
+integer Totaltype = 5;
+
+List<JBCXM__GSMetaInfo__c> statusid = [Select id FROM JBCXM__GSMetaInfo__c where JBCXM__SystemName__c = 'Draft'];
+List<JBCXM__GSMetaInfo__c> sptypeid = [Select id FROM JBCXM__GSMetaInfo__c where JBCXM__Category__c in ('SUCCESS_PLAN_TYPE')];
+List<JBCXM__GSMetaInfo__c> groupcategoryid = [Select id FROM JBCXM__GSMetaInfo__c where JBCXM__SystemName__c = 'Success Plan'];
+integer Countoftemplate = 0;
+List<User> OwnerList = [SELECT Id,name FROM User ORDER BY CreatedDate ASC NULLS FIRST];
+for (integer i =0; i< Totaltype;i++)
+{
+	for(integer j=0; j< Numberoftemplate; j++)
+	{
+		string name = 'Template '+Countoftemplate;
+		List <JBCXM__SuccessPlanTemplate__c> SuccessPlanTemplateAdmin = new List <JBCXM__SuccessPlanTemplate__c>();
+		JBCXM__SuccessPlanTemplate__c Template = new JBCXM__SuccessPlanTemplate__c (
+			name = name,
+			JBCXM__SuccessPlan__c ='{"JBCXM__Status__c":"'+statusid.get(0).id+'","Name":"'+name+'","JBCXM__SuccessPlanType__c":"'+sptypeid.get(i).id+'","JBCXM__CTAGroupCategory__c":"'+groupcategoryid.get(0).id+'","JBCXM__Owner__c":"'+OwnerList.get(0).id+'"}'
+			);
+		Countoftemplate++;
+		SuccessPlanTemplateAdmin.add(Template);
+
+	insert SuccessPlanTemplateAdmin;
+	}
+}

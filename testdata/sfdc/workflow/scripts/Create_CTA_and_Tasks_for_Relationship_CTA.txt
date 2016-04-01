@@ -1,0 +1,184 @@
+
+delete[select id, JBCXM__Account__r.Data_ExternalId__c from JBCXM__CTA__c where JBCXM__Account__r.Data_ExternalId__c like 'MarvelsTestData%'];
+delete[select id, JBCXM__Account__r.Data_ExternalId__c from JBCXM__CSTask__c where JBCXM__Account__r.Data_ExternalId__c like 'MarvelsTestData%'];
+
+//Create Relationship CTA's 
+List <JBCXM__CTA__c> CTAList = new List <JBCXM__CTA__c>();
+List<JBCXM__PickList__c> priorityid = [Select id FROM JBCXM__PickList__c where JBCXM__SystemName__c in ('High','Medium','Low')];
+List<User> OwnerList = [SELECT Id,name FROM User ORDER BY CreatedDate ASC NULLS FIRST ];
+List<JBCXM__PickList__c> reasonid = [Select id FROM JBCXM__PickList__c where JBCXM__Category__c = 'Alert Reason'];
+List<JBCXM__PickList__c> stageid = [Select id FROM JBCXM__PickList__c where JBCXM__SystemName__c ='New'];
+List<JBCXM__CTATypes__c> typeid = [Select id FROM JBCXM__CTATypes__c where name in ('Risk','Opportunity','Event')];
+List<JBCXM__GSRelationship__c> relationshipid = [Select id,JBCXM__Account__c FROM JBCXM__GSRelationship__c];
+List<JBCXM__Playbook__c> playbookid = [Select id,JBCXM__CTAType__c FROM JBCXM__Playbook__c where JBCXM__CTAType__r.name in ('Risk','Opportunity','Event')];
+integer totalpb = 45;
+integer i = 0; 
+
+Map<string,string> Uniqueplaybookid = new Map<string,string>();
+for (JBCXM__Playbook__c playid : playbookid)
+{
+	if( ! Uniqueplaybookid.containsKey(playid.JBCXM__CTAType__c))
+	{
+	Uniqueplaybookid.put(playid.JBCXM__CTAType__c,playid.id);
+	}
+}
+
+integer j=0;
+ for ( JBCXM__GSRelationship__c reid :relationshipid) {
+ 		for (JBCXM__CTATypes__c ctatypeid : typeid) {
+ integer randomNumforreason = 0 + (integer)(Math.random() * (14 - 0));
+  integer randomNum = 50 + (integer)(Math.random() * (100 - 50));
+   integer randomNumforpriority = 0 + (integer)(Math.random() * (2 - 0));
+ 			JBCXM__CTA__c clist 		= new JBCXM__CTA__c (
+					JBCXM__Account__c			= reid.JBCXM__Account__c,
+					JBCXM__Assignee__c				= OwnerList.get(0).Id,
+					JBCXM__Reason__c 			= reasonid.get(randomNumforreason).id,
+					JBCXM__Relationship__c 			= reid.id,
+					JBCXM__Draft__c 			= false,
+					JBCXM__OpenTaskCount__c = 5.0,
+					JBCXM__Priority__c = priorityid.get(randomNumforpriority).id,
+					JBCXM__Source__c = 'Manual',
+					JBCXM__Stage__c = stageid.get(0).id,
+					JBCXM__TaskCount__c = 5.0,
+					JBCXM__Type__c = ctatypeid.id,
+					Name = 'RelationshipCTA' +j,
+					JBCXM__Playbook__c = Uniqueplaybookid.get(ctatypeid.id),
+					JBCXM__DueDate__c = Date.today()+randomNum
+					);
+				j++;
+CTAList.add(clist);
+}
+}
+insert CTAList;
+
+
+
+// Create a CStask for all the CTA created 
+List <JBCXM__CSTask__c> CstaskList = new List <JBCXM__CSTask__c>();
+List<JBCXM__CTA__c> CTAid = [Select id,JBCXM__Account__c,JBCXM__TypeName__c FROM JBCXM__CTA__c];
+List<JBCXM__PlaybookTasks__c> delta = [Select JBCXM__DeltaDays__c FROM JBCXM__PlaybookTasks__c ORDER BY Id ASC NULLS FIRST];
+List<JBCXM__PlaybookTasks__c> displayorder = [Select JBCXM__DisplayOrder__c FROM JBCXM__PlaybookTasks__c ORDER BY Id ASC NULLS FIRST];
+List<JBCXM__PlaybookTasks__c> duedatesrc = [Select JBCXM__DueDateSrc__c FROM JBCXM__PlaybookTasks__c ORDER BY Id ASC NULLS FIRST];
+List<JBCXM__PlaybookTasks__c> parentid = [Select a.JBCXM__Parent__c FROM JBCXM__PlaybookTasks__c a];
+List<JBCXM__PlaybookTasks__c> playbook = [Select JBCXM__PlaybookId__c FROM JBCXM__PlaybookTasks__c ORDER BY Id ASC NULLS FIRST];
+List<JBCXM__PlaybookTasks__c> priority = [Select JBCXM__Priority__c FROM JBCXM__PlaybookTasks__c ORDER BY Id ASC NULLS FIRST];
+List<JBCXM__PlaybookTasks__c> skipoption = [Select JBCXM__SkipOption__c FROM JBCXM__PlaybookTasks__c ORDER BY Id ASC NULLS FIRST];
+List<JBCXM__PlaybookTasks__c> status = [Select JBCXM__Status__c FROM JBCXM__PlaybookTasks__c ORDER BY Id ASC NULLS FIRST];
+List<JBCXM__PlaybookTasks__c> subject = [Select JBCXM__Subject__c FROM JBCXM__PlaybookTasks__c ORDER BY Id ASC NULLS FIRST];
+List<JBCXM__PlaybookTasks__c> uid = [Select Id FROM JBCXM__PlaybookTasks__c ORDER BY Id ASC NULLS FIRST];
+
+integer outercount = 0;
+integer cout;
+for(JBCXM__CTA__c Cid : CTAid)
+{  
+
+	if ( Cid.JBCXM__TypeName__c == 'Risk') 
+	{   i = ((totalpb*5));
+		for ( integer counter = 0 ; counter <5 ; counter ++)
+		{
+		  if (Cout == 0)
+		   {
+		     if ( counter == 0)
+		     {
+  				integer randomNum = -100 + (integer)(Math.random() * ((-30) - (-100)));
+					List<Date> nDateList1 = new List<Date> { Date.today()+randomNum};
+					JBCXM__CSTask__c cslist 		= new JBCXM__CSTask__c (
+					JBCXM__Account__c		= Cid.JBCXM__Account__c,
+					JBCXM__Assigned__c		= OwnerList.get(0).Id,
+					JBCXM__CTA__c = Cid.id,
+					JBCXM__Date__c = nDateList1.get(0),
+					JBCXM__DeltaDays__c = randomNum+.0,
+					JBCXM__DisplayOrder__c = displayorder.get(i).JBCXM__DisplayOrder__c,
+					JBCXM__DueDateSrc__c = duedatesrc.get(i).JBCXM__DueDateSrc__c,
+					JBCXM__Playbook__c = playbook.get(i).JBCXM__PlaybookId__c,
+					JBCXM__Priority__c = priority.get(i).JBCXM__Priority__c,
+					JBCXM__SkipOption__c = skipoption.get(i).JBCXM__SkipOption__c,
+					JBCXM__Status__c = status.get(i).JBCXM__Status__c,
+					JBCXM__Subject__c = subject.get(i).JBCXM__Subject__c,
+					JBCXM__UID__c = uid.get(i).Id
+					);
+							i++;
+				CstaskList.add(cslist);
+			  }
+		    }
+	else
+		{																		// Creating a Trending overdue Task
+			JBCXM__CSTask__c cslist 		= new JBCXM__CSTask__c (
+					JBCXM__Account__c		= Cid.JBCXM__Account__c,
+					JBCXM__Assigned__c		= OwnerList.get(0).Id,
+					JBCXM__CTA__c = Cid.id,
+					JBCXM__Date__c = Date.today()+(delta.get(i).JBCXM__DeltaDays__c).intValue(),
+					JBCXM__DeltaDays__c = delta.get(i).JBCXM__DeltaDays__c,
+					JBCXM__DisplayOrder__c = displayorder.get(i).JBCXM__DisplayOrder__c,
+					JBCXM__DueDateSrc__c = duedatesrc.get(i).JBCXM__DueDateSrc__c,
+					JBCXM__Playbook__c = playbook.get(i).JBCXM__PlaybookId__c,
+					JBCXM__Priority__c = priority.get(i).JBCXM__Priority__c,
+					JBCXM__SkipOption__c = skipoption.get(i).JBCXM__SkipOption__c,
+					JBCXM__Status__c = status.get(i).JBCXM__Status__c,
+					JBCXM__Subject__c = subject.get(i).JBCXM__Subject__c,
+					JBCXM__UID__c = uid.get(i).Id
+					);
+				i++;
+				CstaskList.add(cslist);
+		}
+	  }
+	}
+	if ( Cid.JBCXM__TypeName__c == 'Opportunity') 
+	{   i = ((totalpb*10));
+		for ( integer counter = 0 ; counter <5 ; counter ++)
+			{
+			JBCXM__CSTask__c cslist 		= new JBCXM__CSTask__c (
+					JBCXM__Account__c		= Cid.JBCXM__Account__c,
+					JBCXM__Assigned__c		= OwnerList.get(0).Id,
+					JBCXM__CTA__c = Cid.id,
+					JBCXM__Date__c = Date.today()+(delta.get(i).JBCXM__DeltaDays__c).intValue(),
+					JBCXM__DeltaDays__c = delta.get(i).JBCXM__DeltaDays__c,
+					JBCXM__DisplayOrder__c = displayorder.get(i).JBCXM__DisplayOrder__c,
+					JBCXM__DueDateSrc__c = duedatesrc.get(i).JBCXM__DueDateSrc__c,
+					JBCXM__Playbook__c = playbook.get(i).JBCXM__PlaybookId__c,
+					JBCXM__Priority__c = priority.get(i).JBCXM__Priority__c,
+					JBCXM__SkipOption__c = skipoption.get(i).JBCXM__SkipOption__c,
+					JBCXM__Status__c = status.get(i).JBCXM__Status__c,
+					JBCXM__Subject__c = subject.get(i).JBCXM__Subject__c,
+					JBCXM__UID__c = uid.get(i).Id
+					);
+					i++;
+				CstaskList.add(cslist);
+			}
+	}
+if ( Cid.JBCXM__TypeName__c == 'Event') 
+	{   i = ((totalpb*15));
+		for ( integer counter = 0 ; counter <5 ; counter ++)
+			{
+			JBCXM__CSTask__c cslist 		= new JBCXM__CSTask__c (
+					JBCXM__Account__c		= Cid.JBCXM__Account__c,
+					JBCXM__Assigned__c		= OwnerList.get(0).Id,
+					JBCXM__CTA__c = Cid.id,
+					JBCXM__Date__c = Date.today()+(delta.get(i).JBCXM__DeltaDays__c).intValue(),
+					JBCXM__DeltaDays__c = delta.get(i).JBCXM__DeltaDays__c,
+					JBCXM__DisplayOrder__c = displayorder.get(i).JBCXM__DisplayOrder__c,
+					JBCXM__DueDateSrc__c = duedatesrc.get(i).JBCXM__DueDateSrc__c,
+					JBCXM__Playbook__c = playbook.get(i).JBCXM__PlaybookId__c,
+					JBCXM__Priority__c = priority.get(i).JBCXM__Priority__c,
+					JBCXM__SkipOption__c = skipoption.get(i).JBCXM__SkipOption__c,
+					JBCXM__Status__c = status.get(i).JBCXM__Status__c,
+					JBCXM__Subject__c = subject.get(i).JBCXM__Subject__c,
+					JBCXM__UID__c = uid.get(i).Id
+					);
+					i++;
+				CstaskList.add(cslist);
+			}
+	}
+outercount ++;
+if ( outercount == 20 || outercount == 50 )
+  {
+	Cout = 0;
+  }
+else
+  {
+	cout = 1;
+  }
+}
+
+insert(CstaskList);
+
