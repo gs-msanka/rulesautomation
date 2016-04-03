@@ -74,7 +74,7 @@ public class LoadToCustomersTestUsingMongoAsSourceData extends BaseTest {
     @BeforeClass
     @Parameters("dbStoreType")
     public void setup(@Optional("Mongo") String dbStoreType) throws Exception {
-        basepage.login();
+
         nsTestBase.init();
         tenantManager = new TenantManager();
         String tenantId = tenantManager.getTenantDetail(sfdc.fetchSFDCinfo().getOrg(), null).getTenantId();

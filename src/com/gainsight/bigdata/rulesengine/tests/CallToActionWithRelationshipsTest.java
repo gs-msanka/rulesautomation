@@ -45,6 +45,8 @@ import org.testng.annotations.Optional;
 import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 
+import static org.testng.Assert.assertTrue;
+
 
 /**
  * Created by Abhilash Thaduka on 1/18/2016.
@@ -75,8 +77,8 @@ public class CallToActionWithRelationshipsTest extends BaseTest {
 
     @BeforeClass
     @Parameters("dbStoreType")
-    public void setUp(@Optional String dbStoreType) throws Exception {
-        basepage.login();
+    public void setUp(@Optional("Mongo") String dbStoreType) throws Exception {
+
         nsTestBase.init();
         rulesManagerPageUrl = visualForcePageUrl + "Rulesmanager";
         metaUtil.createExtIdFieldOnAccount(sfdc);
@@ -92,17 +94,18 @@ public class CallToActionWithRelationshipsTest extends BaseTest {
         dataETL.execute(loadData);
         gsDataImpl = new GSDataImpl(NSTestBase.header);
         tenantManager = new TenantManager();
-        tenantDetails = tenantManager.getTenantDetail(null, tenantManager.getTenantDetail(NSTestBase.sfdc.fetchSFDCinfo().getOrg(), null).getTenantId());
-        if (StringUtils.isNotBlank(dbStoreType)) {
-            //dataBaseType = DBStoreType.valueOf(dbStoreType);
-            mongoDBDAO = new MongoDBDAO(NSTestBase.nsConfig.getGlobalDBHost(), Integer.valueOf(NSTestBase.nsConfig.getGlobalDBPort()), NSTestBase.nsConfig.getGlobalDBUserName(), NSTestBase.nsConfig.getGlobalDBPassword(), NSTestBase.nsConfig.getGlobalDBDatabase());
-            TenantDetails.DBDetail schemaDBDetails = null;
-            schemaDBDetails = mongoDBDAO.getSchemaDBDetail(tenantDetails.getTenantId());
-            if (schemaDBDetails == null || schemaDBDetails.getDbServerDetails() == null || schemaDBDetails.getDbServerDetails().get(0) == null) {
-                throw new RuntimeException("DB details are not correct, please check it.");
+        String tenantId = tenantManager.getTenantDetail(sfdc.fetchSFDCinfo().getOrg(), null).getTenantId();
+        tenantDetails = tenantManager.getTenantDetail(null, tenantId);
+        if (StringUtils.isNotBlank(dbStoreType) && dbStoreType.equalsIgnoreCase("Mongo")) {
+            if(tenantDetails.isRedshiftEnabled()){
+                mongoDBDAO = MongoDBDAO.getGlobalMongoDBDAOInstance();
+                assertTrue(mongoDBDAO.disableRedshift(tenantId), "Failed updating dataStoreType at tenant Level to Mongo.");
             }
-            Log.info("Connecting to schema db....");
-            mongoDBDAO = new MongoDBDAO(schemaDBDetails.getDbServerDetails().get(0).getHost().split(":")[0], 27017, schemaDBDetails.getDbServerDetails().get(0).getUserName(), schemaDBDetails.getDbServerDetails().get(0).getPassword(), schemaDBDetails.getDbName());
+        }
+        else if(StringUtils.isNotBlank(dbStoreType) && dbStoreType.equalsIgnoreCase("Redshift")){
+            if(!tenantDetails.isRedshiftEnabled()) {
+                assertTrue(tenantManager.enabledRedShiftWithDBDetails(tenantDetails), "Failed updating dataStoreType at tenant level to Redshift");
+            }
         }
 
         // Loading testdata globally
@@ -112,10 +115,6 @@ public class CallToActionWithRelationshipsTest extends BaseTest {
             collectionInfo.getCollectionDetails().setCollectionName(dbStoreType + date.getTime());
             String collectionId = gsDataImpl.createCustomObject(collectionInfo);
             Assert.assertNotNull(collectionId, "Collection ID should not be null.");
-            // Updating DB storage type to Mpngo/postgres from back end.
-            if (StringUtils.isNotBlank(dbStoreType)) {
-                Assert.assertTrue(mongoDBDAO.updateCollectionDBStoreType(tenantDetails.getTenantId(), collectionId, DBStoreType.valueOf(StringUtils.upperCase(dbStoreType))), "Failed while updating the DB store type to "+dbStoreType);
-            }
             CollectionInfo actualCollectionInfo = gsDataImpl.getCollectionMaster(collectionId);
             collectionName = actualCollectionInfo.getCollectionDetails().getCollectionName();
             dataETL.execute(mapper.readValue(getNameSpaceResolvedFileContents(Application.basedir + "/testdata/newstack/RulesEngine/RulesUI-TestData/GlobalTestData/ExtractJob.txt"), JobInfo.class));

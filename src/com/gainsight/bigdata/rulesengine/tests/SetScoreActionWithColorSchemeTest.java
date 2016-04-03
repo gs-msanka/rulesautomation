@@ -57,7 +57,7 @@ public class SetScoreActionWithColorSchemeTest extends BaseTest{
 	
 	@BeforeClass
 	public void setup() throws Exception {
-		basepage.login();
+
 		sfdc.connect();
 		nsTestBase.init();
 		scoreCardDomain = visualForcePageUrl + "scorecardsetup";

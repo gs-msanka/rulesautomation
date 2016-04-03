@@ -42,8 +42,7 @@ public class SetupRuleActionsWithNativeDataTest extends BaseTest {
 
     @BeforeClass
     public void setup() throws Exception {
-        basepage.login();
-        sfdc.connect();
+
         nsTestBase.init();
         rulesManagerPageUrl = visualForcePageUrl + "Rulesmanager";
         rulesManagerPage = new RulesManagerPage();

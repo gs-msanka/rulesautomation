@@ -63,6 +63,7 @@ public class LoadToCustomersTestUsingRedshiftAsSourceData extends BaseTest {
     MongoDBDAO mongoDBDAO = null;
 
 
+
     /***
      * This function does initial setup required to execute the test cases. Typical setup includes these items:
      * login To Salesforce, Creation and clean up activities on sfdc objects,
@@ -72,7 +73,7 @@ public class LoadToCustomersTestUsingRedshiftAsSourceData extends BaseTest {
     @BeforeClass
     @Parameters("dbStoreType")
     public void setup(@Optional String dbStoreType) throws Exception {
-        basepage.login();
+        
         nsTestBase.init();
         tenantManager = new TenantManager();
         String tenantId = tenantManager.getTenantDetail(sfdc.fetchSFDCinfo().getOrg(), null).getTenantId();

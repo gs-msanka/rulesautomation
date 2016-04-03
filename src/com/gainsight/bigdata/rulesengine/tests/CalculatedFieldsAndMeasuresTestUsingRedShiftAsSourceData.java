@@ -7,6 +7,8 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+
+import org.apache.commons.lang3.StringUtils;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.type.TypeReference;
 import org.testng.Assert;
@@ -39,6 +41,8 @@ import com.gainsight.util.Comparator;
 import com.gainsight.util.MongoDBDAO;
 import com.gainsight.utils.annotations.TestInfo;
 
+import static org.testng.Assert.assertTrue;
+
 /**
  * Class which contains testcases related to calculated fields in
  * rulesengine(setup rule page) by using REDSHIFT as source data(calculated measures, Mda Joins and regular measure fields)
@@ -69,14 +73,23 @@ public class CalculatedFieldsAndMeasuresTestUsingRedShiftAsSourceData extends Ba
 	@Parameters("dbStoreType")
 	public void setup(@Optional String dbStoreType) throws Exception {
 		basepage.login();
-		sfdc.connect();
 		nsTestBase.init();
 		tenantManager = new TenantManager();
 		tenantDetails = tenantManager.getTenantDetail(null, tenantManager.getTenantDetail(sfdc.fetchSFDCinfo().getOrg(), null).getTenantId());
-		//Commenting this code as we store every collection by default in Redshift database only, no longer needed.
-		/*if (dbStoreType != null && dbStoreType.equalsIgnoreCase(DBStoreType.REDSHIFT.name())) {
-			Assert.assertTrue(tenantManager.enabledRedShiftWithDBDetails(tenantDetails), "Error while enabling redshift plese check credentials");
-		}*/
+		String tenantId = tenantManager.getTenantDetail(sfdc.fetchSFDCinfo().getOrg(), null).getTenantId();
+		tenantDetails = tenantManager.getTenantDetail(null, tenantId);
+		if (StringUtils.isNotBlank(dbStoreType) && dbStoreType.equalsIgnoreCase("Mongo")) {
+			if(tenantDetails.isRedshiftEnabled()){
+				mongoDBDAO = MongoDBDAO.getGlobalMongoDBDAOInstance();
+				Log.debug("Tenant Id:"+ tenantId);
+				assertTrue(mongoDBDAO.disableRedshift(tenantId), "Failed updating dataStoreType to Mongo.");
+			}
+		}
+		else if(StringUtils.isNotBlank(dbStoreType) && dbStoreType.equalsIgnoreCase("Redshift")){
+			if(!tenantDetails.isRedshiftEnabled()) {
+				assertTrue(tenantManager.enabledRedShiftWithDBDetails(tenantDetails), "Failed updating dataStoreType to Redshift");
+			}
+		}
 		rulesManagerPageUrl = visualForcePageUrl + "Rulesmanager";
 		rulesManagerPage = new RulesManagerPage();
 		gsDataImpl = new GSDataImpl(NSTestBase.header);
