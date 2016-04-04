@@ -52,9 +52,9 @@ public class RulesManagerPage extends BasePage {
         try {
             env.setTimeout(15);
             if (element.isElementPresent(ADD_RULE_LINK)) {
-                item.doubleClick(ADD_RULE_LINK);
+                item.click(ADD_RULE_LINK);
             } else {
-                item.doubleClick("//div[@class='Rules_homepage']/descendant::span[text()='Rule']");
+                item.click("//div[@class='Rules_homepage']/descendant::span[text()='Rule']");
             }
         } finally {
             env.setTimeout(30);
