@@ -51,7 +51,7 @@ public class CallToActionTest extends BaseTest {
     @BeforeClass
     public void setUp() throws Exception {
 
-        sfdc.connect();
+
         nsTestBase.init();
         rulesManagerPageUrl = visualForcePageUrl + "Rulesmanager";
         rulesManagerPage = new RulesManagerPage();

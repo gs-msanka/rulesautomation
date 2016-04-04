@@ -80,7 +80,7 @@ public class LoadToSfdcTest extends BaseTest {
 	@Parameters("dbStoreType")
 	public void setup(@Optional String dbStoreType) throws Exception {
 
-		sfdc.connect();
+
 		nsTestBase.init();
 		tenantManager = new TenantManager();
 		String tenantId = tenantManager.getTenantDetail(sfdc.fetchSFDCinfo().getOrg(), null).getTenantId();

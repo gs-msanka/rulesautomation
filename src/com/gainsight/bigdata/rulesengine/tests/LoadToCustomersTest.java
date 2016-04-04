@@ -46,7 +46,6 @@ public class LoadToCustomersTest extends BaseTest {
 	@BeforeClass
 	public void setUpData() throws Exception {
 
-		sfdc.connect();
 		nsTestBase.init();
 		rulesManagerPageUrl = visualForcePageUrl + "Rulesmanager";
 		rulesManagerPage = new RulesManagerPage();

@@ -72,7 +72,7 @@ public class CalculatedFieldsAndMeasuresTestUsingRedShiftAsSourceData extends Ba
 	@BeforeClass
 	@Parameters("dbStoreType")
 	public void setup(@Optional String dbStoreType) throws Exception {
-		basepage.login();
+
 		nsTestBase.init();
 		tenantManager = new TenantManager();
 		tenantDetails = tenantManager.getTenantDetail(null, tenantManager.getTenantDetail(sfdc.fetchSFDCinfo().getOrg(), null).getTenantId());

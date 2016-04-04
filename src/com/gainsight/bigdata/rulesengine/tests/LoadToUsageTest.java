@@ -50,7 +50,7 @@ public class LoadToUsageTest extends BaseTest {
 	@BeforeClass
 	public void setup() throws Exception {
 
-		sfdc.connect();
+
 		nsTestBase.init();
 		rulesManagerPageUrl = visualForcePageUrl + "Rulesmanager";
 		rulesManagerPage = new RulesManagerPage();

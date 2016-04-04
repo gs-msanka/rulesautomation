@@ -50,11 +50,11 @@ public class RulesManagerPage extends BasePage {
      */
     public EditRulePage clickOnAddRule() {
         try {
-            env.setTimeout(15);
+            env.setTimeout(MAX_TIME);
             if (element.isElementPresent(ADD_RULE_LINK)) {
-                item.click(ADD_RULE_LINK);
+                element.mouseOverAndClickOnIdentifier(ADD_RULE_LINK);
             } else {
-                item.click("//div[@class='Rules_homepage']/descendant::span[text()='Rule']");
+                element.mouseOverAndClickOnIdentifier("//div[@class='Rules_homepage']/descendant::span[text()='Rule']");
             }
         } finally {
             env.setTimeout(30);
