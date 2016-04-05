@@ -15,6 +15,7 @@ import com.gainsight.testdriver.Log;
 import com.gainsight.util.config.SfdcConfig;
 import com.gainsight.util.config.SfdcConfigProvider;
 import com.gainsight.utils.config.ConfigProviderFactory;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.Select;
 
@@ -271,7 +272,8 @@ public class BasePage extends WebPage implements Constants {
 		for (WebElement ele : listElement) {
             Log.info("Checking : "+ele.isDisplayed());
             if(ele.isDisplayed()) {
-                ele.click();
+                JavascriptExecutor executor =  (JavascriptExecutor) Application.getDriver();
+                executor.executeScript("arguments[0].click();", ele);
                 selected = true;
                 break;
             }
