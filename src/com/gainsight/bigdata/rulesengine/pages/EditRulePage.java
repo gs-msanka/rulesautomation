@@ -41,7 +41,7 @@ public class EditRulePage extends BasePage {
      * @param ruleType Rule type to select
      */
     public void selectRuleType(String ruleType) {
-        item.doubleClick(SELECT_RULE_BUTTON);
+        item.click(SELECT_RULE_BUTTON);
         selectValueInDropDown(ruleType);
     }
 
