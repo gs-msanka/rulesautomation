@@ -43,7 +43,8 @@ public class EditRulePage extends BasePage {
     public void selectRuleType(String ruleType) {
         try{
             item.click(SELECT_RULE_BUTTON);
-            wait.waitTillElementDisplayed("//input[contains(@title, '\"+ruleType+\"')]/following-sibling::span[contains(text(), '\"+ruleType+\"')]", MIN_TIME, MAX_TIME);
+            String selector = "//input[contains(@title, '"+ruleType+"')]/following-sibling::span[contains(text(), '"+ruleType+"')]";
+            wait.waitTillElementDisplayed( selector, MIN_TIME, MAX_TIME);
             selectValueInDropDown(ruleType);
         }
         finally {
