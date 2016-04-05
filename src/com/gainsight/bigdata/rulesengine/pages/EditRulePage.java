@@ -1,5 +1,7 @@
 package com.gainsight.bigdata.rulesengine.pages;
 
+import com.gainsight.testdriver.Application;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.Keys;
 
 import com.gainsight.bigdata.rulesengine.pojo.RulesPojo;
@@ -41,15 +43,10 @@ public class EditRulePage extends BasePage {
      * @param ruleType Rule type to select
      */
     public void selectRuleType(String ruleType) {
-        try{
-            item.click(SELECT_RULE_BUTTON);
-            String selector = "//input[contains(@title, '"+ruleType+"')]/following-sibling::span[contains(text(), '"+ruleType+"')]";
-            wait.waitTillElementDisplayed( selector, MIN_TIME, MAX_TIME);
+
+            JavascriptExecutor executor =  (JavascriptExecutor) Application.getDriver();
+            executor.executeScript("arguments[0].click();", element.getElement(SELECT_RULE_BUTTON));
             selectValueInDropDown(ruleType);
-        }
-        finally {
-            env.setTimeout(20);
-        }
 
     }
 
