@@ -4,26 +4,9 @@
         <listener class-name="com.gainsight.utils.AutTestListener"/>
         <listener class-name="com.gainsight.utils.testlink.TestLinkListener"/>
     </listeners>
-    <test verbose="3" name="RulesEngine UI Automation TestCases" preserve-order="true">
+    <test verbose="3" name="RulesEngine UI Automation TestCases Using MDA MONGO DataBase" preserve-order="true">
+        <parameter name="dbStoreType" value="Mongo"/>
         <classes>
-            <class name="com.gainsight.bigdata.rulesengine.tests.CallToActionWithRelationshipsTest">
-                <methods>
-                    <exclude name="createCtaUsingMdaLinkedCollection"/>
-                </methods>
-            </class>
-            <class name="com.gainsight.bigdata.rulesengine.tests.CreateRuleTest"/>
-            <class name="com.gainsight.bigdata.rulesengine.tests.CallToActionTest"/>
-            <class name="com.gainsight.bigdata.rulesengine.tests.LoadToMilestonesAndFeaturesTest"/>
-            <class name="com.gainsight.bigdata.rulesengine.tests.LoadToCustomersTest"/>
-            <class name="com.gainsight.bigdata.rulesengine.tests.LoadToUsageTest"/>
-            <class name="com.gainsight.bigdata.rulesengine.tests.SetScoreActionWithNumericSchemeTest"/>
-            <class name="com.gainsight.bigdata.rulesengine.tests.SetScoreActionWithGradingSchemeTest"/>
-            <class name="com.gainsight.bigdata.rulesengine.tests.SetScoreActionWithColorSchemeTest"/>
-            <class name="com.gainsight.bigdata.rulesengine.tests.CalculatedFieldsAndMeasuresTest"/>
-            <class name="com.gainsight.bigdata.rulesengine.tests.SetupRuleActionsWithNativeDataTest"/>
-        </classes>
-        <classes>
-            <parameter name="dbStoreType" value="Mongo"/>
             <class name="com.gainsight.bigdata.rulesengine.tests.LoadToMdaTest"/>
             <class name="com.gainsight.bigdata.rulesengine.tests.LoadToCustomersTestUsingMongoAsSourceData"/>
             <class name="com.gainsight.bigdata.rulesengine.tests.LoadToCustomersTestUsingMatrixData"/>
@@ -35,8 +18,10 @@
                 </methods>
             </class>
         </classes>
+    </test>
+    <test verbose="3" name="RulesEngine UI Automation TestCases Using MDA REDSHIFT DataBase" preserve-order="true">
+        <parameter name="dbStoreType" value="Redshift"/>
         <classes>
-            <parameter name="dbStoreType" value="Redshift"/>
             <class name="com.gainsight.bigdata.rulesengine.tests.LoadToMdaTest"/>
             <class name="com.gainsight.bigdata.rulesengine.tests.LoadToSfdcTest"/>
             <class name="com.gainsight.bigdata.rulesengine.tests.LoadToCustomersTestUsingMatrixData"/>
@@ -44,8 +29,10 @@
             <class name="com.gainsight.bigdata.rulesengine.tests.CalculatedFieldsAndMeasuresTestUsingMatrixData"/>
             <class name="com.gainsight.bigdata.rulesengine.tests.CalculatedFieldsAndMeasuresTestUsingRedShiftAsSourceData"/>
         </classes>
+    </test>
+    <test verbose="3" name="RulesEngine UI Automation TestCases Using MDA POSTGRES DataBase" preserve-order="true">
+        <parameter name="dbStoreType" value="POSTGRES"/>
         <classes>
-            <parameter name="dbStoreType" value="POSTGRES"/>
             <class name="com.gainsight.bigdata.rulesengine.tests.CalculatedFieldsAndMeasuresTestUsingMatrixData"/>
             <class name="com.gainsight.bigdata.rulesengine.tests.LoadToCustomersTestUsingMatrixData"/>
         </classes>
