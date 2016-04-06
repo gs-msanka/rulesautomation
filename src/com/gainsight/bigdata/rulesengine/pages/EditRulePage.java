@@ -153,8 +153,7 @@ public class EditRulePage extends BasePage {
      * @return
      */
     public SetupRulePage clickOnSetupRule() {
-        JavascriptExecutor executor =  (JavascriptExecutor) Application.getDriver();
-        executor.executeScript("arguments[0].click();", element.getElement(SETUP_RULE_LINK));
+        item.click(SETUP_RULE_LINK);
         return new SetupRulePage();
     }
 

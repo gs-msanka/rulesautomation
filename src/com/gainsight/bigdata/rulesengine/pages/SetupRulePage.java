@@ -1,5 +1,7 @@
 package com.gainsight.bigdata.rulesengine.pages;
 
+import com.gainsight.testdriver.Application;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.Keys;
 import org.testng.Assert;
 
@@ -110,7 +112,9 @@ public class SetupRulePage extends BasePage {
     }
 
     public SetupRuleActionPage clickOnNext() {
-        item.click(NEXT_BUTTON);
+		JavascriptExecutor executor =  (JavascriptExecutor) Application.getDriver();
+		executor.executeScript("arguments[0].click();", element.getElement(NEXT_BUTTON));
+		selectValueInDropDown(ruleType);
         waitForPageLoad();
         return new SetupRuleActionPage();
     }
