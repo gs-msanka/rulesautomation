@@ -110,7 +110,8 @@ public class EditRulePage extends BasePage {
      * Click on next button
      */
     public void clickOnNext() {
-        item.click(RULE_NEXT);
+        JavascriptExecutor executor =  (JavascriptExecutor) Application.getDriver();
+        executor.executeScript("arguments[0].click();", element.getElement(RULE_NEXT));
         waitForPageLoad();
     }
 
