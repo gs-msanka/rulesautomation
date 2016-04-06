@@ -373,6 +373,7 @@ public class SetupRuleActionPage extends BasePage {
 			if (fieldMappingObject.isDefaultValue()) {
 				item.click(xpath+ fieldMapping + "//following-sibling::div/descendant::input[contains(@class, 'gs-hasDefaultValue')]");
 				if (fieldMappingObject.isDefaultBooleanValue()) {
+                    wait.waitTillElementDisplayed(xpath+ fieldMapping+ "//parent::div/following-sibling::div/descendant::input[contains(@class, 'custom-value-check')]", MIN_TIME, MAX_TIME);
 					item.click(xpath+ fieldMapping+ "//parent::div/following-sibling::div/descendant::input[contains(@class, 'custom-value-check')]");
 				} else {
 					element.setText(xpath+ fieldMapping + "//parent::div/following-sibling::div/descendant::input", fieldMappingObject.getDefaultValueInput());
