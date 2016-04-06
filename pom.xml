@@ -118,15 +118,15 @@
 	<profiles>
 		<profile>
 			<id>testngXmlPath</id>
+			<activation>
+				<activeByDefault>true</activeByDefault>
+			</activation>
 			<properties>
 				<testngXmlFile>${testngFileName}</testngXmlFile>
 			</properties>
 		</profile>
 		<profile>
 			<id>testngXml</id>
-			<activation>
-				<activeByDefault>true</activeByDefault>
-			</activation>
 			<properties>
 				<testngXmlFile>testsuite/acceptance/${testngFileName}</testngXmlFile>
 			</properties>
