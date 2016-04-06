@@ -114,7 +114,6 @@ public class SetupRulePage extends BasePage {
     public SetupRuleActionPage clickOnNext() {
 		JavascriptExecutor executor =  (JavascriptExecutor) Application.getDriver();
 		executor.executeScript("arguments[0].click();", element.getElement(NEXT_BUTTON));
-		selectValueInDropDown(ruleType);
         waitForPageLoad();
         return new SetupRuleActionPage();
     }
