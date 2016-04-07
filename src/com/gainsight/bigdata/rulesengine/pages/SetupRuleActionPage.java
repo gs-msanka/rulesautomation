@@ -162,7 +162,8 @@ public class SetupRuleActionPage extends BasePage {
         }
         try {
 
-            wait.waitTillElementDisplayed(CREATE_CTA_RADIO_BUTTON, MIN_TIME, MAX_TIME);
+            wait.waitTillElementToBeClickable(CREATE_CTA_RADIO_BUTTON, 60);
+            Log.info("end of waiting for a while.");
             if (element.isElementPresent(CREATE_CTA_RADIO_BUTTON)) {
                 item.click(xpath + CREATE_CTA_RADIO_BUTTON);
 
@@ -217,8 +218,8 @@ public class SetupRuleActionPage extends BasePage {
         String xpath = "//div[contains(@class,'setup-action-ctn')]/div[" + i + "]";
         clickOnActionButton();
         item.click(xpath + SELECT_BUTTON);
-        selectValueInDropDown("Load To Feature");
-        wait.waitTillElementToBeClickable(xpath + PRODUCT_LTF, MAX_TIME);
+        selectValueInDropDown("Load to Feature");
+        wait.waitTillElementToBeClickable(xpath + PRODUCT_LTF, MAX_TIME * 2);
         item.click(xpath + PRODUCT_LTF);
         selectValueInDropDown(loadToFeatureAction.getProduct());
         item.click(xpath + FEATURE_LTF);
@@ -326,7 +327,7 @@ public class SetupRuleActionPage extends BasePage {
         String xpath = "//div[contains(@class,'setup-action-ctn')]/div[" + i + "]";
         clickOnActionButton();
         item.click(xpath + SELECT_BUTTON);
-        selectValueInDropDown("Load To Milestone");
+        selectValueInDropDown("Load to Milestone");
         // scrolling into a particular webElement since, auto scroll is not happening
         Log.info("Scrolling into webElement/locator: " +MILESTONE_LTM);
         ((JavascriptExecutor)Application.getDriver()).executeScript("arguments[0].scrollIntoView(true);", element.getElement(MILESTONE_LTM));
@@ -363,7 +364,7 @@ public class SetupRuleActionPage extends BasePage {
        item.click(xpath + SELECT_BUTTON);
 
       //  ((JavascriptExecutor)Application.getDriver()).executeScript("arguments[0].scrollIntoView(true);", element.getElement(MILESTONE_LTM));
-        selectValueInDropDown("Load To SFDC Object");
+        selectValueInDropDown("Load to SFDC Object");
      //   wait.waitTillElementDisplayed(xpath + LOAD_TO_OBJECT, 10, 20);
 
         item.click(xpath + LOAD_TO_OBJECT);

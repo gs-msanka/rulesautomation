@@ -19,7 +19,7 @@
             <class name="com.gainsight.bigdata.rulesengine.tests.SetScoreActionWithNumericSchemeTest"/>
             <class name="com.gainsight.bigdata.rulesengine.tests.SetScoreActionWithGradingSchemeTest"/>
             <class name="com.gainsight.bigdata.rulesengine.tests.SetScoreActionWithColorSchemeTest"/>
-            <class name="com.gainsight.bigdata.rulesengine.tests.CalculatedFieldsAndMeasuresTest"/>
+          <!--  <class name="com.gainsight.bigdata.rulesengine.tests.CalculatedFieldsAndMeasuresTest"/>-->
             <class name="com.gainsight.bigdata.rulesengine.tests.SetupRuleActionsWithNativeDataTest"/>
         </classes>
     </test>

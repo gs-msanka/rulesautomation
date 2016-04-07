@@ -90,7 +90,6 @@
 				<version>2.18.1</version>
 				<configuration>
 					<suiteXmlFiles>
-						<!--<echo>${testngXmlFile}</echo>-->
 						<suiteXmlFile>${testngXmlFile}</suiteXmlFile>
 					</suiteXmlFiles>
 				</configuration>
@@ -112,6 +111,18 @@
 							<goal>run</goal>
 						</goals>
 					</execution>
+					<execution>
+						<phase>validate</phase>
+						<goals>
+							<goal>run</goal>
+						</goals>
+						<configuration>
+							<tasks>
+								<echo>********Displaying value of pom.xml element***********</echo>
+								<echo>${testngXmlFile}</echo>
+							</tasks>
+						</configuration>
+					</execution>
 				</executions>
 			</plugin>
 		</plugins>
@@ -119,6 +130,12 @@
 	<profiles>
 		<profile>
 			<id>testngXmlPath</id>
+			<activation>
+				<property>
+					<name>environment</name>
+					<value>rules</value>
+				</property>
+			</activation>
 			<properties>
 				<testngXmlFile>${testngFileName}</testngXmlFile>
 			</properties>
@@ -129,6 +146,7 @@
 				<activeByDefault>true</activeByDefault>
 			</activation>
 			<properties>
+				<kiran>hello</kiran>
 				<testngXmlFile>testsuite/acceptance/${testngFileName}</testngXmlFile>
 			</properties>
 		</profile>
