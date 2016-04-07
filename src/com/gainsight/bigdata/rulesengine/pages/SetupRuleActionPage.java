@@ -327,12 +327,12 @@ public class SetupRuleActionPage extends BasePage {
         clickOnActionButton();
         item.click(xpath + SELECT_BUTTON);
         selectValueInDropDown("Load to Milestone");
+        wait.waitTillElementNotDisplayed("blocker_view48", MIN_TIME, MAX_TIME);
         if (loadToMileStoneAction.getMilestoneDate().getType().contains("Show Field")) {
             item.click(xpath + SHOWFIELD_LTM);
             item.click(xpath + SHOEFIELD_SELECT_LTM);
             selectValueInDropDown(loadToMileStoneAction.getMilestoneDate().getDateField());
         } else {
-            wait.waitTillElementNotDisplayed("blocker_view48", MIN_TIME, MAX_TIME);
             item.click(xpath + CONSTANT_SELECT_LTM);
             selectValueInDropDown(loadToMileStoneAction.getMilestoneDate().getDateField());
             element.setText(NEWRULE_PART1 + i + NEWRULE_PART2
