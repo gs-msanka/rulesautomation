@@ -49,7 +49,7 @@ public class SetupRuleActionPage extends BasePage {
     private final String DUE_DATE_TYPE = "//select[contains(@class, 'due_date_type')]/following-sibling::button";
 
     private final String SHOWFIELD_LTM = "//label[contains(text(),'Date')]/..//input[@value='show_field']";
-    private final String CONSTANT_SELECT_LTM = "//label[contains(text(),'Date')]/..//select[contains(@class,'constant')]/../button";
+    private final String CONSTANT_SELECT_LTM = "//label[contains(text(),'Date')]/..//select[contains(@class,'constant')]/following-sibling::button";
     private final String CONSTANT_SELECT_LTM_VALUE = "//label[contains(text(),'Date')]/..//select[contains(@class,'constant')]/..//input";
     private final String SHOEFIELD_SELECT_LTM = "//select[@class='form-select']/following-sibling::button";
     private final String MILESTONE_LTM = "//label[contains(text(),'Milestone')]/..//button";
@@ -162,8 +162,7 @@ public class SetupRuleActionPage extends BasePage {
         }
         try {
 
-            wait.waitTillElementToBeClickable(CREATE_CTA_RADIO_BUTTON, 60);
-            Log.info("end of waiting for a while.");
+            wait.waitTillElementNotDisplayed("blocker_view48", MIN_TIME, MAX_TIME);
             if (element.isElementPresent(CREATE_CTA_RADIO_BUTTON)) {
                 item.click(xpath + CREATE_CTA_RADIO_BUTTON);
 
@@ -328,14 +327,12 @@ public class SetupRuleActionPage extends BasePage {
         clickOnActionButton();
         item.click(xpath + SELECT_BUTTON);
         selectValueInDropDown("Load to Milestone");
-        // scrolling into a particular webElement since, auto scroll is not happening
-        Log.info("Scrolling into webElement/locator: " +MILESTONE_LTM);
-        ((JavascriptExecutor)Application.getDriver()).executeScript("arguments[0].scrollIntoView(true);", element.getElement(MILESTONE_LTM));
         if (loadToMileStoneAction.getMilestoneDate().getType().contains("Show Field")) {
             item.click(xpath + SHOWFIELD_LTM);
             item.click(xpath + SHOEFIELD_SELECT_LTM);
             selectValueInDropDown(loadToMileStoneAction.getMilestoneDate().getDateField());
         } else {
+            wait.waitTillElementNotDisplayed("blocker_view48", MIN_TIME, MAX_TIME);
             item.click(xpath + CONSTANT_SELECT_LTM);
             selectValueInDropDown(loadToMileStoneAction.getMilestoneDate().getDateField());
             element.setText(NEWRULE_PART1 + i + NEWRULE_PART2

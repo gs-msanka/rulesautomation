@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<suite name="RulesEngine UI Automation TestSuite" preserve-order="true">
+    <listeners>
+        <listener class-name="com.gainsight.utils.AutTestListener"/>
+        <listener class-name="com.gainsight.utils.testlink.TestLinkListener"/>
+    </listeners>
+    <test verbose="3" name="RulesEngine UI Automation Tests" preserve-order="true">
+        <classes>
+            <class name="com.gainsight.bigdata.rulesengine.tests.CallToActionWithRelationshipsTest">
+                <methods>
+                    <exclude name="createCtaUsingMdaLinkedCollection"/>
+                </methods>
+            </class>
+            <class name="com.gainsight.bigdata.rulesengine.tests.CreateRuleTest"/>
+            <class name="com.gainsight.bigdata.rulesengine.tests.CallToActionTest"/>
+            <class name="com.gainsight.bigdata.rulesengine.tests.LoadToMilestonesAndFeaturesTest"/>
+            <class name="com.gainsight.bigdata.rulesengine.tests.SetupRuleActionsWithNativeDataTest"/>
+        </classes>
+    </test>
+</suite>
