@@ -357,13 +357,8 @@ public class SetupRuleActionPage extends BasePage {
     public void loadToSfdcObject(LoadToSFDCAction loadToSFDCAction, int i) {
         String xpath = "//div[contains(@class,'setup-action-ctn')]/div[" + i + "]";
         clickOnActionButton();
-        //item.mouseOverAndClickOnIdentifier(xpath + SELECT_BUTTON);
-       item.click(xpath + SELECT_BUTTON);
-
-      //  ((JavascriptExecutor)Application.getDriver()).executeScript("arguments[0].scrollIntoView(true);", element.getElement(MILESTONE_LTM));
+        item.click(xpath + SELECT_BUTTON);
         selectValueInDropDown("Load to SFDC Object");
-     //   wait.waitTillElementDisplayed(xpath + LOAD_TO_OBJECT, 10, 20);
-
         item.click(xpath + LOAD_TO_OBJECT);
         selectValueInDropDown(loadToSFDCAction.getObjectName());
         item.click(xpath + LOAD_TO_OBJECT_OPERATION_TYPE);
@@ -560,6 +555,7 @@ public class SetupRuleActionPage extends BasePage {
     
     public void closeCTA(CloseCtaAction closeCta, int i) {
     	String xpath = "//div[contains(@class,'setup-action-ctn')]/div[" + i + "]";
+        wait.waitTillElementNotDisplayed("blocker_view50", MIN_TIME, MAX_TIME);
 		item.click(xpath + CLOSE_CTA_RADIO_BUTTON);
 		item.click(xpath + TYPE_CCTA);
 		selectValueInDropDown(closeCta.getType(), true);
