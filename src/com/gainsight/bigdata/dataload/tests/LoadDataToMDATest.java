@@ -1347,7 +1347,7 @@ public class LoadDataToMDATest extends NSTestBase {
 
             NsResponseObj nsResponseObj = mapper.readValue(responseObj.getContent(), NsResponseObj.class);
             Assert.assertEquals(nsResponseObj.getErrorCode(), MDAErrorCodes.COLUMN_DEF_NOT_EXISTS.getGSCode(), "Error code should be GS_3203");
-            Assert.assertEquals(nsResponseObj.getErrorDesc(), "Column definition does not exist. Message: Column does not exists for target field name: AccountID");
+            Assert.assertEquals(nsResponseObj.getErrorDesc(), "Column definition does not exist.Column does not exists for target field name: AccountI");
         }
     }
 
