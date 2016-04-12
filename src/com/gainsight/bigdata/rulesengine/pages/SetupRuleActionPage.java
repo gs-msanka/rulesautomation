@@ -22,6 +22,8 @@ import com.gainsight.sfdc.pages.BasePage;
 import com.gainsight.sfdc.util.DateUtil;
 import com.gainsight.testdriver.Application;
 import com.gainsight.testdriver.Log;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
 /**
  * Created by vmenon on 9/3/2015.
@@ -51,7 +53,7 @@ public class SetupRuleActionPage extends BasePage {
     private final String SHOWFIELD_LTM = "//label[contains(text(),'Date')]/..//input[@value='show_field']";
     private final String CONSTANT_SELECT_LTM = "//label[contains(text(),'Date')]/..//select[contains(@class,'constant')]/following-sibling::button";
     private final String CONSTANT_SELECT_LTM_VALUE = "//label[contains(text(),'Date')]/..//select[contains(@class,'constant')]/..//input";
-    private final String SHOEFIELD_SELECT_LTM = "//select[@class='form-select']/following-sibling::button";
+    private final String SHOEFIELD_SELECT_LTM = "//select[contains(@class, 'milestone-show-field-select')]/following-sibling::button";
     private final String MILESTONE_LTM = "//label[contains(text(),'Milestone')]/..//button";
 
     private final String LOADTOFEATURE_SHOWFIELD_LICENCED_DROPDOWN = "//div[contains(@class, 'feature-lic-showfield-block')]/descendant::select/following-sibling::button";
@@ -218,7 +220,8 @@ public class SetupRuleActionPage extends BasePage {
         clickOnActionButton();
         item.click(xpath + SELECT_BUTTON);
         selectValueInDropDown("Load to Feature");
-        wait.waitTillElementToBeClickable(xpath + PRODUCT_LTF, MAX_TIME * 2);
+
+        wait.waitTillElementNotDisplayed("//div[@class='gs-sc-loader']", MIN_TIME, MAX_TIME);
         item.click(xpath + PRODUCT_LTF);
         selectValueInDropDown(loadToFeatureAction.getProduct());
         item.click(xpath + FEATURE_LTF);
@@ -331,6 +334,7 @@ public class SetupRuleActionPage extends BasePage {
         if (loadToMileStoneAction.getMilestoneDate().getType().contains("Show Field")) {
             item.click(xpath + SHOWFIELD_LTM);
             item.click(xpath + SHOEFIELD_SELECT_LTM);
+
             selectValueInDropDown(loadToMileStoneAction.getMilestoneDate().getDateField());
         } else {
             item.click(xpath + CONSTANT_SELECT_LTM);
