@@ -4,23 +4,15 @@
         <listener class-name="com.gainsight.utils.AutTestListener"/>
         <listener class-name="com.gainsight.utils.testlink.TestLinkListener"/>
     </listeners>
+    <test verbose="3" name="RulesEngine UI Automation TestCases Using MDA MONGO DataBase" preserve-order="true">
+        <parameter name="dbStoreType" value="Mongo"/>
+        <classes>
+            <class name="com.gainsight.bigdata.rulesengine.tests.LoadToCustomersTestUsingMongoAsSourceData"/>
+        </classes>
+    </test>
     <test verbose="3" name="RulesEngine UI Automation Tests" preserve-order="true">
         <classes>
-            <class name="com.gainsight.bigdata.rulesengine.tests.CallToActionWithRelationshipsTest">
-                <methods>
-                    <exclude name="createCtaUsingMdaLinkedCollection"/>
-                </methods>
-            </class>
-            <class name="com.gainsight.bigdata.rulesengine.tests.CreateRuleTest"/>
             <class name="com.gainsight.bigdata.rulesengine.tests.CallToActionTest"/>
-            <class name="com.gainsight.bigdata.rulesengine.tests.LoadToMilestonesAndFeaturesTest"/>
-            <class name="com.gainsight.bigdata.rulesengine.tests.LoadToCustomersTest"/>
-            <class name="com.gainsight.bigdata.rulesengine.tests.LoadToUsageTest"/>
-            <class name="com.gainsight.bigdata.rulesengine.tests.SetScoreActionWithNumericSchemeTest"/>
-            <class name="com.gainsight.bigdata.rulesengine.tests.SetScoreActionWithGradingSchemeTest"/>
-            <class name="com.gainsight.bigdata.rulesengine.tests.SetScoreActionWithColorSchemeTest"/>
-          <!--  <class name="com.gainsight.bigdata.rulesengine.tests.CalculatedFieldsAndMeasuresTest"/>-->
-            <class name="com.gainsight.bigdata.rulesengine.tests.SetupRuleActionsWithNativeDataTest"/>
         </classes>
     </test>
 </suite>
