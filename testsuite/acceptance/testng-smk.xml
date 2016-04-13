@@ -7,12 +7,26 @@
     <test verbose="3" name="RulesEngine UI Automation TestCases Using MDA MONGO DataBase" preserve-order="true">
         <parameter name="dbStoreType" value="Mongo"/>
         <classes>
-            <class name="com.gainsight.bigdata.rulesengine.tests.LoadToCustomersTestUsingMongoAsSourceData"/>
+            <!--<class name="com.gainsight.bigdata.rulesengine.tests.LoadToCustomersTestUsingMongoAsSourceData"/>-->
+            <class name="com.gainsight.bigdata.rulesengine.tests.CalculatedFieldsAndMeasuresTestUsingMatrixData"/>
+            <class name="com.gainsight.bigdata.rulesengine.tests.CalculatedFieldsAndMeasuresTestUsingMongoAsSourceData"/>        </classes>
+    </test>
+    <!--<test verbose="3" name="RulesEngine UI Automation Tests" preserve-order="true">
+        <classes>
+          &lt;!&ndash;  <class name="com.gainsight.bigdata.rulesengine.tests.CallToActionTest"/>&ndash;&gt;
+        </classes>
+    </test>-->
+    <test verbose="3" name="RulesEngine UI Automation TestCases Using MDA POSTGRES DataBase" preserve-order="true">
+        <parameter name="dbStoreType" value="POSTGRES"/>
+        <classes>
+            <class name="com.gainsight.bigdata.rulesengine.tests.CalculatedFieldsAndMeasuresTestUsingMatrixData"/>
         </classes>
     </test>
-    <test verbose="3" name="RulesEngine UI Automation Tests" preserve-order="true">
+    <test verbose="3" name="RulesEngine UI Automation TestCases Using MDA REDSHIFT DataBase" preserve-order="true">
+        <parameter name="dbStoreType" value="Redshift"/>
         <classes>
-            <class name="com.gainsight.bigdata.rulesengine.tests.CallToActionTest"/>
+             <class name="com.gainsight.bigdata.rulesengine.tests.CalculatedFieldsAndMeasuresTestUsingMatrixData"/>
+            <class name="com.gainsight.bigdata.rulesengine.tests.CalculatedFieldsAndMeasuresTestUsingRedShiftAsSourceData"/>
         </classes>
     </test>
 </suite>
