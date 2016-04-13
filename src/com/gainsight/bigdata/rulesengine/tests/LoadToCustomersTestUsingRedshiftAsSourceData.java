@@ -72,7 +72,6 @@ public class LoadToCustomersTestUsingRedshiftAsSourceData extends BaseTest {
     @BeforeClass
     @Parameters("dbStoreType")
     public void setup(@Optional String dbStoreType) throws Exception {
-        basepage.login();
         nsTestBase.init();
         tenantManager = new TenantManager();
         String tenantId = tenantManager.getTenantDetail(sfdc.fetchSFDCinfo().getOrg(), null).getTenantId();
@@ -123,7 +122,7 @@ public class LoadToCustomersTestUsingRedshiftAsSourceData extends BaseTest {
         dataETL.execute(jobInfo);
         List<Map<String, String>> expectedData = Comparator.getParsedCsvDataWithHeaderNamespaceResolved(TEST_DATA_DIR + "GS-3149/GS-3149-Redshift-ExpectedData.csv");
         List<Map<String, String>> actualData =   Comparator.getParsedCsvDataWithHeaderNamespaceResolved(TEST_DATA_DIR + "GS-3149/GS-3149-ActualData.csv");
-        List<Map<String, String>> differenceData = com.gainsight.util.Comparator.compareListData(expectedData, actualData);
+        List<Map<String, String>> differenceData = Comparator.compareListData(expectedData, actualData);
         Log.info("Difference is : " + mapper.writeValueAsString(differenceData));
         Assert.assertEquals(differenceData.size(), 0, "Check the Diff above which is not matching between expected testdata from csv and actual data from csv");
     }
@@ -145,7 +144,7 @@ public class LoadToCustomersTestUsingRedshiftAsSourceData extends BaseTest {
         dataETL.execute(jobInfo);
         List<Map<String, String>> expectedData = Comparator.getParsedCsvDataWithHeaderNamespaceResolved(TEST_DATA_DIR + "GS-5135/GS-5135-Redshift-ExpectedData.csv");
         List<Map<String, String>> actualData =   Comparator.getParsedCsvDataWithHeaderNamespaceResolved(TEST_DATA_DIR + "GS-5135/GS-5135-ActualData.csv");
-        List<Map<String, String>> differenceData = com.gainsight.util.Comparator.compareListData(expectedData, actualData);
+        List<Map<String, String>> differenceData = Comparator.compareListData(expectedData, actualData);
         Log.info("Difference is : " + mapper.writeValueAsString(differenceData));
         Assert.assertEquals(differenceData.size(), 0, "Check the Diff above which is not matching between expected testdata from csv and actual data from csv");
     }

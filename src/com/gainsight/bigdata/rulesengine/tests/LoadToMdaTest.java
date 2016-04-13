@@ -49,6 +49,8 @@ import com.gainsight.util.Comparator;
 import com.gainsight.util.DBStoreType;
 import com.gainsight.utils.annotations.TestInfo;
 
+import static org.testng.Assert.assertTrue;
+
 /**
  * @author Abhilash Thaduka
  *
@@ -80,17 +82,18 @@ public class LoadToMdaTest extends BaseTest {
 		sfdc.connect();
 		nsTestBase.init();
 		tenantManager = new TenantManager();
-		tenantDetails = tenantManager.getTenantDetail(null, tenantManager.getTenantDetail(sfdc.fetchSFDCinfo().getOrg(), null).getTenantId());
-		if (StringUtils.isNotBlank(dbStoreType) && !dbStoreType.equalsIgnoreCase("Redshift")){
-			this.dbStoreType = dbStoreType;
-			mongoDBDAO = new MongoDBDAO(nsConfig.getGlobalDBHost(), Integer.valueOf(nsConfig.getGlobalDBPort()), nsConfig.getGlobalDBUserName(), nsConfig.getGlobalDBPassword(), nsConfig.getGlobalDBDatabase());
-			TenantDetails.DBDetail schemaDBDetails = null;
-			schemaDBDetails = mongoDBDAO.getSchemaDBDetail(tenantDetails.getTenantId());
-			if (schemaDBDetails == null || schemaDBDetails.getDbServerDetails() == null || schemaDBDetails.getDbServerDetails().get(0) == null) {
-				throw new RuntimeException("DB details are not correct, please check it.");
+		String tenantId = tenantManager.getTenantDetail(sfdc.fetchSFDCinfo().getOrg(), null).getTenantId();
+		tenantDetails = tenantManager.getTenantDetail(null, tenantId);
+		if (StringUtils.isNotBlank(dbStoreType) && dbStoreType.equalsIgnoreCase("Mongo")) {
+			if(tenantDetails.isRedshiftEnabled()){
+				mongoDBDAO = MongoDBDAO.getGlobalMongoDBDAOInstance();
+				assertTrue(mongoDBDAO.disableRedshift(tenantId), "Failed updating dataStoreType at tenant Level to Mongo.");
 			}
-			Log.info("Connecting to schema db....");
-			mongoDBDAO = new MongoDBDAO(schemaDBDetails.getDbServerDetails().get(0).getHost().split(":")[0], 27017, schemaDBDetails.getDbServerDetails().get(0).getUserName(), schemaDBDetails.getDbServerDetails().get(0).getPassword(), schemaDBDetails.getDbName());
+		}
+		else if(StringUtils.isNotBlank(dbStoreType) && dbStoreType.equalsIgnoreCase("Redshift")){
+			if(!tenantDetails.isRedshiftEnabled()) {
+				assertTrue(tenantManager.enabledRedShiftWithDBDetails(tenantDetails), "Failed updating dataStoreType at tenant level to Redshift");
+			}
 		}
 		rulesManagerPageUrl = visualForcePageUrl + "Rulesmanager";
 		rulesManagerPage = new RulesManagerPage();
@@ -125,9 +128,6 @@ public class LoadToMdaTest extends BaseTest {
 		collectionInfo.getCollectionDetails().setCollectionName("GS-3977-MDA" + date.getTime());
 		String collectionId = gsDataImpl.createCustomObject(collectionInfo);
 		Assert.assertNotNull(collectionId, "Collection ID should not be null.");
-		if (StringUtils.isNotBlank(this.dbStoreType) && !dbStoreType.equalsIgnoreCase("Redshift")) {
-			Assert.assertTrue(mongoDBDAO.updateCollectionDBStoreType(tenantDetails.getTenantId(), collectionId, DBStoreType.valueOf(StringUtils.upperCase(dbStoreType))), "Failed while updating the DB store type to "+dbStoreType);
-		}
 		CollectionInfo actualCollectionInfo = gsDataImpl.getCollectionMaster(collectionId);
 		String collectionName = actualCollectionInfo.getCollectionDetails().getCollectionName();
 		
@@ -143,9 +143,6 @@ public class LoadToMdaTest extends BaseTest {
 		collectionInfo2.getCollectionDetails().setCollectionName("GS-3977EmptyCollection-" + date.getTime());
 		String collectionId2 = gsDataImpl.createCustomObject(collectionInfo2);
 		Assert.assertNotNull(collectionId2, "Collection ID should not be null.");
-		if (StringUtils.isNotBlank(this.dbStoreType) && !dbStoreType.equalsIgnoreCase("Redshift")) {
-			Assert.assertTrue(mongoDBDAO.updateCollectionDBStoreType(tenantDetails.getTenantId(), collectionId2, DBStoreType.valueOf(StringUtils.upperCase(dbStoreType))), "Failed while updating the DB store type to "+dbStoreType);
-		}
 		CollectionInfo actualCollectionInfo2 = gsDataImpl.getCollectionMaster(collectionId2);
 		String collectionName2 = actualCollectionInfo2.getCollectionDetails().getCollectionName();
 		// Setting collection permisssion in ruleslodable object
@@ -183,7 +180,7 @@ public class LoadToMdaTest extends BaseTest {
 		dataETL.execute(mapper.readValue((new FileReader(Application.basedir+ "/testdata/newstack/RulesEngine/RulesUI-TestData/GS-3977-MdaData/GS-3977-ExpectedJob.txt")),JobInfo.class));
 
 		// Below are the list of all datatypes verifying for actual data
-		List<Map<String, String>> expData = ReportManager.populateDefaultBooleanValue(com.gainsight.util.Comparator.getParsedCsvData(new CSVReader(new FileReader(Application.basedir	+ "/testdata/newstack/RulesEngine/RulesUI-TestData/GS-3977-MdaData/ExpectedData2.csv"))),actualCollectionInfo);
+		List<Map<String, String>> expData = ReportManager.populateDefaultBooleanValue(Comparator.getParsedCsvData(new CSVReader(new FileReader(Application.basedir	+ "/testdata/newstack/RulesEngine/RulesUI-TestData/GS-3977-MdaData/ExpectedData2.csv"))),actualCollectionInfo);
 		String list[] = { "CustomNumberWithDecimals1", "CustomeDate2", "CustomString2","Name", "CustomNumber1", "CustomBooleanField1",
 				"CustomString1", "CustomDateTime1", "CustomBooleanField2","CustomDateTime2", "CustomeDate1",
 				"CustomNumberWithDecimals2" ,"CustomNumber2" };
@@ -202,9 +199,6 @@ public class LoadToMdaTest extends BaseTest {
 		collectionInfo1.getCollectionDetails().setCollectionName("GS-3978-MDA" + date.getTime());
 		String collectionId1 = gsDataImpl.createCustomObject(collectionInfo1);
 		Assert.assertNotNull(collectionId1, "Collection ID should not be null.");
-		if (StringUtils.isNotBlank(this.dbStoreType) && !dbStoreType.equalsIgnoreCase("Redshift")) {
-			Assert.assertTrue(mongoDBDAO.updateCollectionDBStoreType(tenantDetails.getTenantId(), collectionId1, DBStoreType.valueOf(StringUtils.upperCase(dbStoreType))), "Failed while updating the DB store type to "+dbStoreType);
-		}
 		CollectionInfo actualCollectionInfo1 = gsDataImpl.getCollectionMaster(collectionId1);
 		String collectionName1 = actualCollectionInfo1.getCollectionDetails().getCollectionName();
 		
@@ -234,13 +228,11 @@ public class LoadToMdaTest extends BaseTest {
 		dataETL.execute(mapper.readValue((new FileReader(Application.basedir+ "/testdata/newstack/RulesEngine/RulesUI-TestData/GS-3978-MdaData/GS-3978-ExpectedJob.txt")),JobInfo.class));
 
 		// Below are the list of all datatypes verifying for actual data
-		List<Map<String, String>> expData1 = ReportManager.populateDefaultBooleanValue(com.gainsight.util.Comparator.getParsedCsvData(new CSVReader(new FileReader(Application.basedir	+ "/testdata/newstack/RulesEngine/RulesUI-TestData/GS-3978-MdaData/ExpectedData2.csv"))),actualCollectionInfo1);
+		List<Map<String, String>> expData1 = ReportManager.populateDefaultBooleanValue(Comparator.getParsedCsvData(new CSVReader(new FileReader(Application.basedir	+ "/testdata/newstack/RulesEngine/RulesUI-TestData/GS-3978-MdaData/ExpectedData2.csv"))),actualCollectionInfo1);
 		String list1[] = { "CustomNumberWithDecimals1", "CustomeDate2", "CustomString2","Name", "CustomNumber1", "CustomBooleanField1",
 				"CustomString1", "CustomDateTime1", "CustomBooleanField2","CustomDateTime2", "CustomeDate1",
 				"CustomNumberWithDecimals2" ,"CustomNumber2" };
 		List<Map<String, String>> actualData1 = ReportManager.getProcessedReportData(reportManager.runReportLinksAndGetData(reportManager.createTabularReport(actualCollectionInfo2,list1)),actualCollectionInfo2);
-		Log.info("Actual : " + mapper.writeValueAsString(actualData1));
-		Log.info("Expected : " + mapper.writeValueAsString(expData1));
 		List<Map<String, String>> diffData1 = Comparator.compareListData(expData1, actualData1);
 		Log.info("Diff : " + mapper.writeValueAsString(diffData1));
 		Assert.assertEquals(diffData1.size(), 0, "Check the Diff above which is not matching between expected data and actual data");
@@ -262,9 +254,6 @@ public class LoadToMdaTest extends BaseTest {
 		collectionInfo.getCollectionDetails().setCollectionName("GS-3979-MDA-3979" + date.getTime());
 		String collectionId = gsDataImpl.createCustomObject(collectionInfo);
 		Assert.assertNotNull(collectionId, "Collection ID should not be null.");
-		if (StringUtils.isNotBlank(this.dbStoreType) && !dbStoreType.equalsIgnoreCase("Redshift")) {
-			Assert.assertTrue(mongoDBDAO.updateCollectionDBStoreType(tenantDetails.getTenantId(), collectionId, DBStoreType.valueOf(StringUtils.upperCase(dbStoreType))), "Failed while updating the DB store type to "+dbStoreType);
-		}
 		CollectionInfo actualCollectionInfo = gsDataImpl.getCollectionMaster(collectionId);
 		String collectionName = actualCollectionInfo.getCollectionDetails().getCollectionName();	
 		JobInfo loadTransform = mapper.readValue((new FileReader(Application.basedir+ "/testdata/newstack/RulesEngine/RulesUI-TestData/GS-3977-MdaData/GS-3977-DataloadJob.txt")), JobInfo.class);
@@ -279,9 +268,6 @@ public class LoadToMdaTest extends BaseTest {
 		collectionInfo2.getCollectionDetails().setCollectionName("GS-3979EmptyCollection-3979" + date.getTime());
 		String collectionId2 = gsDataImpl.createCustomObject(collectionInfo2);
 		Assert.assertNotNull(collectionId2, "Collection ID should not be null.");
-		if (StringUtils.isNotBlank(this.dbStoreType) && !dbStoreType.equalsIgnoreCase("Redshift")) {
-			Assert.assertTrue(mongoDBDAO.updateCollectionDBStoreType(tenantDetails.getTenantId(), collectionId2, DBStoreType.valueOf(StringUtils.upperCase(dbStoreType))), "Failed while updating the DB store type to "+dbStoreType);
-		}
 		CollectionInfo actualCollectionInfo2 = gsDataImpl.getCollectionMaster(collectionId2);
 		String collectionName2 = actualCollectionInfo2.getCollectionDetails().getCollectionName();
 		// Setting collection permisssion in ruleslodable object
@@ -319,13 +305,11 @@ public class LoadToMdaTest extends BaseTest {
 		dataETL.execute(mapper.readValue((new FileReader(Application.basedir+ "/testdata/newstack/RulesEngine/RulesUI-TestData/GS-3977-MdaData/GS-3977-ExpectedJob.txt")),JobInfo.class));
 
 		// Below are the list of all datatypes verifying for actual data
-		List<Map<String, String>> expData = ReportManager.populateDefaultBooleanValue(com.gainsight.util.Comparator.getParsedCsvData(new CSVReader(new FileReader(Application.basedir	+ "/testdata/newstack/RulesEngine/RulesUI-TestData/GS-3977-MdaData/ExpectedData2.csv"))),actualCollectionInfo);
+		List<Map<String, String>> expData = ReportManager.populateDefaultBooleanValue(Comparator.getParsedCsvData(new CSVReader(new FileReader(Application.basedir	+ "/testdata/newstack/RulesEngine/RulesUI-TestData/GS-3977-MdaData/ExpectedData2.csv"))),actualCollectionInfo);
 		String list[] = { "CustomNumberWithDecimals1", "CustomeDate2", "CustomString2","Name", "CustomNumber1", "CustomBooleanField1",
 				"CustomString1", "CustomDateTime1", "CustomBooleanField2","CustomDateTime2", "CustomeDate1",
 				"CustomNumberWithDecimals2" ,"CustomNumber2" };
 		List<Map<String, String>> actualData = ReportManager.getProcessedReportData(reportManager.runReportLinksAndGetData(reportManager.createTabularReport(actualCollectionInfo2,list)),actualCollectionInfo2);
-		Log.info("Actual : " + mapper.writeValueAsString(actualData));
-		Log.info("Expected : " + mapper.writeValueAsString(expData));
 		List<Map<String, String>> diffData = Comparator.compareListData(expData, actualData);
 		Log.info("Diff : " + mapper.writeValueAsString(diffData));
 		Assert.assertEquals(diffData.size(), 0, "Check the Diff above which is not matching between expected data and actual data");
@@ -338,9 +322,6 @@ public class LoadToMdaTest extends BaseTest {
 		collectionInfo1.getCollectionDetails().setCollectionName("GS-3979-MDA2-3979" + date.getTime());
 		String collectionId1 = gsDataImpl.createCustomObject(collectionInfo1);
 		Assert.assertNotNull(collectionId1, "Collection ID should not be null.");
-		if (StringUtils.isNotBlank(this.dbStoreType) && !dbStoreType.equalsIgnoreCase("Redshift")) {
-			Assert.assertTrue(mongoDBDAO.updateCollectionDBStoreType(tenantDetails.getTenantId(), collectionId1, DBStoreType.valueOf(StringUtils.upperCase(dbStoreType))), "Failed while updating the DB store type to "+dbStoreType);
-		}
 		CollectionInfo actualCollectionInfo1 = gsDataImpl.getCollectionMaster(collectionId1);
 		String collectionName1 = actualCollectionInfo1.getCollectionDetails().getCollectionName();
 		
@@ -370,14 +351,12 @@ public class LoadToMdaTest extends BaseTest {
 		dataETL.execute(mapper.readValue((new FileReader(Application.basedir+ "/testdata/newstack/RulesEngine/RulesUI-TestData/GS-3979-MdaData/GS-3979-ExpectedJob.txt")),JobInfo.class));
 
 		// Below are the list of all datatypes verifying for actual data
-		List<Map<String, String>> expData1 = ReportManager.populateDefaultBooleanValue(com.gainsight.util.Comparator.getParsedCsvData(new CSVReader(new FileReader(Application.basedir	+ "/testdata/newstack/RulesEngine/RulesUI-TestData/GS-3979-MdaData/ExpectedData2.csv"))),actualCollectionInfo1);
+		List<Map<String, String>> expData1 = ReportManager.populateDefaultBooleanValue(Comparator.getParsedCsvData(new CSVReader(new FileReader(Application.basedir	+ "/testdata/newstack/RulesEngine/RulesUI-TestData/GS-3979-MdaData/ExpectedData2.csv"))),actualCollectionInfo1);
 		String list1[] = { "CustomNumberWithDecimals1", "CustomeDate2", "CustomString2","Name", "CustomNumber1", "CustomBooleanField1",
 				"CustomString1", "CustomDateTime1", "CustomBooleanField2","CustomDateTime2", "CustomeDate1",
 				"CustomNumberWithDecimals2" ,"CustomNumber2" };
 		//actualCollectionInfo2
 		List<Map<String, String>> actualData1 = ReportManager.getProcessedReportData(reportManager.runReportLinksAndGetData(reportManager.createTabularReport(actualCollectionInfo2,list1)),actualCollectionInfo2);
-		Log.info("Actual : " + mapper.writeValueAsString(actualData1));
-		Log.info("Expected : " + mapper.writeValueAsString(expData1));
 		List<Map<String, String>> diffData1 = Comparator.compareListData(expData1, actualData1);
 		Log.info("Diff : " + mapper.writeValueAsString(diffData1));
 		Assert.assertEquals(diffData1.size(), 0, "Check the Diff above which is not matching between expected data and actual data");

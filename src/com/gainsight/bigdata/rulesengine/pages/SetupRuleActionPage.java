@@ -51,7 +51,7 @@ public class SetupRuleActionPage extends BasePage {
     private final String SHOWFIELD_LTM = "//label[contains(text(),'Date')]/..//input[@value='show_field']";
     private final String CONSTANT_SELECT_LTM = "//label[contains(text(),'Date')]/..//select[contains(@class,'constant')]/../button";
     private final String CONSTANT_SELECT_LTM_VALUE = "//label[contains(text(),'Date')]/..//select[contains(@class,'constant')]/..//input";
-    private final String SHOEFIELD_SELECT_LTM = "//select[@class='form-select']/following-sibling::button";
+    private final String SHOEFIELD_SELECT_LTM =  "//select[contains(@class, 'milestone-show-field-select')]/following-sibling::button";
     private final String MILESTONE_LTM = "//label[contains(text(),'Milestone')]/..//button";
 
     private final String LOADTOFEATURE_SHOWFIELD_LICENCED_DROPDOWN = "//div[contains(@class, 'feature-lic-showfield-block')]/descendant::select/following-sibling::button";
@@ -102,11 +102,12 @@ public class SetupRuleActionPage extends BasePage {
 
 
     private final String FIELD_MAPPING_DESTINATION = "//option[contains(text(), '%s')]";
-    private final String LOAD_TO_OBJECT = "//div[contains(@class, 'only-for-load-to-object')]/descendant::select/following-sibling::button";
-    private final String LOAD_TO_OBJECT_OPERATION_TYPE = "//div[contains(@class, 'only-for-load-to-object')]/descendant::select[contains(@class, 'operation-type')]/following-sibling::button";
+    private final String LOAD_TO_OBJECT = "//div[contains(@class, 'object-name-select')]/descendant::select/following-sibling::button";
+    private final String LOAD_TO_OBJECT_OPERATION_TYPE = "//select[contains(@class, 'operation-type')]/following-sibling::button";
 
     private final String NEWRULE_PART1 = "//div[contains(@class,'setup-action-ctn')]/div[";
     private final String NEWRULE_PART2 = "]";
+    private final String BLOCKER_VIEW = "//div[@class='gs-sc-loader']";
     
     private final String COMMENTS_TOKENS_DIV = "//div[contains(@class, 'form-control alertComment')]/following-sibling::div[@class='showFieldList']/descendant::span[text()='%s']";
 
@@ -161,7 +162,7 @@ public class SetupRuleActionPage extends BasePage {
             selectValueInDropDown("Call To Action");
         }
         try {
-            env.setTimeout(1);
+            wait.waitTillElementNotDisplayed(BLOCKER_VIEW, MIN_TIME, MAX_TIME);
             if (element.isElementPresent(CREATE_CTA_RADIO_BUTTON)) {
                 item.click(xpath + CREATE_CTA_RADIO_BUTTON);
 
@@ -217,10 +218,12 @@ public class SetupRuleActionPage extends BasePage {
         clickOnActionButton();
         item.click(xpath + SELECT_BUTTON);
         selectValueInDropDown("Load to Feature");
+        wait.waitTillElementNotDisplayed(BLOCKER_VIEW, MIN_TIME, MAX_TIME);
         item.click(xpath + PRODUCT_LTF);
         selectValueInDropDown(loadToFeatureAction.getProduct());
         item.click(xpath + FEATURE_LTF);
         selectValueInDropDown(loadToFeatureAction.getFeature());
+
 
         if (loadToFeatureAction.getLicensed().getType().equalsIgnoreCase("Constant")) {
             item.click(xpath + LICENSED_CONSTANT_RADIO_BUTTON);
@@ -325,6 +328,7 @@ public class SetupRuleActionPage extends BasePage {
         clickOnActionButton();
         item.click(xpath + SELECT_BUTTON);
         selectValueInDropDown("Load to Milestone");
+        wait.waitTillElementNotDisplayed(BLOCKER_VIEW, MIN_TIME, MAX_TIME);
         // scrolling into a particular webElement since, auto scroll is not happening
         Log.info("Scrolling into webElement/locator: " +MILESTONE_LTM);
         ((JavascriptExecutor)Application.getDriver()).executeScript("arguments[0].scrollIntoView(true);", element.getElement(MILESTONE_LTM));
@@ -554,6 +558,7 @@ public class SetupRuleActionPage extends BasePage {
     
     public void closeCTA(CloseCtaAction closeCta, int i) {
     	String xpath = "//div[contains(@class,'setup-action-ctn')]/div[" + i + "]";
+        wait.waitTillElementNotDisplayed(BLOCKER_VIEW, MIN_TIME, MAX_TIME);
 		item.click(xpath + CLOSE_CTA_RADIO_BUTTON);
 		item.click(xpath + TYPE_CCTA);
 		selectValueInDropDown(closeCta.getType(), true);

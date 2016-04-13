@@ -49,8 +49,6 @@ public class LoadToUsageTest extends BaseTest {
 	
 	@BeforeClass
 	public void setup() throws Exception {
-		basepage.login();
-		sfdc.connect();
 		nsTestBase.init();
 		rulesManagerPageUrl = visualForcePageUrl + "Rulesmanager";
 		rulesManagerPage = new RulesManagerPage();
@@ -84,8 +82,6 @@ public class LoadToUsageTest extends BaseTest {
 		List<Map<String, String>> expectedData = Comparator.getParsedCsvDataWithHeaderNamespaceResolved(Application.basedir+ "/testdata/newstack/RulesEngine/RulesUI-TestData/GS-5148/ExpectedData.csv");
 		List<Map<String, String>> actualData = Comparator.getParsedCsvDataWithHeaderNamespaceResolved(Application.basedir+ "/testdata/newstack/RulesEngine/RulesUI-TestData/GS-5148/ActualData.csv");
 		List<Map<String, String>> differenceData = Comparator.compareListData(expectedData, actualData);
-		Log.info("Actual : " + mapper.writeValueAsString(actualData));
-		Log.info("Expected : " + mapper.writeValueAsString(expectedData));
 		Log.info("Difference is : " + mapper.writeValueAsString(differenceData));
 		Assert.assertEquals(differenceData.size(), 0, "Check the Diff above which is not matching between expected testdata from csv and actual data from csv");
 		
@@ -96,8 +92,6 @@ public class LoadToUsageTest extends BaseTest {
 		List<Map<String, String>> expectedData1 = Comparator.getParsedCsvDataWithHeaderNamespaceResolved(Application.basedir+ "/testdata/newstack/RulesEngine/RulesUI-TestData/GS-5148/ExpectedData.csv");
 		List<Map<String, String>> actualData1 = Comparator.getParsedCsvDataWithHeaderNamespaceResolved(Application.basedir+ "/testdata/newstack/RulesEngine/RulesUI-TestData/GS-5148/ActualData.csv");
 		List<Map<String, String>> differenceData1 = Comparator.compareListData(expectedData1, actualData1);
-		Log.info("Actual : " + mapper.writeValueAsString(actualData1));
-		Log.info("Expected : " + mapper.writeValueAsString(expectedData1));
 		Log.info("Difference is : " + mapper.writeValueAsString(differenceData1));
 		Assert.assertEquals(differenceData1.size(), 0, "Check the Diff above which is not matching between expected testdata from csv and actual data from csv");
 	}
@@ -119,8 +113,6 @@ public class LoadToUsageTest extends BaseTest {
 		List<Map<String, String>> expectedData = Comparator.getParsedCsvDataWithHeaderNamespaceResolved(Application.basedir+ "/testdata/newstack/RulesEngine/RulesUI-TestData/GS-5150/ExpectedData.csv");
 		List<Map<String, String>> actualData = Comparator.getParsedCsvDataWithHeaderNamespaceResolved(Application.basedir+ "/testdata/newstack/RulesEngine/RulesUI-TestData/GS-5150/ActualData.csv");
 		List<Map<String, String>> differenceData = Comparator.compareListData(expectedData, actualData);
-		Log.info("Actual : " + mapper.writeValueAsString(actualData));
-		Log.info("Expected : " + mapper.writeValueAsString(expectedData));
 		Log.info("Difference is : " + mapper.writeValueAsString(differenceData));
 		Assert.assertEquals(differenceData.size(), 0, "Check the Diff above which is not matching between expected testdata from csv and actual data from csv");
 	}

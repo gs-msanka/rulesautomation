@@ -74,7 +74,6 @@ public class LoadToCustomersTestUsingMongoAsSourceData extends BaseTest {
     @BeforeClass
     @Parameters("dbStoreType")
     public void setup(@Optional("Mongo") String dbStoreType) throws Exception {
-        basepage.login();
         nsTestBase.init();
         tenantManager = new TenantManager();
         String tenantId = tenantManager.getTenantDetail(sfdc.fetchSFDCinfo().getOrg(), null).getTenantId();
@@ -162,7 +161,7 @@ public class LoadToCustomersTestUsingMongoAsSourceData extends BaseTest {
     }
 
     @TestInfo(testCaseIds = { "GS-230485" })
-    @Test()
+  //  @Test()
     public void testLoadToCustomers3() throws Exception {
         RulesPojo rulesPojo = mapper.readValue(new File(TEST_DATA_DIR + "GS-230485/GS-230485-input-mongo.json"), RulesPojo.class);
         rulesEngineUtil.updateSourceObjectInRule(rulesPojo, collectionName);

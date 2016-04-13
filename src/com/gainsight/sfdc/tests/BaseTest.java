@@ -109,6 +109,7 @@ public class BaseTest {
             env.launchBrower();
             basepage = new BasePage();
             Log.info("Initializing Base Page : " + basepage);
+            basepage.login();
         } catch (Exception e) {
             env.stop();
             Log.error(e.getLocalizedMessage(), e);

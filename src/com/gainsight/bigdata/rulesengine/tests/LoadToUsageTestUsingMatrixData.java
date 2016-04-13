@@ -79,7 +79,6 @@ public class LoadToUsageTestUsingMatrixData extends BaseTest {
     @BeforeClass
     @Parameters("dbStoreType")
     public void setup(@Optional("Mongo") String dbStoreType) throws Exception {
-        basepage.login();
         nsTestBase.init();
         tenantManager = new TenantManager();
         String tenantId = tenantManager.getTenantDetail(sfdc.fetchSFDCinfo().getOrg(), null).getTenantId();
@@ -141,8 +140,6 @@ public class LoadToUsageTestUsingMatrixData extends BaseTest {
         List<Map<String, String>> expectedData = Comparator.getParsedCsvDataWithHeaderNamespaceResolved(TEST_DATA_DIR + "GS-5148/ExpectedData.csv");
         List<Map<String, String>> actualData = Comparator.getParsedCsvDataWithHeaderNamespaceResolved(TEST_DATA_DIR + "GS-5148/ActualData.csv");
         List<Map<String, String>> differenceData = Comparator.compareListData(expectedData, actualData);
-        Log.info("Actual : " + mapper.writeValueAsString(actualData));
-        Log.info("Expected : " + mapper.writeValueAsString(expectedData));
         Log.info("Difference is : " + mapper.writeValueAsString(differenceData));
         Assert.assertEquals(differenceData.size(), 0, "Check the Diff above which is not matching between expected testdata from csv and actual data from csv");
 
@@ -153,8 +150,6 @@ public class LoadToUsageTestUsingMatrixData extends BaseTest {
         List<Map<String, String>> expectedData1 = Comparator.getParsedCsvDataWithHeaderNamespaceResolved(TEST_DATA_DIR + "/GS-5148/ExpectedData.csv");
         List<Map<String, String>> actualData1 = Comparator.getParsedCsvDataWithHeaderNamespaceResolved(TEST_DATA_DIR + "GS-5148/ActualData.csv");
         List<Map<String, String>> differenceData1 = Comparator.compareListData(expectedData1, actualData1);
-        Log.info("Actual : " + mapper.writeValueAsString(actualData1));
-        Log.info("Expected : " + mapper.writeValueAsString(expectedData1));
         Log.info("Difference is : " + mapper.writeValueAsString(differenceData1));
         Assert.assertEquals(differenceData1.size(), 0, "Check the Diff above which is not matching between expected testdata from csv and actual data from csv");
     }
@@ -188,8 +183,6 @@ public class LoadToUsageTestUsingMatrixData extends BaseTest {
         List<Map<String, String>> expectedData = Comparator.getParsedCsvDataWithHeaderNamespaceResolved(TEST_DATA_DIR + "GS-5150/ExpectedData.csv");
         List<Map<String, String>> actualData = Comparator.getParsedCsvDataWithHeaderNamespaceResolved(TEST_DATA_DIR + "GS-5150/ActualData.csv");
         List<Map<String, String>> differenceData = Comparator.compareListData(expectedData, actualData);
-        Log.info("Actual : " + mapper.writeValueAsString(actualData));
-        Log.info("Expected : " + mapper.writeValueAsString(expectedData));
         Log.info("Difference is : " + mapper.writeValueAsString(differenceData));
         Assert.assertEquals(differenceData.size(), 0, "Check the Diff above which is not matching between expected testdata from csv and actual data from csv");
     }

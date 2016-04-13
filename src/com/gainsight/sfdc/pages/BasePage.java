@@ -70,8 +70,8 @@ public class BasePage extends WebPage implements Constants {
 		if(!driver.getCurrentUrl().contains("login")){
 			driver.get(env.getDefaultUrl());
 		}
-		field.setTextField("username", sfdcConfig.getSfdcUsername());
-		field.setTextField("password", sfdcConfig.getSfdcPassword());
+		field.clearAndSetText("username", sfdcConfig.getSfdcUsername());
+		field.clearAndSetText("password", sfdcConfig.getSfdcPassword());
 		button.click("Login");
         try {
             wait.waitTillElementPresent(USERNAVBUTTON, MIN_TIME, MAX_TIME);
