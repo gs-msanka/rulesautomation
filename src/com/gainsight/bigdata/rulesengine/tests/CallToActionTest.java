@@ -550,7 +550,9 @@ public class CallToActionTest extends BaseTest {
             // Since UI names and API names are different, writing a common util will be error prone always.
             for (SObject tokenRecords : ctarecords) {
                 String ctaComment = (String) tokenRecords.getField(resolveStrNameSpace("JBCXM__Comments__c"));
+                Log.info("Expected comment:"+ctaComment);
                 String actualTokenComments = (String) tokenRecords.getChild((resolveStrNameSpace("JBCXM__Account__r"))).getChild("Name").getValue() + tokenRecords.getChild(resolveStrNameSpace("JBCXM__Account__r")).getChild("Id").getValue() + tokenRecords.getChild(resolveStrNameSpace("JBCXM__Account__r")).getChild("Percent_Auto__c").getValue() + tokenRecords.getChild(resolveStrNameSpace("JBCXM__Account__r")).getChild("C_Picklist__c").getValue();
+                Log.info("Actual comment:"+actualTokenComments);
                 // Asserting both create cta and close cta comments
                 Assert.assertEquals(ctaComment, actualTokenComments + "\n" + "\n" + actualTokenComments);
             }
