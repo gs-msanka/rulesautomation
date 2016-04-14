@@ -82,6 +82,11 @@
       "sfdc_username" : "scorecards@automation.com",
       "sfdc_password" : "scorecards15",
       "sfdc_stoken" : "wyqR8VGjrc8ucWfPDNDPzOS0g"
+    },
+    "pbandi"  : {
+      "sfdc_username" : "pbandi@11demo.com",
+      "sfdc_password" : "p.kumar1b",
+      "sfdc_stoken" : "3kBHiHUUZdCo1QKIj6Uq2fenN"
     }
   }
 }
