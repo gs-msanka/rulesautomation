@@ -50,8 +50,6 @@ public class CallToActionTest extends BaseTest {
 
     @BeforeClass
     public void setUp() throws Exception {
-
-
         nsTestBase.init();
         rulesManagerPageUrl = visualForcePageUrl + "Rulesmanager";
         rulesManagerPage = new RulesManagerPage();
@@ -67,7 +65,7 @@ public class CallToActionTest extends BaseTest {
     }
 
     @TestInfo(testCaseIds = {"GS-4185", "GS-4186", "GS-4257"})
-    @Test
+    @Test(enabled = false)
     public void testCtaWithUpsertPriorityOption() throws Exception {
         SetupRuleActionPage setupRuleActionPage = new SetupRuleActionPage();
         // Creating cta with Low priority
@@ -148,7 +146,7 @@ public class CallToActionTest extends BaseTest {
     }
 
     @TestInfo(testCaseIds = {"GS-4256", "GS-4257"})
-    @Test
+    @Test(enabled = false)
     public void testCtaWithUpdateCommentsAlwaysOption() throws Exception {
         SetupRuleActionPage setupRuleActionPage = new SetupRuleActionPage();
         RulesPojo rulesPojo = mapper.readValue(new File(Application.basedir + "/testdata/newstack/RulesEngine/RulesUI-TestData/TC24.json"), RulesPojo.class);
@@ -201,7 +199,7 @@ public class CallToActionTest extends BaseTest {
     }
 
     @TestInfo(testCaseIds = {"GS-4257"})
-    @Test
+    @Test(enabled = false)
     public void testCtaWithUpdateCommentsNeverOption() throws Exception {
         SetupRuleActionPage setupRuleActionPage = new SetupRuleActionPage();
         RulesPojo rulesPojo = mapper.readValue(new File(Application.basedir + "/testdata/newstack/RulesEngine/RulesUI-TestData/TC25.json"), RulesPojo.class);
@@ -230,7 +228,7 @@ public class CallToActionTest extends BaseTest {
     }
 
     @TestInfo(testCaseIds = {"GS-4258"})
-    @Test
+    @Test(enabled = false)
     public void testCtaWithAddOrReplacePlaybook() throws Exception {
         SetupRuleActionPage setupRuleActionPage = new SetupRuleActionPage();
         // Creating cta with no playbook
@@ -296,7 +294,7 @@ public class CallToActionTest extends BaseTest {
     }
 
     @TestInfo(testCaseIds = {"GS-6247"})
-    @Test
+    @Test(enabled = false)
     public void testCtaWithRuleNameChangeOption() throws Exception {
         SetupRuleActionPage setupRuleActionPage = new SetupRuleActionPage();
         RulesPojo rulesPojo = mapper.readValue(new File(Application.basedir + "/testdata/newstack/RulesEngine/RulesUI-TestData/TC27.json"), RulesPojo.class);
@@ -352,7 +350,7 @@ public class CallToActionTest extends BaseTest {
     }
 
     @TestInfo(testCaseIds = {"GS-4264"})
-    @Test
+    @Test(enabled = false)
     public void testCtaUpsertWithSnoozeOption() throws Exception {
         SetupRuleActionPage setupRuleActionPage = new SetupRuleActionPage();
         RulesPojo rulesPojo = mapper.readValue(new File(Application.basedir + "/testdata/newstack/RulesEngine/RulesUI-TestData/TC28.json"), RulesPojo.class);
@@ -408,7 +406,7 @@ public class CallToActionTest extends BaseTest {
     }
 
     @TestInfo(testCaseIds = {"GS-4261"})
-    @Test
+    @Test(enabled = false)
     public void testCtaActionWithDonNotSkipWeekendOption() throws Exception {
         RulesPojo rulesPojo = mapper.readValue(new File(Application.basedir + "/testdata/newstack/RulesEngine/RulesUI-TestData/TC29.json"), RulesPojo.class);
         rulesManagerPage.openRulesManagerPage(rulesManagerPageUrl);
@@ -441,7 +439,7 @@ public class CallToActionTest extends BaseTest {
 
 
     @TestInfo(testCaseIds = {"GS-4261"})
-    @Test
+    @Test(enabled = false)
     public void testCtaActionWithSkipAllWeekendsOption() throws Exception {
         RulesPojo rulesPojo = mapper.readValue(new File(Application.basedir + "/testdata/newstack/RulesEngine/RulesUI-TestData/TC30.json"), RulesPojo.class);
         rulesManagerPage.openRulesManagerPage(rulesManagerPageUrl);
@@ -477,7 +475,7 @@ public class CallToActionTest extends BaseTest {
     }
 
     @TestInfo(testCaseIds = {"GS-4261"})
-    @Test
+    @Test(enabled = false)
     public void testCtaActionWithSkipWeekendIfDueOnWeekEndOption() throws Exception {
         RulesPojo rulesPojo = mapper.readValue(new File(Application.basedir + "/testdata/newstack/RulesEngine/RulesUI-TestData/TC31.json"), RulesPojo.class);
         rulesManagerPage.openRulesManagerPage(rulesManagerPageUrl);
@@ -509,7 +507,7 @@ public class CallToActionTest extends BaseTest {
     }
 
     @TestInfo(testCaseIds = {"GS-3873", "GS-4185"})
-    @Test
+    @Test()
     // This testcase handles owner field userlookup and cta token also for create cta action
     public void testCloseCtaFromSpecificSource() throws Exception {
         RulesPojo rulesPojo = mapper.readValue(new File(Application.basedir + "/testdata/newstack/RulesEngine/RulesUI-TestData/TC32.json"), RulesPojo.class);
@@ -558,7 +556,7 @@ public class CallToActionTest extends BaseTest {
     }
 
     @TestInfo(testCaseIds = {"GS-3874"})
-    @Test
+    @Test(enabled = false)
     public void testCloseCtaFromAllSources() throws Exception {
         RulesPojo rulesPojo = mapper.readValue(new File(Application.basedir + "/testdata/newstack/RulesEngine/RulesUI-TestData/TC33.json"), RulesPojo.class);
         rulesManagerPage.openRulesManagerPage(rulesManagerPageUrl);
