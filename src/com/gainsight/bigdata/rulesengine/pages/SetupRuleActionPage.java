@@ -105,13 +105,13 @@ public class SetupRuleActionPage extends BasePage {
 
     private final String FIELD_MAPPING_DESTINATION = "//option[contains(text(), '%s')]";
     private final String LOAD_TO_OBJECT = "//div[contains(@class, 'col-md-3')]/descendant::select[contains(@class,'object-name-select')]/following-sibling::button";
-    private final String LOAD_TO_OBJECT_OPERATION_TYPE = "//div[contains(@class, 'col-md-3')]/descendant::select[contains(@class, 'operation-type')]/following-sibling::button";
+    private final String LOAD_TO_OBJECT_OPERATION_TYPE = "//select[contains(@class, 'operation-type')]/following-sibling::button";
 
     private final String NEWRULE_PART1 = "//div[contains(@class,'setup-action-ctn')]/div[";
     private final String NEWRULE_PART2 = "]";
     
     private final String COMMENTS_TOKENS_DIV = "//div[contains(@class, 'form-control alertComment')]/following-sibling::div[@class='showFieldList']/descendant::span[text()='%s']";
-
+    private final String BLOCKER_VIEW = "//div[@class='gs-sc-loader']";
     /**
      * Selects the given action type
      *
@@ -164,7 +164,7 @@ public class SetupRuleActionPage extends BasePage {
         }
         try {
 
-            wait.waitTillElementNotDisplayed("blocker_view48", MIN_TIME, MAX_TIME);
+            wait.waitTillElementNotDisplayed(BLOCKER_VIEW, MIN_TIME, MAX_TIME);
             if (element.isElementPresent(CREATE_CTA_RADIO_BUTTON)) {
                 item.click(xpath + CREATE_CTA_RADIO_BUTTON);
 
@@ -330,7 +330,7 @@ public class SetupRuleActionPage extends BasePage {
         clickOnActionButton();
         item.click(xpath + SELECT_BUTTON);
         selectValueInDropDown("Load to Milestone");
-        wait.waitTillElementNotDisplayed("blocker_view48", MIN_TIME, MAX_TIME);
+        wait.waitTillElementNotDisplayed(BLOCKER_VIEW, MIN_TIME, MAX_TIME);
         if (loadToMileStoneAction.getMilestoneDate().getType().contains("Show Field")) {
             item.click(xpath + SHOWFIELD_LTM);
             item.click(xpath + SHOEFIELD_SELECT_LTM);
@@ -367,6 +367,7 @@ public class SetupRuleActionPage extends BasePage {
         selectValueInDropDown(loadToSFDCAction.getObjectName());
         item.click(xpath + LOAD_TO_OBJECT_OPERATION_TYPE);
         selectValueInDropDown(loadToSFDCAction.getOperation());
+
         List<FieldMapping> ruleActions = loadToSFDCAction.getFieldMappings();
         for (FieldMapping fieldMappingObject : ruleActions) {
             String fieldMapping = String.format(FIELD_MAPPING_LTU1, fieldMappingObject.getSourceObject());
@@ -527,6 +528,7 @@ public class SetupRuleActionPage extends BasePage {
         }
         str = "SELECT Id, Name   FROM " + " Account " + " Where " + str
                 + " isDeleted=false";
+        Log.debug("Query string:*"+str);
         return str;
     }
 
@@ -559,7 +561,7 @@ public class SetupRuleActionPage extends BasePage {
     
     public void closeCTA(CloseCtaAction closeCta, int i) {
     	String xpath = "//div[contains(@class,'setup-action-ctn')]/div[" + i + "]";
-        wait.waitTillElementNotDisplayed("blocker_view50", MIN_TIME, MAX_TIME);
+        wait.waitTillElementNotDisplayed(BLOCKER_VIEW, MIN_TIME, MAX_TIME);
 		item.click(xpath + CLOSE_CTA_RADIO_BUTTON);
 		item.click(xpath + TYPE_CCTA);
 		selectValueInDropDown(closeCta.getType(), true);
