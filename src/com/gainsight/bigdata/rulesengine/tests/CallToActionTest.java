@@ -544,7 +544,9 @@ public class CallToActionTest extends BaseTest {
             int srcObjRecCount = records.length;
             Assert.assertEquals(srcObjRecCount, sfdc.getRecordCount(resolveStrNameSpace(("select id, name FROM JBCXM__CTA__c where Name='" + ctaAction.getName() + "' and  JBCXM__Source__c='Rules' and JBCXM__ClosedDate__c!=null and isdeleted=false"))));
             String names = getAccountNamesAsStringFromAccountObject(records, "Name", null, false);
-            SObject[] ctarecords = sfdc.getRecords(resolveStrNameSpace("SELECT Id,Name,JBCXM__Account__r.Name,JBCXM__Account__r.Id,JBCXM__Comments__c,JBCXM__Account__r.C_Picklist__c," + "JBCXM__Account__r.Percent_Auto__c FROM JBCXM__CTA__c where JBCXM__Account__r.Name in (" + names + ") and isDeleted=false"));
+            String query = resolveStrNameSpace("SELECT Id,Name,JBCXM__Account__r.Name,JBCXM__Account__r.Id,JBCXM__Comments__c,JBCXM__Account__r.C_Picklist__c," + "JBCXM__Account__r.Percent_Auto__c FROM JBCXM__CTA__c where JBCXM__Account__r.Name in (" + names + ") and isDeleted=false");
+            Log.info("****Inside cta*** query: "+query);
+            SObject[] ctarecords = sfdc.getRecords(query);
             // Since UI names and API names are different, writing a common util will be error prone always.
             for (SObject tokenRecords : ctarecords) {
                 String ctaComment = (String) tokenRecords.getField(resolveStrNameSpace("JBCXM__Comments__c"));
