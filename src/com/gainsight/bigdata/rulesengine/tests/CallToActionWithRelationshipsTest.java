@@ -78,7 +78,6 @@ public class CallToActionWithRelationshipsTest extends BaseTest {
     @BeforeClass
     @Parameters("dbStoreType")
     public void setUp(@Optional String dbStoreType) throws Exception {
-        basepage.login();
         nsTestBase.init();
         rulesManagerPageUrl = visualForcePageUrl + "Rulesmanager";
         metaUtil.createExtIdFieldOnAccount(sfdc);

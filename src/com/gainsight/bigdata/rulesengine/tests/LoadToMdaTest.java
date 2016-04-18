@@ -78,8 +78,6 @@ public class LoadToMdaTest extends BaseTest {
 	@BeforeClass
 	@Parameters("dbStoreType")
 	public void setup(@Optional String dbStoreType) throws Exception {
-		basepage.login();
-		sfdc.connect();
 		nsTestBase.init();
 		tenantManager = new TenantManager();
 		String tenantId = tenantManager.getTenantDetail(sfdc.fetchSFDCinfo().getOrg(), null).getTenantId();
