@@ -116,6 +116,10 @@ public class ReportBuilderMDAMongoUITest extends BaseTest {
         mongoDBDAO.deleteMongoDocumentFromReportMaster(
                 tenantManager.getTenantDetail(sfdcInfo.getOrg(), null).getTenantId(), "reportmaster", "SFDCReport");
         reportingBasePage.openReportingPage(reportingBuilderPageUrl);
+        if (tenantDetails.getReportReadLimit() < 200) {
+            tenantDetails.setReportReadLimit(200);
+            Assert.assertTrue(tenantManager.updateTenant(tenantDetails), "Tenant update failed");
+        }
     }
 
     @TestInfo(testCaseIds = {"GS-9040"})
@@ -145,7 +149,7 @@ public class ReportBuilderMDAMongoUITest extends BaseTest {
         reportingBasePage.createNewReport();
         reportMaster.getReportInfo().get(0).setReportReadLimit(tenantDetails.getReportReadLimit());
         reportingUtil.createReportFromUiAndVerifyBackedJSON(reportMaster, reportingBasePage, mongoUtil);
-        reportingUtil.verifyReportData(reportMaster, mongoUtil, null);
+        reportingUtil.verifyReportData(reportMaster, mongoUtil, str);
     }
 
     @TestInfo(testCaseIds = {"GS-9031"})
@@ -160,7 +164,7 @@ public class ReportBuilderMDAMongoUITest extends BaseTest {
         reportingBasePage.createNewReport();
         reportMaster.getReportInfo().get(0).setReportReadLimit(tenantDetails.getReportReadLimit());
         reportingUtil.createReportFromUiAndVerifyBackedJSON(reportMaster, reportingBasePage, mongoUtil);
-        reportingUtil.verifyReportData(reportMaster, mongoUtil, null);
+        reportingUtil.verifyReportData(reportMaster, mongoUtil, str);
     }
 
     @TestInfo(testCaseIds = {"GS-9032"})
@@ -175,7 +179,7 @@ public class ReportBuilderMDAMongoUITest extends BaseTest {
         reportingBasePage.createNewReport();
         reportMaster.getReportInfo().get(0).setReportReadLimit(tenantDetails.getReportReadLimit());
         reportingUtil.createReportFromUiAndVerifyBackedJSON(reportMaster, reportingBasePage, mongoUtil);
-        reportingUtil.verifyReportData(reportMaster, mongoUtil, null);
+        reportingUtil.verifyReportData(reportMaster, mongoUtil, str);
 
     }
 
@@ -222,7 +226,7 @@ public class ReportBuilderMDAMongoUITest extends BaseTest {
 
         reportMaster.getReportInfo().get(0).setReportReadLimit(tenantDetails.getReportReadLimit());
         reportingUtil.createReportFromUiAndVerifyBackedJSON(reportMaster, reportingBasePage, mongoUtil);
-        reportingUtil.verifyReportData(reportMaster, mongoUtil, null);
+        reportingUtil.verifyReportData(reportMaster, mongoUtil, str);
     }
 
     @TestInfo(testCaseIds = {"GS-9036"})
@@ -237,7 +241,7 @@ public class ReportBuilderMDAMongoUITest extends BaseTest {
         reportingBasePage.createNewReport();
         reportMaster.getReportInfo().get(0).setReportReadLimit(tenantDetails.getReportReadLimit());
         reportingUtil.createReportFromUiAndVerifyBackedJSON(reportMaster, reportingBasePage, mongoUtil);
-        reportingUtil.verifyReportData(reportMaster, mongoUtil, null);
+        reportingUtil.verifyReportData(reportMaster, mongoUtil, str);
     }
 
    @TestInfo(testCaseIds = {"GS-9037"})
@@ -251,7 +255,7 @@ public class ReportBuilderMDAMongoUITest extends BaseTest {
        reportingBasePage.createNewReport();
        reportMaster.getReportInfo().get(0).setReportReadLimit(tenantDetails.getReportReadLimit());
        reportingUtil.createReportFromUiAndVerifyBackedJSON(reportMaster, reportingBasePage, mongoUtil);
-       reportingUtil.verifyReportData(reportMaster, mongoUtil, null);
+       reportingUtil.verifyReportData(reportMaster, mongoUtil, str);
     }
 
    @TestInfo(testCaseIds = {"GS-9038"})
@@ -281,7 +285,7 @@ public class ReportBuilderMDAMongoUITest extends BaseTest {
         reportingBasePage.createNewReport();
         reportMaster.getReportInfo().get(0).setReportReadLimit(tenantDetails.getReportReadLimit());
         reportingUtil.createReportFromUiAndVerifyBackedJSON(reportMaster, reportingBasePage, mongoUtil);
-        reportingUtil.verifyReportData(reportMaster, mongoUtil, null);
+        reportingUtil.verifyReportData(reportMaster, mongoUtil, str);
     }
 
     @TestInfo(testCaseIds = {"GS-200142"})
@@ -407,7 +411,7 @@ public class ReportBuilderMDAMongoUITest extends BaseTest {
         reportingBasePage.createNewReport();
         reportMaster.getReportInfo().get(0).setReportReadLimit(tenantDetails.getReportReadLimit());
         reportingUtil.createReportFromUiAndVerifyBackedJSON(reportMaster, reportingBasePage, mongoUtil);
-        reportingUtil.verifyReportData(reportMaster, mongoUtil, null);
+        reportingUtil.verifyReportData(reportMaster, mongoUtil, str);
     }
 
     @TestInfo(testCaseIds = {"GS-200150"})
@@ -471,7 +475,7 @@ public class ReportBuilderMDAMongoUITest extends BaseTest {
         reportingBasePage.createNewReport();
         reportMaster.getReportInfo().get(0).setReportReadLimit(tenantDetails.getReportReadLimit());
         reportingUtil.createReportFromUiAndVerifyBackedJSON(reportMaster, reportingBasePage, mongoUtil);
-        reportingUtil.verifyReportData(reportMaster, mongoUtil, null);
+        reportingUtil.verifyReportData(reportMaster, mongoUtil, str);
 
     }
 
