@@ -44,6 +44,8 @@ import com.gainsight.util.DBStoreType;
 import com.gainsight.util.MongoDBDAO;
 import com.gainsight.utils.annotations.TestInfo;
 
+import static org.testng.Assert.assertTrue;
+
 /**
  * @author Abhilash Thaduka
  *
@@ -78,20 +80,20 @@ public class CalculatedFieldsAndMeasuresTestUsingMatrixData extends BaseTest{
 	@BeforeClass
 	@Parameters("dbStoreType")
 	public void setup(@Optional("") String dbStoreType) throws Exception {
-		basepage.login();
-		sfdc.connect();
 		nsTestBase.init();
 		tenantManager = new TenantManager();
-		tenantDetails = tenantManager.getTenantDetail(null, tenantManager.getTenantDetail(sfdc.fetchSFDCinfo().getOrg(), null).getTenantId());
-		if (StringUtils.isNotBlank(dbStoreType) && !dbStoreType.equalsIgnoreCase("Redshift")) {
-			mongoDBDAO = new MongoDBDAO(nsConfig.getGlobalDBHost(),Integer.valueOf(nsConfig.getGlobalDBPort()),nsConfig.getGlobalDBUserName(),nsConfig.getGlobalDBPassword(),nsConfig.getGlobalDBDatabase());
-			TenantDetails.DBDetail schemaDBDetails = null;
-			schemaDBDetails = mongoDBDAO.getSchemaDBDetail(tenantDetails.getTenantId());		 
-			if (schemaDBDetails == null || schemaDBDetails.getDbServerDetails() == null || schemaDBDetails.getDbServerDetails().get(0) == null) {
-				throw new RuntimeException("DB details are not correct, please check it.");
+		String tenantId = tenantManager.getTenantDetail(sfdc.fetchSFDCinfo().getOrg(), null).getTenantId();
+		tenantDetails = tenantManager.getTenantDetail(null, tenantId);
+		if (StringUtils.isNotBlank(dbStoreType) && dbStoreType.equalsIgnoreCase("Mongo")) {
+			if(tenantDetails.isRedshiftEnabled()){
+				mongoDBDAO = MongoDBDAO.getGlobalMongoDBDAOInstance();
+				assertTrue(mongoDBDAO.disableRedshift(tenantId), "Failed updating dataStoreType at tenant level to Mongo.");
 			}
-			Log.info("Connecting to schema db....");
-			mongoDBDAO = new MongoDBDAO(schemaDBDetails.getDbServerDetails().get(0).getHost().split(":")[0], 27017, schemaDBDetails.getDbServerDetails().get(0).getUserName(), schemaDBDetails.getDbServerDetails().get(0).getPassword(),schemaDBDetails.getDbName());
+		}
+		else if(StringUtils.isNotBlank(dbStoreType) && dbStoreType.equalsIgnoreCase("Redshift")){
+			if(!tenantDetails.isRedshiftEnabled()) {
+				assertTrue(tenantManager.enabledRedShiftWithDBDetails(tenantDetails), "Failed updating dataStoreType at tenant level to Redshift");
+			}
 		}
 		rulesManagerPageUrl = visualForcePageUrl + "Rulesmanager";
 		rulesManagerPage = new RulesManagerPage();
@@ -106,10 +108,7 @@ public class CalculatedFieldsAndMeasuresTestUsingMatrixData extends BaseTest{
 			collectionInfo.getCollectionDetails().setCollectionName(dbStoreType + date.getTime());
 			String collectionId = gsDataImpl.createCustomObject(collectionInfo);
 			Assert.assertNotNull(collectionId, "Collection ID should not be null.");
-			// Updating DB storage type to postgres from back end.
-			if (StringUtils.isNotBlank(dbStoreType) && !dbStoreType.equalsIgnoreCase("Redshift")) {
-				Assert.assertTrue(mongoDBDAO.updateCollectionDBStoreType(tenantDetails.getTenantId(), collectionId, DBStoreType.valueOf(StringUtils.upperCase(dbStoreType))), "Failed while updating the DB store type to "+dbStoreType);
-			}	
+
 			CollectionInfo actualCollectionInfo = gsDataImpl.getCollectionMaster(collectionId);
 			collectionName = actualCollectionInfo.getCollectionDetails().getCollectionName();
 			dataETL.execute(mapper.readValue(resolveNameSpace(Application.basedir+ "/testdata/newstack/RulesEngine/RulesUI-TestData/GlobalTestData/DataloadJob3.txt"),JobInfo.class));
@@ -150,8 +149,6 @@ public class CalculatedFieldsAndMeasuresTestUsingMatrixData extends BaseTest{
 		List<Map<String, String>> expectedData = Comparator.getParsedCsvDataWithHeaderNamespaceResolved(Application.basedir+ "/testdata/newstack/RulesEngine/RulesUI-TestData/GS-4200/ExpectedData-2.csv");
 		List<Map<String, String>> actualData = Comparator.getParsedCsvDataWithHeaderNamespaceResolved(Application.basedir+ "/testdata/newstack/RulesEngine/RulesUI-TestData/GS-4200/ActualData.csv");
 		List<Map<String, String>> differenceData = Comparator.compareListData(expectedData, actualData);
-		Log.info("Actual : " + mapper.writerWithDefaultPrettyPrinter().writeValueAsString(actualData));
-		Log.info("Expected : " + mapper.writerWithDefaultPrettyPrinter().writeValueAsString(expectedData));
 		Log.info("Difference is : " + mapper.writerWithDefaultPrettyPrinter().writeValueAsString(differenceData));
 		Assert.assertEquals(differenceData.size(), 0, "Check the Diff above for which the aggregated data is not matching");
 	}
@@ -178,8 +175,6 @@ public class CalculatedFieldsAndMeasuresTestUsingMatrixData extends BaseTest{
 		List<Map<String, String>> expectedData = Comparator.getParsedCsvDataWithHeaderNamespaceResolved(Application.basedir+ "/testdata/newstack/RulesEngine/RulesUI-TestData/GS-4236/ExpectedData-2.csv");
 		List<Map<String, String>> actualData = Comparator.getParsedCsvDataWithHeaderNamespaceResolved(Application.basedir+ "/testdata/newstack/RulesEngine/RulesUI-TestData/GS-4236/ActualData.csv");
 		List<Map<String, String>> differenceData = Comparator.compareListData(expectedData, actualData);
-		Log.info("Actual : " + mapper.writerWithDefaultPrettyPrinter().writeValueAsString(actualData));
-		Log.info("Expected : " + mapper.writerWithDefaultPrettyPrinter().writeValueAsString(expectedData));
 		Log.info("Difference is : " + mapper.writerWithDefaultPrettyPrinter().writeValueAsString(differenceData));
 		Assert.assertEquals(differenceData.size(), 0, "Check the Diff above for which the aggregated data is not matching");	
 	}
@@ -201,8 +196,6 @@ public class CalculatedFieldsAndMeasuresTestUsingMatrixData extends BaseTest{
 		List<Map<String, String>> expectedData = Comparator.getParsedCsvDataWithHeaderNamespaceResolved(Application.basedir+ "/testdata/newstack/RulesEngine/RulesUI-TestData/GS-4048/ExpectedData-2.csv");
 		List<Map<String, String>> actualData = Comparator.getParsedCsvDataWithHeaderNamespaceResolved(Application.basedir+ "/testdata/newstack/RulesEngine/RulesUI-TestData/GS-4048/ActualData.csv");
 		List<Map<String, String>> differenceData = Comparator.compareListData(expectedData, actualData);
-		Log.info("Actual : " + mapper.writeValueAsString(actualData));
-		Log.info("Expected : " + mapper.writeValueAsString(expectedData));
 		Log.info("Difference is : " + mapper.writeValueAsString(differenceData));
 		Assert.assertEquals(differenceData.size(), 0, "Check the Diff above for which the aggregated data is not matching");	
 	}
@@ -225,8 +218,6 @@ public class CalculatedFieldsAndMeasuresTestUsingMatrixData extends BaseTest{
 		List<Map<String, String>> expectedData = Comparator.getParsedCsvDataWithHeaderNamespaceResolved(Application.basedir+ "/testdata/newstack/RulesEngine/RulesUI-TestData/GS-4045/ExpectedData-2.csv");
 		List<Map<String, String>> actualData = Comparator.getParsedCsvDataWithHeaderNamespaceResolved(Application.basedir+ "/testdata/newstack/RulesEngine/RulesUI-TestData/GS-4045/ActualData.csv");
 		List<Map<String, String>> differenceData = Comparator.compareListData(expectedData, actualData);
-		Log.info("Actual : " + mapper.writerWithDefaultPrettyPrinter().writeValueAsString(actualData));
-		Log.info("Expected : " + mapper.writerWithDefaultPrettyPrinter().writeValueAsString(expectedData));
 		Log.info("Difference is : " + mapper.writerWithDefaultPrettyPrinter().writeValueAsString(differenceData));
 		Assert.assertEquals(differenceData.size(), 0, "Check the Diff above for which the aggregated data is not matching");	
 	}
@@ -248,8 +239,6 @@ public class CalculatedFieldsAndMeasuresTestUsingMatrixData extends BaseTest{
 		List<Map<String, String>> expectedData = Comparator.getParsedCsvDataWithHeaderNamespaceResolved(Application.basedir+ "/testdata/newstack/RulesEngine/RulesUI-TestData/GS-4046/ExpectedData-2.csv");
 		List<Map<String, String>> actualData = Comparator.getParsedCsvDataWithHeaderNamespaceResolved(Application.basedir+ "/testdata/newstack/RulesEngine/RulesUI-TestData/GS-4046/ActualData.csv");
 		List<Map<String, String>> differenceData = Comparator.compareListData(expectedData, actualData);
-		Log.info("Actual : " + mapper.writerWithDefaultPrettyPrinter().writeValueAsString(actualData));
-		Log.info("Expected : " + mapper.writerWithDefaultPrettyPrinter().writeValueAsString(expectedData));
 		Log.info("Difference is : " + mapper.writerWithDefaultPrettyPrinter().writeValueAsString(differenceData));
 		Assert.assertEquals(differenceData.size(), 0, "Check the Diff above for which the aggregated data is not matching");	
 	}
@@ -271,8 +260,6 @@ public class CalculatedFieldsAndMeasuresTestUsingMatrixData extends BaseTest{
 		List<Map<String, String>> expectedData = Comparator.getParsedCsvDataWithHeaderNamespaceResolved(Application.basedir+ "/testdata/newstack/RulesEngine/RulesUI-TestData/GS-4237/ExpectedData-2.csv");
 		List<Map<String, String>> actualData = Comparator.getParsedCsvDataWithHeaderNamespaceResolved(Application.basedir+ "/testdata/newstack/RulesEngine/RulesUI-TestData/GS-4237/ActualData.csv");
 		List<Map<String, String>> differenceData = Comparator.compareListData(expectedData, actualData);
-		Log.info("Actual : " + mapper.writerWithDefaultPrettyPrinter().writeValueAsString(actualData));
-		Log.info("Expected : " + mapper.writerWithDefaultPrettyPrinter().writeValueAsString(expectedData));
 		Log.info("Difference is : " + mapper.writerWithDefaultPrettyPrinter().writeValueAsString(differenceData));
 		Assert.assertEquals(differenceData.size(), 0, "Check the Diff above for which the aggregated data is not matching");	
 	}
@@ -294,8 +281,6 @@ public class CalculatedFieldsAndMeasuresTestUsingMatrixData extends BaseTest{
 		List<Map<String, String>> expectedData = Comparator.getParsedCsvDataWithHeaderNamespaceResolved(Application.basedir+ "/testdata/newstack/RulesEngine/RulesUI-TestData/GS-4238/ExpectedData-2.csv");
 		List<Map<String, String>> actualData = Comparator.getParsedCsvDataWithHeaderNamespaceResolved(Application.basedir+ "/testdata/newstack/RulesEngine/RulesUI-TestData/GS-4238/ActualData.csv");
 		List<Map<String, String>> differenceData = Comparator.compareListData(expectedData, actualData);
-		Log.info("Actual : " + mapper.writerWithDefaultPrettyPrinter().writeValueAsString(actualData));
-		Log.info("Expected : " + mapper.writerWithDefaultPrettyPrinter().writeValueAsString(expectedData));
 		Log.info("Difference is : " + mapper.writerWithDefaultPrettyPrinter().writeValueAsString(differenceData));
 		Assert.assertEquals(differenceData.size(), 0, "Check the Diff above for which the aggregated data is not matching");	
 	}
@@ -317,8 +302,6 @@ public class CalculatedFieldsAndMeasuresTestUsingMatrixData extends BaseTest{
 		List<Map<String, String>> expectedData = Comparator.getParsedCsvDataWithHeaderNamespaceResolved(Application.basedir+ "/testdata/newstack/RulesEngine/RulesUI-TestData/GS-4204/ExpectedData-3.csv");
 		List<Map<String, String>> actualData = Comparator.getParsedCsvDataWithHeaderNamespaceResolved(Application.basedir+ "/testdata/newstack/RulesEngine/RulesUI-TestData/GS-4204/ActualData.csv");
 		List<Map<String, String>> differenceData = Comparator.compareListData(expectedData, actualData);
-		Log.info("Actual : " + mapper.writeValueAsString(actualData));
-		Log.info("Expected : " + mapper.writeValueAsString(expectedData));
 		Log.info("Difference is : " + mapper.writeValueAsString(differenceData));
 		Assert.assertEquals(differenceData.size(), 0, "Check the Diff above for which the aggregated data is not matching");
 		
@@ -339,8 +322,6 @@ public class CalculatedFieldsAndMeasuresTestUsingMatrixData extends BaseTest{
 		List<Map<String, String>> expectedData1 = Comparator.getParsedCsvDataWithHeaderNamespaceResolved(Application.basedir+ "/testdata/newstack/RulesEngine/RulesUI-TestData/GS-4204/ExpectedData-4.csv");
 		List<Map<String, String>> actualData1 = Comparator.getParsedCsvDataWithHeaderNamespaceResolved(Application.basedir+ "/testdata/newstack/RulesEngine/RulesUI-TestData/GS-4204/ActualData.csv");
 		List<Map<String, String>> differenceData1 = Comparator.compareListData(expectedData1, actualData1);
-		Log.info("Actual : " + mapper.writeValueAsString(actualData1));
-		Log.info("Expected : " + mapper.writeValueAsString(expectedData1));
 		Log.info("Difference is : " + mapper.writeValueAsString(differenceData1));
 		Assert.assertEquals(differenceData1.size(), 0, "Check the Diff above for which the aggregated data is not matching");	
 	}
@@ -363,8 +344,8 @@ public class CalculatedFieldsAndMeasuresTestUsingMatrixData extends BaseTest{
 		List<Map<String, String>> expectedData = Comparator.getParsedCsvDataWithHeaderNamespaceResolved(Application.basedir+ "/testdata/newstack/RulesEngine/RulesUI-TestData/GS-4239/ExpectedData-3.csv");
 		List<Map<String, String>> actualData = Comparator.getParsedCsvDataWithHeaderNamespaceResolved(Application.basedir+ "/testdata/newstack/RulesEngine/RulesUI-TestData/GS-4239/ActualData.csv");
 		List<Map<String, String>> differenceData = Comparator.compareListData(expectedData, actualData);
-		Log.info("Actual : " + mapper.writeValueAsString(actualData));
-		Log.info("Expected : " + mapper.writeValueAsString(expectedData));
+		
+		
 		Log.info("Difference is : " + mapper.writeValueAsString(differenceData));
 		Assert.assertEquals(differenceData.size(), 0, "Check the Diff above for which the aggregated data is not matching");
 				
@@ -385,8 +366,6 @@ public class CalculatedFieldsAndMeasuresTestUsingMatrixData extends BaseTest{
 		List<Map<String, String>> expectedData1 = Comparator.getParsedCsvDataWithHeaderNamespaceResolved(Application.basedir+ "/testdata/newstack/RulesEngine/RulesUI-TestData/GS-4239/ExpectedData-4.csv");
 		List<Map<String, String>> actualData1 = Comparator.getParsedCsvDataWithHeaderNamespaceResolved(Application.basedir+ "/testdata/newstack/RulesEngine/RulesUI-TestData/GS-4239/ActualData.csv");
 		List<Map<String, String>> differenceData1 = Comparator.compareListData(expectedData1, actualData1);
-		Log.info("Actual : " + mapper.writeValueAsString(actualData1));
-		Log.info("Expected : " + mapper.writeValueAsString(expectedData1));
 		Log.info("Difference is : " + mapper.writeValueAsString(differenceData1));
 		Assert.assertEquals(differenceData1.size(), 0, "Check the Diff above for which the aggregated data is not matching");
 	}
@@ -408,8 +387,6 @@ public class CalculatedFieldsAndMeasuresTestUsingMatrixData extends BaseTest{
 		List<Map<String, String>> expectedData = Comparator.getParsedCsvDataWithHeaderNamespaceResolved(Application.basedir+ "/testdata/newstack/RulesEngine/RulesUI-TestData/GS-4234/ExpectedData.csv");
 		List<Map<String, String>> actualData = Comparator.getParsedCsvDataWithHeaderNamespaceResolved(Application.basedir+ "/testdata/newstack/RulesEngine/RulesUI-TestData/GS-4234/ActualData.csv");
 		List<Map<String, String>> differenceData = Comparator.compareListData(expectedData, actualData);
-		Log.info("Actual : " + mapper.writeValueAsString(actualData));
-		Log.info("Expected : " + mapper.writeValueAsString(expectedData));
 		Log.info("Difference is : " + mapper.writeValueAsString(differenceData));
 		Assert.assertEquals(differenceData.size(), 0, "Check the Diff above for which the aggregated data is not matching");
 	}

@@ -77,8 +77,6 @@ public class LoadToSfdcTest extends BaseTest {
 	@BeforeClass
 	@Parameters("dbStoreType")
 	public void setup(@Optional String dbStoreType) throws Exception {
-		basepage.login();
-		sfdc.connect();
 		nsTestBase.init();
 		tenantManager = new TenantManager();
 		tenantDetails = tenantManager.getTenantDetail(null, tenantManager.getTenantDetail(sfdc.fetchSFDCinfo().getOrg(), null).getTenantId());
@@ -120,9 +118,6 @@ public class LoadToSfdcTest extends BaseTest {
 		collectionInfo.getCollectionDetails().setCollectionName("LoadToSfdc-MDA" + date.getTime());
 		String collectionId = gsDataImpl.createCustomObject(collectionInfo);
 		Assert.assertNotNull(collectionId, "Collection ID should not be null.");
-		if (StringUtils.isNotBlank(this.dbStoreType) && !dbStoreType.equalsIgnoreCase("Redshift")) {
-			Assert.assertTrue(mongoDBDAO.updateCollectionDBStoreType(tenantDetails.getTenantId(), collectionId, DBStoreType.valueOf(StringUtils.upperCase(this.dbStoreType))), "Failed while updating the DB store type to "+this.dbStoreType);
-		}
 		CollectionInfo actualCollectionInfo = gsDataImpl.getCollectionMaster(collectionId);
 		String collectionName = actualCollectionInfo.getCollectionDetails().getCollectionName();
 		
@@ -153,8 +148,6 @@ public class LoadToSfdcTest extends BaseTest {
 		List<Map<String, String>> expectedData = Comparator.getParsedCsvDataWithHeaderNamespaceResolved(Application.basedir+ "/testdata/newstack/RulesEngine/RulesUI-TestData/GS-3963/GS3963-ExpectedData2.csv");
 		List<Map<String, String>> actualData = Comparator.getParsedCsvDataWithHeaderNamespaceResolved(Application.basedir+ "/testdata/newstack/RulesEngine/RulesUI-TestData/GS-3963/GS3963-ActualData.csv");
 		List<Map<String, String>> differenceData = Comparator.compareListData(expectedData, actualData);
-		Log.info("Actual : " + mapper.writeValueAsString(actualData));
-		Log.info("Expected : " + mapper.writeValueAsString(expectedData));
 		Log.info("Difference is : " + mapper.writeValueAsString(differenceData));
 		Assert.assertEquals(differenceData.size(), 0, "Check the Diff above which is not matching between expected data and actual data");
 		
@@ -165,9 +158,6 @@ public class LoadToSfdcTest extends BaseTest {
 		collectionInfo1.getCollectionDetails().setCollectionName("GS-3965-Collection2" + date.getTime());
 		String collectionId1 = gsDataImpl.createCustomObject(collectionInfo1);
 		Assert.assertNotNull(collectionId1, "Collection ID should not be null.");
-		if (StringUtils.isNotBlank(this.dbStoreType) && !dbStoreType.equalsIgnoreCase("Redshift")) {
-			Assert.assertTrue(mongoDBDAO.updateCollectionDBStoreType(tenantDetails.getTenantId(), collectionId1, DBStoreType.valueOf(StringUtils.upperCase(this.dbStoreType))), "Failed while updating the DB store type to "+this.dbStoreType);
-		}
 		CollectionInfo actualCollectionInfo1 = gsDataImpl.getCollectionMaster(collectionId1);
 		String collectionName1 = actualCollectionInfo1.getCollectionDetails().getCollectionName();
 		
@@ -197,8 +187,6 @@ public class LoadToSfdcTest extends BaseTest {
 		List<Map<String, String>> expectedData1 = Comparator.getParsedCsvDataWithHeaderNamespaceResolved(Application.basedir+ "/testdata/newstack/RulesEngine/RulesUI-TestData/GS-3965/GS3965-ExpectedData2.csv");
 		List<Map<String, String>> actualData1 = Comparator.getParsedCsvDataWithHeaderNamespaceResolved(Application.basedir+ "/testdata/newstack/RulesEngine/RulesUI-TestData/GS-3965/GS3965-ActualData.csv");
 		List<Map<String, String>> differenceData1 = Comparator.compareListData(expectedData1, actualData1);
-		Log.info("Actual : " + mapper.writeValueAsString(actualData1));
-		Log.info("Expected : " + mapper.writeValueAsString(expectedData1));
 		Log.info("Difference is : " + mapper.writeValueAsString(differenceData1));
 		Assert.assertEquals(differenceData1.size(), 0, "Check the Diff above which is not matching between expected data and actual data");
 	}
@@ -212,9 +200,6 @@ public class LoadToSfdcTest extends BaseTest {
 		collectionInfo.getCollectionDetails().setCollectionName("LoadToSfdc-MDA-Upsert" + date.getTime());
 		String collectionId = gsDataImpl.createCustomObject(collectionInfo);
 		Assert.assertNotNull(collectionId, "Collection ID should not be null.");
-		if (StringUtils.isNotBlank(this.dbStoreType) && !dbStoreType.equalsIgnoreCase("Redshift")) {
-			Assert.assertTrue(mongoDBDAO.updateCollectionDBStoreType(tenantDetails.getTenantId(), collectionId, DBStoreType.valueOf(StringUtils.upperCase(this.dbStoreType))), "Failed while updating the DB store type to "+this.dbStoreType);
-		}
 		CollectionInfo actualCollectionInfo = gsDataImpl.getCollectionMaster(collectionId);
 		String collectionName = actualCollectionInfo.getCollectionDetails().getCollectionName();
 		
@@ -245,8 +230,6 @@ public class LoadToSfdcTest extends BaseTest {
 		List<Map<String, String>> expectedData = Comparator.getParsedCsvDataWithHeaderNamespaceResolved(Application.basedir+ "/testdata/newstack/RulesEngine/RulesUI-TestData/GS-3963/GS3963-ExpectedData2.csv");
 		List<Map<String, String>> actualData = Comparator.getParsedCsvDataWithHeaderNamespaceResolved(Application.basedir+ "/testdata/newstack/RulesEngine/RulesUI-TestData/GS-3963/GS3963-ActualData.csv");
 		List<Map<String, String>> differenceData = Comparator.compareListData(expectedData, actualData);
-		Log.info("Actual : " + mapper.writeValueAsString(actualData));
-		Log.info("Expected : " + mapper.writeValueAsString(expectedData));
 		Log.info("Difference is : " + mapper.writeValueAsString(differenceData));
 		Assert.assertEquals(differenceData.size(), 0, "Check the Diff above which is not matching between expected data and actual data");
 		
@@ -258,9 +241,6 @@ public class LoadToSfdcTest extends BaseTest {
 		collectionInfo1.getCollectionDetails().setCollectionName("GS-3965-Collection2-Upsert" + date.getTime());
 		String collectionId1 = gsDataImpl.createCustomObject(collectionInfo1);
 		Assert.assertNotNull(collectionId1, "Collection ID should not be null.");
-		if (StringUtils.isNotBlank(this.dbStoreType) && !dbStoreType.equalsIgnoreCase("Redshift")) {
-			Assert.assertTrue(mongoDBDAO.updateCollectionDBStoreType(tenantDetails.getTenantId(), collectionId1, DBStoreType.valueOf(StringUtils.upperCase(this.dbStoreType))), "Failed while updating the DB store type to "+this.dbStoreType);
-		}
 		CollectionInfo actualCollectionInfo1 = gsDataImpl.getCollectionMaster(collectionId1);
 		String collectionName1 = actualCollectionInfo1.getCollectionDetails().getCollectionName();
 		
@@ -290,8 +270,6 @@ public class LoadToSfdcTest extends BaseTest {
 		List<Map<String, String>> expectedData1 = Comparator.getParsedCsvDataWithHeaderNamespaceResolved(Application.basedir+ "/testdata/newstack/RulesEngine/RulesUI-TestData/GS-3984/GS3984-ExpectedData2.csv");
 		List<Map<String, String>> actualData1 = Comparator.getParsedCsvDataWithHeaderNamespaceResolved(Application.basedir+ "/testdata/newstack/RulesEngine/RulesUI-TestData/GS-3984/GS3984-ActualData.csv");
 		List<Map<String, String>> differenceData1 = Comparator.compareListData(expectedData1, actualData1);
-		Log.info("Actual : " + mapper.writeValueAsString(actualData1));
-		Log.info("Expected : " + mapper.writeValueAsString(expectedData1));
 		Log.info("Difference is : " + mapper.writeValueAsString(differenceData1));
 		Assert.assertEquals(differenceData1.size(), 0, "Check the Diff above which is not matching between expected data and actual data");
 	}
@@ -315,8 +293,6 @@ public class LoadToSfdcTest extends BaseTest {
 		List<Map<String, String>> expectedData = Comparator.getParsedCsvDataWithHeaderNamespaceResolved(Application.basedir+ "/testdata/newstack/RulesEngine/RulesUI-TestData/GS-3966/ExpectedData.csv");
 		List<Map<String, String>> actualData = Comparator.getParsedCsvDataWithHeaderNamespaceResolved(Application.basedir+ "/testdata/newstack/RulesEngine/RulesUI-TestData/GS-3966/GS3966-ActualData.csv");
 		List<Map<String, String>> differenceData = Comparator.compareListData(expectedData, actualData);
-		Log.info("Actual : " + mapper.writeValueAsString(actualData));
-		Log.info("Expected : " + mapper.writeValueAsString(expectedData));
 		Log.info("Difference is : " + mapper.writeValueAsString(differenceData));
 		Assert.assertEquals(differenceData.size(), 0, "Check the Diff above which is not matching between expected data and actual data");
 	}

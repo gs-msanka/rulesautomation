@@ -57,8 +57,6 @@ public class SetScoreActionWithColorSchemeTest extends BaseTest{
 	
 	@BeforeClass
 	public void setup() throws Exception {
-		basepage.login();
-		sfdc.connect();
 		nsTestBase.init();
 		scoreCardDomain = visualForcePageUrl + "scorecardsetup";
 		rulesManagerPageUrl = visualForcePageUrl + "Rulesmanager";
@@ -99,8 +97,6 @@ public class SetScoreActionWithColorSchemeTest extends BaseTest{
 		List<Map<String, String>> expectedData = Comparator.getParsedCsvDataWithHeaderNamespaceResolved(Application.basedir + "/testdata/newstack/RulesEngine/RulesUI-TestData/GS-3385/GS-3825-ExpectedDataForColorScheme.csv");
 		List<Map<String, String>> actualData = Comparator.getParsedCsvDataWithHeaderNamespaceResolved(Application.basedir + "/testdata/newstack/RulesEngine/RulesUI-TestData/GS-3385/ActualData.csv");
 		List<Map<String, String>> differenceData = Comparator.compareListData(expectedData, actualData);
-		Log.info("Actual : " + mapper.writeValueAsString(actualData));
-		Log.info("Expected : " + mapper.writeValueAsString(expectedData));
 		Log.info("Difference is : " + mapper.writeValueAsString(differenceData));
 		Assert.assertEquals(differenceData.size(), 0, "Check the Diff above which is not matching between expected testdata from csv and actual data from csv");
 	}
@@ -119,8 +115,6 @@ public class SetScoreActionWithColorSchemeTest extends BaseTest{
 		List<Map<String, String>> expectedData = Comparator.getParsedCsvDataWithHeaderNamespaceResolved(Application.basedir + "/testdata/newstack/RulesEngine/RulesUI-TestData/GS-3825/GS3825-ExpectedDataForColorSchema.csv");
 		List<Map<String, String>> actualData = Comparator.getParsedCsvDataWithHeaderNamespaceResolved(Application.basedir + "/testdata/newstack/RulesEngine/RulesUI-TestData/GS-3825/ActualData.csv");
 		List<Map<String, String>> differenceData = Comparator.compareListData(expectedData, actualData);
-		Log.info("Actual : " + mapper.writeValueAsString(actualData));
-		Log.info("Expected : " + mapper.writeValueAsString(expectedData));
 		Log.info("Difference is : " + mapper.writeValueAsString(differenceData));
 		Assert.assertEquals(differenceData.size(), 0, "Check the Diff above which is not matching between expected testdata from csv and actual data from csv");
 	}
@@ -139,8 +133,6 @@ public class SetScoreActionWithColorSchemeTest extends BaseTest{
 		List<Map<String, String>> expectedData = Comparator.getParsedCsvDataWithHeaderNamespaceResolved(Application.basedir + "/testdata/newstack/RulesEngine/RulesUI-TestData/GS-3837/GS-3837-ExpectedDataForColorSchema.csv");
 		List<Map<String, String>> actualData = Comparator.getParsedCsvDataWithHeaderNamespaceResolved(Application.basedir + "/testdata/newstack/RulesEngine/RulesUI-TestData/GS-3837/ActualData.csv");
 		List<Map<String, String>> differenceData = Comparator.compareListData(expectedData, actualData);
-		Log.info("Actual : " + mapper.writeValueAsString(actualData));
-		Log.info("Expected : " + mapper.writeValueAsString(expectedData));
 		Log.info("Difference is : " + mapper.writeValueAsString(differenceData));
 		Assert.assertEquals(differenceData.size(), 0, "Check the Diff above which is not matching between expected testdata from csv and actual data from csv");
 	}

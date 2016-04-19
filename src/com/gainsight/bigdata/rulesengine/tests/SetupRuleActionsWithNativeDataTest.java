@@ -42,8 +42,6 @@ public class SetupRuleActionsWithNativeDataTest extends BaseTest {
 
     @BeforeClass
     public void setup() throws Exception {
-        basepage.login();
-        sfdc.connect();
         nsTestBase.init();
         rulesManagerPageUrl = visualForcePageUrl + "Rulesmanager";
         rulesManagerPage = new RulesManagerPage();
@@ -73,8 +71,6 @@ public class SetupRuleActionsWithNativeDataTest extends BaseTest {
         List<Map<String, String>> actualData = rulesUtil.getRecordsFromListofMap(PreviewResults, records);
         String expectedString = "[{\"Custom_Currency__c\":\"110.0\",\"C_lookup__r.Name\":\"RULESUI Account 1\",\"rules_c_Number__c\":\"1.0\",\"rules_c_Email__c\":\"athaduka@gainsight.com\",\"rules_phone__c\":\"123456789\",\"rules_c_MultiPicklist__c\":\"MPvalue1\",\"rules_c_TextArea__c\":\"RULESUI Account 1 TextArea 1\",\"rules_c_Percent__c\":\"1000.0\",\"rules_c_Checkbox__c\":\"true\",\"rules_c_Text__c\":\"RULESUI Account 1 Text 1\",\"rules_URL__c\":\"http:://gainsight.com\",\"rules_c_Picklist__c\":\"Pvalue1\"},{\"Custom_Currency__c\":\"200.0\",\"C_lookup__r.Name\":\"RULESUI Account 2\",\"rules_c_Number__c\":\"2.0\",\"rules_c_Email__c\":\"athaduka@gainsight.com\",\"rules_phone__c\":\"123456789\",\"rules_c_MultiPicklist__c\":\"MPvalue2\",\"rules_c_TextArea__c\":\"RULESUI Account 2 TextArea 1\",\"rules_c_Percent__c\":\"100.0\",\"rules_c_Checkbox__c\":\"false\",\"rules_c_Text__c\":\"RULESUI Account 2 Text 1\",\"rules_URL__c\":\"http:://google.com\",\"rules_c_Picklist__c\":\"Pvalue2\"},{\"Custom_Currency__c\":\"300.0\",\"C_lookup__r.Name\":\"RULESUI Account 3\",\"rules_c_Number__c\":\"3.0\",\"rules_c_Email__c\":\"athaduka@gainsight.com\",\"rules_phone__c\":\"123456789\",\"rules_c_MultiPicklist__c\":\"MPvalue3\",\"rules_c_TextArea__c\":\"RULESUI Account 3 TextArea 1\",\"rules_c_Percent__c\":\"12.0\",\"rules_c_Checkbox__c\":\"true\",\"rules_c_Text__c\":\"RULESUI Account 3 Text 1\",\"rules_URL__c\":\"http:://gainsight.com\",\"rules_c_Picklist__c\":\"Pvalue3\"},{\"Custom_Currency__c\":\"400.0\",\"C_lookup__r.Name\":\"RULESUI Account 4\",\"rules_c_Number__c\":\"4.0\",\"rules_c_Email__c\":\"athaduka@gainsight.com\",\"rules_phone__c\":\"123456789\",\"rules_c_MultiPicklist__c\":\"MPvalue1\",\"rules_c_TextArea__c\":\"RULESUI Account 4 TextArea 1\",\"rules_c_Percent__c\":\"50.0\",\"rules_c_Checkbox__c\":\"false\",\"rules_c_Text__c\":\"RULESUI Account 4 Text 1\",\"rules_URL__c\":\"http:://google.com\",\"rules_c_Picklist__c\":\"Pvalue1\"},{\"Custom_Currency__c\":\"500.0\",\"C_lookup__r.Name\":\"RULESUI Account 5\",\"rules_c_Number__c\":\"4.0\",\"rules_c_Email__c\":\"athaduka@gainsight.com\",\"rules_phone__c\":\"123456789\",\"rules_c_MultiPicklist__c\":\"MPvalue2\",\"rules_c_TextArea__c\":\"RULESUI Account 5 TextArea 1\",\"rules_c_Percent__c\":\"1000.0\",\"rules_c_Checkbox__c\":\"true\",\"rules_c_Text__c\":\"RULESUI Account 5 Text 1\",\"rules_URL__c\":\"http:://gainsight.com\",\"rules_c_Picklist__c\":\"Pvalue2\"},{\"Custom_Currency__c\":\"600.0\",\"C_lookup__r.Name\":\"RULESUI Account 6\",\"rules_c_Number__c\":\"6.0\",\"rules_c_Email__c\":\"athaduka@gainsight.com\",\"rules_phone__c\":\"123456789\",\"rules_c_MultiPicklist__c\":\"MPvalue3\",\"rules_c_TextArea__c\":\"RULESUI Account 6 TextArea 1\",\"rules_c_Percent__c\":\"100.0\",\"rules_c_Checkbox__c\":\"false\",\"rules_c_Text__c\":\"RULESUI Account 6 Text 1\",\"rules_URL__c\":\"http:://google.com\",\"rules_c_Picklist__c\":\"Pvalue3\"},{\"Custom_Currency__c\":\"700.0\",\"C_lookup__r.Name\":\"RULESUI Account 7\",\"rules_c_Number__c\":\"7.0\",\"rules_c_Email__c\":\"athaduka@gainsight.com\",\"rules_phone__c\":\"123456789\",\"rules_c_MultiPicklist__c\":\"MPvalue1\",\"rules_c_TextArea__c\":\"RULESUI Account 7 TextArea 1\",\"rules_c_Percent__c\":\"12.0\",\"rules_c_Checkbox__c\":\"true\",\"rules_c_Text__c\":\"RULESUI Account 7 Text 1\",\"rules_URL__c\":\"http:://gainsight.com\",\"rules_c_Picklist__c\":\"Pvalue1\"},{\"Custom_Currency__c\":\"800.0\",\"C_lookup__r.Name\":\"RULESUI Account 8\",\"rules_c_Number__c\":\"8.0\",\"rules_c_Email__c\":\"athaduka@gainsight.com\",\"rules_phone__c\":\"123456789\",\"rules_c_MultiPicklist__c\":\"MPvalue2\",\"rules_c_TextArea__c\":\"RULESUI Account 8 TextArea 1\",\"rules_c_Percent__c\":\"50.0\",\"rules_c_Checkbox__c\":\"false\",\"rules_c_Text__c\":\"RULESUI Account 8 Text 1\",\"rules_URL__c\":\"http:://google.com\",\"rules_c_Picklist__c\":\"Pvalue2\"},{\"Custom_Currency__c\":\"900.0\",\"C_lookup__r.Name\":\"RULESUI Account 9\",\"rules_c_Number__c\":\"9.0\",\"rules_c_Email__c\":\"athaduka@gainsight.com\",\"rules_phone__c\":\"123456789\",\"rules_c_MultiPicklist__c\":\"MPvalue3\",\"rules_c_TextArea__c\":\"RULESUI Account 9 TextArea 1\",\"rules_c_Percent__c\":\"1000.0\",\"rules_c_Checkbox__c\":\"true\",\"rules_c_Text__c\":\"RULESUI Account 9 Text 1\",\"rules_URL__c\":\"http:://google.com\",\"rules_c_Picklist__c\":\"Pvalue3\"}]";
         List<Map<String, String>> expectedData = mapper.readValue(expectedString, new TypeReference<List<Map<String, String>>>() {});
-        Log.info("ExpectedData : " + mapper.writeValueAsString(expectedData));
-        Log.info("ActualData : " + mapper.writeValueAsString(actualData));
         List<Map<String, String>> differenceData = Comparator.compareListData(expectedData, actualData);
         Log.info("Difference is : " + mapper.writeValueAsString(differenceData));
         Assert.assertEquals(actualData.size(), expectedData.size(), "Number of records are not matched");
@@ -94,8 +90,6 @@ public class SetupRuleActionsWithNativeDataTest extends BaseTest {
         List<Map<String, String>> actualData = rulesUtil.getRecordsFromListofMap(PreviewResults, records);
         String expectedString = "[{\"C_lookup__r.Name\":\"RULESUI Account 1\"},{\"C_lookup__r.Name\":\"RULESUI Account 2\"},{\"C_lookup__r.Name\":\"RULESUI Account 4\"},{\"C_lookup__r.Name\":\"RULESUI Account 6\"},{\"C_lookup__r.Name\":\"RULESUI Account 8\"}]";
         List<Map<String, String>> expectedData = mapper.readValue(expectedString, new TypeReference<List<Map<String, String>>>() {});
-        Log.info("ExpectedData : " + mapper.writeValueAsString(expectedData));
-        Log.info("ActualData : " + mapper.writeValueAsString(actualData));
         List<Map<String, String>> differenceData = Comparator.compareListData(expectedData, actualData);
         Log.info("Difference is : " + mapper.writeValueAsString(differenceData));
         Assert.assertEquals(actualData.size(), expectedData.size(), "Number of records are not matched after applying filters");
@@ -115,8 +109,6 @@ public class SetupRuleActionsWithNativeDataTest extends BaseTest {
         List<Map<String, String>> actualData = rulesUtil.getRecordsFromListofMap(PreviewResults, records);
         String expectedString = "[{\"C_lookup__r.Name\":\"RULESUI Account 1\"},{\"C_lookup__r.Name\":\"RULESUI Account 2\"},{\"C_lookup__r.Name\":\"RULESUI Account 3\"},{\"C_lookup__r.Name\":\"RULESUI Account 4\"},{\"C_lookup__r.Name\":\"RULESUI Account 5\"},{\"C_lookup__r.Name\":\"RULESUI Account 6\"},{\"C_lookup__r.Name\":\"RULESUI Account 7\"},{\"C_lookup__r.Name\":\"RULESUI Account 8\"},{\"C_lookup__r.Name\":\"RULESUI Account 9\"}]";
         List<Map<String, String>> expectedData = mapper.readValue(expectedString, new TypeReference<List<Map<String, String>>>() {});
-        Log.info("ExpectedData : " + mapper.writeValueAsString(expectedData));
-        Log.info("ActualData : " + mapper.writeValueAsString(actualData));
         List<Map<String, String>> differenceData = Comparator.compareListData(expectedData, actualData);
         Log.info("Difference is : " + mapper.writeValueAsString(differenceData));
         Assert.assertEquals(actualData.size(), expectedData.size(), "Number of records are not matched after applying filters");
@@ -136,8 +128,6 @@ public class SetupRuleActionsWithNativeDataTest extends BaseTest {
         List<Map<String, String>> actualData = rulesUtil.getRecordsFromListofMap(PreviewResults, records);
         String expectedString = "[{\"C_lookup__r.Name\":\"RULESUI Account 1\"},{\"C_lookup__r.Name\":\"RULESUI Account 2\"},{\"C_lookup__r.Name\":\"RULESUI Account 3\"},{\"C_lookup__r.Name\":\"RULESUI Account 4\"},{\"C_lookup__r.Name\":\"RULESUI Account 5\"},{\"C_lookup__r.Name\":\"RULESUI Account 6\"},{\"C_lookup__r.Name\":\"RULESUI Account 7\"},{\"C_lookup__r.Name\":\"RULESUI Account 8\"},{\"C_lookup__r.Name\":\"RULESUI Account 9\"}]";
         List<Map<String, String>> expectedData = mapper.readValue(expectedString, new TypeReference<List<Map<String, String>>>() {});
-        Log.info("ExpectedData : " + mapper.writeValueAsString(expectedData));
-        Log.info("ActualData : " + mapper.writeValueAsString(actualData));
         List<Map<String, String>> differenceData = Comparator.compareListData(expectedData, actualData);
         Log.info("Difference is : " + mapper.writeValueAsString(differenceData));
         Assert.assertEquals(actualData.size(), expectedData.size(), "Number of records are not matched after applying filters");
@@ -157,8 +147,6 @@ public class SetupRuleActionsWithNativeDataTest extends BaseTest {
         List<Map<String, String>> actualData = rulesUtil.getRecordsFromListofMap(PreviewResults, records);
         String expectedString = "[{\"C_lookup__r.Name\":\"RULESUI Account 9\",\"rules_c_Checkbox__c\":\"true\",\"Custom_Checkbox2__c\":\"true\"}]";
         List<Map<String, String>> expectedData = mapper.readValue(expectedString, new TypeReference<List<Map<String, String>>>() {});
-        Log.info("ExpectedData : " + mapper.writeValueAsString(expectedData));
-        Log.info("ActualData : " + mapper.writeValueAsString(actualData));
         List<Map<String, String>> differenceData = Comparator.compareListData(expectedData, actualData);
         Log.info("Difference is : " + mapper.writeValueAsString(differenceData));
         Assert.assertEquals(actualData.size(), expectedData.size(), "Number of records are not matched after applying filters");
