@@ -118,7 +118,7 @@ public class ReportBuilderMDAMongoUITest extends BaseTest {
         reportingBasePage.openReportingPage(reportingBuilderPageUrl);
         if (tenantDetails.getReportReadLimit() < 200) {
             tenantDetails.setReportReadLimit(200);
-            tenantManager.updateTenant(tenantDetails);
+            Assert.assertTrue(tenantManager.updateTenant(tenantDetails), "Tenant update failed");
         }
     }
 
