@@ -1,0 +1,27 @@
+{
+  "ruleType": "Custom",
+  "ruleName": "GS-4185-Matrix-Testcase-ID",
+  "ruleDescription": "GS-4185-Matrix-Testcase-ID Desc",
+  "setupRule": null,
+  "setupActions": [
+    {
+      "actionType": "createCta",
+      "upsert": true,
+      "action": {
+        "ctaUpsert": true,
+        "name": "CTA Rule GS-4185 - UI",
+        "priority": "High",
+        "type": "Risk",
+        "status": "New",
+        "playbook": "Collections",
+        "reason": "Product Issue",
+        "ownerField": "",
+        "chatterUpdate": "",
+        "dueDate": "10",
+        "defaultOwner": "weRules",
+        "dueDateType": "",
+        "comments": "These are test comments for CTA"
+      }
+    }
+  ]
+}
