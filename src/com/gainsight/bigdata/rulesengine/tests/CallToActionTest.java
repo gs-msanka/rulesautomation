@@ -65,7 +65,7 @@ public class CallToActionTest extends BaseTest {
     }
 
     @TestInfo(testCaseIds = {"GS-4185", "GS-4186", "GS-4257"})
-    @Test(enabled = false)
+    @Test()
     public void testCtaWithUpsertPriorityOption() throws Exception {
         SetupRuleActionPage setupRuleActionPage = new SetupRuleActionPage();
         // Creating cta with Low priority
@@ -146,7 +146,7 @@ public class CallToActionTest extends BaseTest {
     }
 
     @TestInfo(testCaseIds = {"GS-4256", "GS-4257"})
-    @Test(enabled = false)
+    @Test()
     public void testCtaWithUpdateCommentsAlwaysOption() throws Exception {
         SetupRuleActionPage setupRuleActionPage = new SetupRuleActionPage();
         RulesPojo rulesPojo = mapper.readValue(new File(Application.basedir + "/testdata/newstack/RulesEngine/RulesUI-TestData/TC24.json"), RulesPojo.class);
@@ -199,7 +199,7 @@ public class CallToActionTest extends BaseTest {
     }
 
     @TestInfo(testCaseIds = {"GS-4257"})
-    @Test(enabled = false)
+    @Test()
     public void testCtaWithUpdateCommentsNeverOption() throws Exception {
         SetupRuleActionPage setupRuleActionPage = new SetupRuleActionPage();
         RulesPojo rulesPojo = mapper.readValue(new File(Application.basedir + "/testdata/newstack/RulesEngine/RulesUI-TestData/TC25.json"), RulesPojo.class);
@@ -228,7 +228,7 @@ public class CallToActionTest extends BaseTest {
     }
 
     @TestInfo(testCaseIds = {"GS-4258"})
-    @Test(enabled = false)
+    @Test()
     public void testCtaWithAddOrReplacePlaybook() throws Exception {
         SetupRuleActionPage setupRuleActionPage = new SetupRuleActionPage();
         // Creating cta with no playbook
@@ -294,7 +294,7 @@ public class CallToActionTest extends BaseTest {
     }
 
     @TestInfo(testCaseIds = {"GS-6247"})
-    @Test(enabled = false)
+    @Test()
     public void testCtaWithRuleNameChangeOption() throws Exception {
         SetupRuleActionPage setupRuleActionPage = new SetupRuleActionPage();
         RulesPojo rulesPojo = mapper.readValue(new File(Application.basedir + "/testdata/newstack/RulesEngine/RulesUI-TestData/TC27.json"), RulesPojo.class);
@@ -350,7 +350,7 @@ public class CallToActionTest extends BaseTest {
     }
 
     @TestInfo(testCaseIds = {"GS-4264"})
-    @Test(enabled = false)
+    @Test()
     public void testCtaUpsertWithSnoozeOption() throws Exception {
         SetupRuleActionPage setupRuleActionPage = new SetupRuleActionPage();
         RulesPojo rulesPojo = mapper.readValue(new File(Application.basedir + "/testdata/newstack/RulesEngine/RulesUI-TestData/TC28.json"), RulesPojo.class);
@@ -406,7 +406,7 @@ public class CallToActionTest extends BaseTest {
     }
 
     @TestInfo(testCaseIds = {"GS-4261"})
-    @Test(enabled = false)
+    @Test()
     public void testCtaActionWithDonNotSkipWeekendOption() throws Exception {
         RulesPojo rulesPojo = mapper.readValue(new File(Application.basedir + "/testdata/newstack/RulesEngine/RulesUI-TestData/TC29.json"), RulesPojo.class);
         rulesManagerPage.openRulesManagerPage(rulesManagerPageUrl);
@@ -439,7 +439,7 @@ public class CallToActionTest extends BaseTest {
 
 
     @TestInfo(testCaseIds = {"GS-4261"})
-    @Test(enabled = false)
+    @Test()
     public void testCtaActionWithSkipAllWeekendsOption() throws Exception {
         RulesPojo rulesPojo = mapper.readValue(new File(Application.basedir + "/testdata/newstack/RulesEngine/RulesUI-TestData/TC30.json"), RulesPojo.class);
         rulesManagerPage.openRulesManagerPage(rulesManagerPageUrl);
@@ -475,7 +475,7 @@ public class CallToActionTest extends BaseTest {
     }
 
     @TestInfo(testCaseIds = {"GS-4261"})
-    @Test(enabled = false)
+    @Test()
     public void testCtaActionWithSkipWeekendIfDueOnWeekEndOption() throws Exception {
         RulesPojo rulesPojo = mapper.readValue(new File(Application.basedir + "/testdata/newstack/RulesEngine/RulesUI-TestData/TC31.json"), RulesPojo.class);
         rulesManagerPage.openRulesManagerPage(rulesManagerPageUrl);
@@ -547,6 +547,7 @@ public class CallToActionTest extends BaseTest {
             String query = resolveStrNameSpace("SELECT Id,Name,JBCXM__Account__r.Name,JBCXM__Account__r.Id,JBCXM__Comments__c,JBCXM__Account__r.C_Picklist__c," + "JBCXM__Account__r.Percent_Auto__c FROM JBCXM__CTA__c where JBCXM__Account__r.Name in (" + names + ") and isDeleted=false");
             Log.info("****Inside cta*** query: "+query);
             SObject[] ctarecords = sfdc.getRecords(query);
+            Log.debug("CTA Records: "+Arrays.toString(ctarecords));
             // Since UI names and API names are different, writing a common util will be error prone always.
             for (SObject tokenRecords : ctarecords) {
                 String ctaComment = (String) tokenRecords.getField(resolveStrNameSpace("JBCXM__Comments__c"));
@@ -560,7 +561,7 @@ public class CallToActionTest extends BaseTest {
     }
 
     @TestInfo(testCaseIds = {"GS-3874"})
-    @Test(enabled = false)
+    @Test()
     public void testCloseCtaFromAllSources() throws Exception {
         RulesPojo rulesPojo = mapper.readValue(new File(Application.basedir + "/testdata/newstack/RulesEngine/RulesUI-TestData/TC33.json"), RulesPojo.class);
         rulesManagerPage.openRulesManagerPage(rulesManagerPageUrl);
