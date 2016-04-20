@@ -155,12 +155,13 @@ public class CallToActionTestUsingMatrixData extends BaseTest{
         rulesManagerPage.openRulesManagerPage(rulesManagerPageUrl);
         RulesPojo CTA_Upsert = mapper.readValue(new File(TEST_DATA_DIR + "GS-4185/GS-4185-Matrix-Upsert-input.json"), RulesPojo.class);
         RuleAction ruleActions2 = CTA_Upsert.getSetupActions().get(0);
+        CTAAction ctaAction2 = null;
         if (ruleActions2.getActionType().name().contains("CTA") && ruleActions2.isUpsert()) {
-            CTAAction ctaAction2 = mapper.readValue(CTA_Upsert.getSetupActions().get(0).getAction(), CTAAction.class);
+            ctaAction2 = mapper.readValue(CTA_Upsert.getSetupActions().get(0).getAction(), CTAAction.class);
             rulesManagerPage.editRuleByName(CTA_Upsert.getRuleName());
             rulesEngineUtil.createRuleFromUi(CTA_Upsert);
             Assert.assertTrue(rulesUtil.runRule(CTA_Upsert.getRuleName()), "Rule processing failed, Please check rule execution attachment for more details !");
-            Assert.assertTrue(rulesUtil.isCTACreateSuccessfully(ctaAction2.getPriority(), ctaAction2.getStatus(), sfdcInfo.getUserId(), ctaAction2.getType(), ctaAction2.getReason(), ctaAction2.getComments(), ctaAction2.getName(), ctaAction2.getPlaybook()), "verify whether cta action configured resulted correct cta or not");
+            Assert.assertTrue(rulesUtil.isCTACreateSuccessfully(ctaAction2.getPriority(), ctaAction2.getStatus(), sfdcInfo.getUserId(), ctaAction2.getType(), ctaAction2.getReason(), ctaAction.getComments()+ ctaAction2.getComments(), ctaAction2.getName(), ctaAction2.getPlaybook()), "verify whether cta action configured resulted correct cta or not");
             Assert.assertEquals(srcObjRecCount, sfdc.getRecordCount(resolveStrNameSpace(("select id, name FROM JBCXM__CTA__c where Name='" + ctaAction2.getName() + "' and  JBCXM__Source__c='Rules' and isdeleted=false"))));
         }
         //Verifying CS tasks of a CTA for the playbook applied
@@ -186,7 +187,7 @@ public class CallToActionTestUsingMatrixData extends BaseTest{
             rulesManagerPage.editRuleByName(CTA_Upsert.getRuleName());
             rulesEngineUtil.createRuleFromUi(CTA_Upsert);
             Assert.assertTrue(rulesUtil.runRule(CTA_Upsert.getRuleName()), "Rule processing failed, Please check rule execution attachment for more details !");
-            Assert.assertTrue(rulesUtil.isCTACreateSuccessfully("High", ctaAction3.getStatus(), sfdcInfo.getUserId(), ctaAction3.getType(), ctaAction3.getReason(), ctaAction3.getComments(), ctaAction3.getName(), ctaAction3.getPlaybook()), "verify whether cta action configured resulted correct cta or not");
+            Assert.assertTrue(rulesUtil.isCTACreateSuccessfully("High", ctaAction3.getStatus(), sfdcInfo.getUserId(), ctaAction3.getType(), ctaAction3.getReason(),ctaAction.getComments()+ ctaAction2.getComments()+ ctaAction3.getComments(), ctaAction3.getName(), ctaAction3.getPlaybook()), "verify whether cta action configured resulted correct cta or not");
             Assert.assertEquals(srcObjRecCount, sfdc.getRecordCount(resolveStrNameSpace(("select id, name FROM JBCXM__CTA__c where Name='" + ctaAction3.getName() + "' and JBCXM__Source__c='Rules' and isdeleted=false"))));
         }
         //Verifying CS tasks of a CTA for the playbook applied
