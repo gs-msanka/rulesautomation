@@ -58,6 +58,7 @@ public class ReportBuilderMDARedShiftUITest extends BaseTest {
     private String reportingBuilderPageUrl;
     private static final String COLLECTION_MASTER = "collectionmaster";
     Date date = Calendar.getInstance().getTime();
+    TenantDetails tenantDetails = null;
 
     @BeforeClass
     public void setup() throws Exception {
@@ -70,7 +71,7 @@ public class ReportBuilderMDARedShiftUITest extends BaseTest {
         reportingBasePage = new ReportingBasePage();
         mongoDBDAO = new MongoDBDAO(nsConfig.getGlobalDBHost(), Integer.valueOf(nsConfig.getGlobalDBPort()),
                 nsConfig.getGlobalDBUserName(), nsConfig.getGlobalDBPassword(), nsConfig.getGlobalDBDatabase());
-        TenantDetails tenantDetails = tenantManager.getTenantDetail(sfdcInfo.getOrg(), null);
+         tenantDetails = tenantManager.getTenantDetail(sfdcInfo.getOrg(), null);
 
         dbDetail = mongoDBDAO.getDataDBDetail(tenantDetails.getTenantId());
         List<TenantDetails.DBServerDetail> dbDetails = dbDetail.getDbServerDetails();
@@ -178,6 +179,7 @@ public class ReportBuilderMDARedShiftUITest extends BaseTest {
         reportingBasePage.openReportingPage(reportingBuilderPageUrl);
         reportingBasePage.createNewReport();
 
+        reportMaster.getReportInfo().get(0).setReportReadLimit(tenantDetails.getReportReadLimit());
         reportingUtil.createReportFromUiAndVerifyBackedJSON(reportMaster, reportingBasePage, mongoUtil);
 
         reportingUtil.verifyReportData(reportMaster, mongoUtil, null);
@@ -376,7 +378,7 @@ public class ReportBuilderMDARedShiftUITest extends BaseTest {
         reportingBasePage.createNewReport();
 
         reportingUtil.createReportFromUiAndVerifyBackedJSON(reportMaster, reportingBasePage, mongoUtil);
-        reportingUtil.verifyReportData(reportMaster, mongoUtil, null);
+        reportingUtil.verifyReportData(reportMaster, mongoUtil, str);
 
     }
 
@@ -405,12 +407,12 @@ public class ReportBuilderMDARedShiftUITest extends BaseTest {
                 new File(Application.basedir
                         + "/testdata/newstack/reporting/data/ReportingAggeration/FlatMDARedshiftReportsWithMaxShowMe.json"),
                 ReportMaster.class);
-        /*String str = FileUtils.readFileToString(
-                new File(Application.basedir + "/testdata/newstack/reporting/data/reportData/redshift/RedshiftCQData.json"));*/
+        String str = FileUtils.readFileToString(
+                new File(Application.basedir + "/testdata/newstack/reporting/data/reportData/redshift/RedshiftCQData.json"));
         reportingBasePage.createNewReport();
 
         reportingUtil.createReportFromUiAndVerifyBackedJSON(reportMaster, reportingBasePage, mongoUtil);
-        reportingUtil.verifyReportData(reportMaster, mongoUtil, null);
+        reportingUtil.verifyReportData(reportMaster, mongoUtil, str);
 
     }
 
@@ -459,7 +461,7 @@ public class ReportBuilderMDARedShiftUITest extends BaseTest {
         reportingBasePage.createNewReport();
 
         reportingUtil.createReportFromUiAndVerifyBackedJSON(reportMaster, reportingBasePage, mongoUtil);
-        reportingUtil.verifyReportData(reportMaster, mongoUtil, null);
+        reportingUtil.verifyReportData(reportMaster, mongoUtil, str);
 
     }
 
@@ -475,7 +477,7 @@ public class ReportBuilderMDARedShiftUITest extends BaseTest {
         reportingBasePage.createNewReport();
 
         reportingUtil.createReportFromUiAndVerifyBackedJSON(reportMaster, reportingBasePage, mongoUtil);
-        reportingUtil.verifyReportData(reportMaster, mongoUtil, null);
+        reportingUtil.verifyReportData(reportMaster, mongoUtil, str);
 
     }
 

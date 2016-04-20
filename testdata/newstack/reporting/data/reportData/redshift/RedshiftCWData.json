@@ -1,39 +1,39 @@
 {
   "data": [
     {
-      "Date": "02-08-2016",
-      "AccountName": "REPORTINGUI Account 1",
       "FilesDownloaded": 64,
       "ProductCode": 1,
-      "Active": 1
+      "Active": 1,
+      "AccountName": "REPORTINGUI Account 1",
+      "Date": "0"
     },
     {
-      "Date": "12-07-2015",
-      "AccountName": "REPORTINGUI Account 10",
       "FilesDownloaded": 46,
       "ProductCode": 1,
-      "Active": 1
+      "Active": 1,
+      "AccountName": "REPORTINGUI Account 10",
+      "Date": "-9"
     },
     {
-      "Date": "03-17-2014",
-      "AccountName": "REPORTINGUI Account 100",
       "FilesDownloaded": 152,
       "ProductCode": 1,
-      "Active": 1
+      "Active": 1,
+      "AccountName": "REPORTINGUI Account 100",
+      "Date": "-99"
     },
     {
-      "Date": "03-10-2014",
-      "AccountName": "REPORTINGUI Account 101",
       "FilesDownloaded": 199,
       "ProductCode": 1,
-      "Active": 1
+      "Active": 1,
+      "AccountName": "REPORTINGUI Account 101",
+      "Date": "-100"
     },
     {
-      "Date": "03-03-2014",
-      "AccountName": "REPORTINGUI Account 102",
       "FilesDownloaded": 75,
       "ProductCode": 1,
-      "Active": 1
+      "Active": 1,
+      "AccountName": "REPORTINGUI Account 102",
+      "Date": "-101"
     }
   ]
 }
