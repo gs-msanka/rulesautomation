@@ -100,7 +100,7 @@ public class CallToActionTestUsingMatrixData extends BaseTest{
             Assert.assertNotNull(collectionId, "Collection ID should not be null.");
             CollectionInfo actualCollectionInfo = gsDataImpl.getCollectionMaster(collectionId);
             collectionName = actualCollectionInfo.getCollectionDetails().getCollectionName();
-            dataETL.execute(mapper.readValue(resolveNameSpace(GLOBAL_TEST_DATA_DIR + "DataloadJobMatrixCTA.txt"),JobInfo.class));
+            dataETL.execute(mapper.readValue(resolveNameSpace(GLOBAL_TEST_DATA_DIR + "DataLoadJobMatrixCTA.txt"),JobInfo.class));
             JobInfo loadTransform = mapper.readValue((new FileReader(GLOBAL_TEST_DATA_DIR + "DataloadJob.txt")), JobInfo.class);
             File dataFile = FileProcessor.getDateProcessedFile(loadTransform, date);
             DataLoadMetadata metadata = CollectionUtil.getDBDataLoadMetaData(actualCollectionInfo, new String[] { "ID", "AccountName", "CustomDate1", "PageViews", "Logins", "Description"},	DataLoadOperationType.INSERT);
