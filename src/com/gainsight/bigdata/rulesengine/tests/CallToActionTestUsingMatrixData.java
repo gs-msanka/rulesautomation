@@ -119,7 +119,7 @@ public class CallToActionTestUsingMatrixData extends BaseTest{
     }
 
     @TestInfo(testCaseIds = {"GS-4185", "GS-4186", "GS-4257", "GS-4256", "GS-4257"})
-    @Test(enabled = false)
+    @Test(enabled = true)
     public void testCtaWithUpsertPriorityAndCommentsAlwaysOption() throws Exception {
         SetupRuleActionPage setupRuleActionPage = new SetupRuleActionPage();
         // Creating cta with Low priority
