@@ -75,6 +75,7 @@ public class CallToActionTestUsingMatrixData extends BaseTest{
         nsTestBase.init();
         rulesManagerPageUrl = visualForcePageUrl + "Rulesmanager";
         rulesManagerPage = new RulesManagerPage();
+        sfdc.runApexCode(resolveStrNameSpace("Delete [SELECT Id FROM JBCXM__ActionTemplates__c];"));
         gsDataImpl = new GSDataImpl(NSTestBase.header);
         tenantManager = new TenantManager();
         String tenantId = tenantManager.getTenantDetail(sfdc.fetchSFDCinfo().getOrg(), null).getTenantId();
@@ -117,9 +118,9 @@ public class CallToActionTestUsingMatrixData extends BaseTest{
         sfdc.runApexCode(getNameSpaceResolvedFileContents(CLEANUP_DATA));
     }
 
-    @TestInfo(testCaseIds = {"GS-4185", "GS-4186", "GS-4257"})
+    @TestInfo(testCaseIds = {"GS-4185", "GS-4186", "GS-4257", "GS-4256", "GS-4257"})
     @Test(enabled = true)
-    public void testCtaWithUpsertPriorityOption() throws Exception {
+    public void testCtaWithUpsertPriorityAndCommentsAlwaysOption() throws Exception {
         SetupRuleActionPage setupRuleActionPage = new SetupRuleActionPage();
         // Creating cta with Low priority
         RulesPojo rulesPojo = mapper.readValue(new File(TEST_DATA_DIR + "GS-4185/GS-4185-Matrix-input.json"), RulesPojo.class);
@@ -136,7 +137,7 @@ public class CallToActionTestUsingMatrixData extends BaseTest{
 
         List<Map<String, String>> countMap = Comparator.getParsedCsvDataWithHeaderNamespaceResolved(TEST_DATA_DIR + "GS-4185/ExpectedData.csv");
         int  srcObjRecCount = Integer.valueOf(countMap.get(0).get("count"));
-        Assert.assertEquals(srcObjRecCount, sfdc.getRecordCount(resolveStrNameSpace(("select id, name FROM JBCXM__CTA__c where Name='" + ctaAction.getName() + "' and JBCXM__Source__c='Rules' and isdeleted=false"))));
+        Assert.assertEquals(sfdc.getRecordCount(resolveStrNameSpace(("select id, name FROM JBCXM__CTA__c where Name='" + ctaAction.getName() + "' and JBCXM__Source__c='Rules' and isdeleted=false"))), srcObjRecCount ,"Verify the no.of accounts for which cta is created.");
 
         //Verifying CS tasks of a CTA for the playbook applied
         dataETL.execute(mapper.readValue(resolveNameSpace(RULE_JOBS + "CSTasks.txt"), JobInfo.class));
@@ -162,7 +163,7 @@ public class CallToActionTestUsingMatrixData extends BaseTest{
             rulesEngineUtil.createRuleFromUi(CTA_Upsert);
             Assert.assertTrue(rulesUtil.runRule(CTA_Upsert.getRuleName()), "Rule processing failed, Please check rule execution attachment for more details !");
             Assert.assertTrue(rulesUtil.isCTACreateSuccessfully(ctaAction2.getPriority(), ctaAction2.getStatus(), sfdcInfo.getUserId(), ctaAction2.getType(), ctaAction2.getReason(), ctaAction.getComments()+ "\n" + "\n" + ctaAction2.getComments(), ctaAction2.getName(), ctaAction2.getPlaybook()), "verify whether cta action configured resulted correct cta or not");
-            Assert.assertEquals(srcObjRecCount, sfdc.getRecordCount(resolveStrNameSpace(("select id, name FROM JBCXM__CTA__c where Name='" + ctaAction2.getName() + "' and  JBCXM__Source__c='Rules' and isdeleted=false"))));
+            Assert.assertEquals(sfdc.getRecordCount(resolveStrNameSpace(("select id, name FROM JBCXM__CTA__c where Name='" + ctaAction.getName() + "' and JBCXM__Source__c='Rules' and isdeleted=false"))), srcObjRecCount ,"Verify the no.of accounts for which cta is created.");
         }
         //Verifying CS tasks of a CTA for the playbook applied
         dataETL.execute(mapper.readValue(resolveNameSpace(RULE_JOBS + "CSTasks.txt"), JobInfo.class));
@@ -188,8 +189,7 @@ public class CallToActionTestUsingMatrixData extends BaseTest{
             rulesEngineUtil.createRuleFromUi(CTA_Upsert);
             Assert.assertTrue(rulesUtil.runRule(CTA_Upsert.getRuleName()), "Rule processing failed, Please check rule execution attachment for more details !");
             Assert.assertTrue(rulesUtil.isCTACreateSuccessfully("High", ctaAction3.getStatus(), sfdcInfo.getUserId(), ctaAction3.getType(), ctaAction3.getReason(),ctaAction.getComments()+ "\n" + "\n" + ctaAction2.getComments()+ "\n" + "\n" + ctaAction3.getComments(), ctaAction3.getName(), ctaAction3.getPlaybook()), "verify whether cta action configured resulted correct cta or not");
-            Assert.assertEquals(srcObjRecCount, sfdc.getRecordCount(resolveStrNameSpace(("select id, name FROM JBCXM__CTA__c where Name='" + ctaAction3.getName() + "' and JBCXM__Source__c='Rules' and isdeleted=false"))));
-        }
+            Assert.assertEquals(sfdc.getRecordCount(resolveStrNameSpace(("select id, name FROM JBCXM__CTA__c where Name='" + ctaAction.getName() + "' and JBCXM__Source__c='Rules' and isdeleted=false"))), srcObjRecCount ,"Verify the no.of accounts for which cta is created.");        }
         //Verifying CS tasks of a CTA for the playbook applied
         dataETL.execute(mapper.readValue(resolveNameSpace(RULE_JOBS + "CSTasks.txt"), JobInfo.class));
         JobInfo jobInfo1 = mapper.readValue(resolveNameSpace(RULE_JOBS + "playbookTasks.txt"), JobInfo.class);
@@ -203,4 +203,41 @@ public class CallToActionTestUsingMatrixData extends BaseTest{
         Log.info("Difference is : " + mapper.writeValueAsString(differenceData1));
         Assert.assertEquals(differenceData1.size(), 0, "Check the Diff above for which the CS-Tasks are not matching for the cta");
     }
+
+    @TestInfo(testCaseIds = { "GS-4257"})
+    @Test(enabled = true)
+    public void testCtaWithUpdateCommentsNeverOption() throws Exception {
+        SetupRuleActionPage setupRuleActionPage = new SetupRuleActionPage();
+        // Creating cta with Low priority
+        RulesPojo rulesPojo = mapper.readValue(new File(TEST_DATA_DIR + "GS-4257/GS-4257-Matrix-input.json"), RulesPojo.class);
+        rulesEngineUtil.updateSourceObjectInRule(rulesPojo, collectionName);
+        Log.debug("updated input testdata/pojo is " + mapper.writeValueAsString(rulesPojo));
+        rulesManagerPage.openRulesManagerPage(rulesManagerPageUrl);
+        rulesManagerPage.clickOnAddRule();
+        rulesEngineUtil.createRuleFromUi(rulesPojo);
+        Assert.assertTrue(rulesUtil.runRule(rulesPojo.getRuleName()), "Rule processing failed, Please check rule execution attachment for more details !");
+        JsonNode action = rulesPojo.getSetupActions().get(0).getAction();
+        CTAAction ctaAction = mapper.readValue(action, CTAAction.class);
+        Assert.assertTrue(rulesUtil.isCTACreateSuccessfully(ctaAction.getPriority(), ctaAction.getStatus(), sfdcInfo.getUserId(), ctaAction.getType(), ctaAction.getReason(), ctaAction.getComments(), ctaAction.getName(), ctaAction.getPlaybook()), "verify whether cta action configured resulted correct cta or not");
+        dataETL.execute(mapper.readValue(resolveNameSpace(TEST_DATA_DIR + "GS-4185/CTA-ExpectedJob.txt"),JobInfo.class));
+
+        List<Map<String, String>> countMap = Comparator.getParsedCsvDataWithHeaderNamespaceResolved(TEST_DATA_DIR + "GS-4185/ExpectedData.csv");
+        int  srcObjRecCount = Integer.valueOf(countMap.get(0).get("count"));
+        Assert.assertEquals(sfdc.getRecordCount(resolveStrNameSpace(("select id, name FROM JBCXM__CTA__c where Name='" + ctaAction.getName() + "' and JBCXM__Source__c='Rules' and isdeleted=false"))), srcObjRecCount ,"Verify the no.of accounts for which cta is created.");
+
+        //Verifying CS tasks of a CTA for the playbook applied
+        dataETL.execute(mapper.readValue(resolveNameSpace(RULE_JOBS + "CSTasks.txt"), JobInfo.class));
+        JobInfo jobInfo = mapper.readValue(resolveNameSpace(RULE_JOBS + "playbookTasks.txt"), JobInfo.class);
+        CTAAction act = mapper.readValue(rulesPojo.getSetupActions().get(0).getAction(), CTAAction.class);
+        jobInfo.getExtractionRule().setWhereCondition(" where JBCXM__PlaybookId__r.Name='" + act.getPlaybook() + "'");
+        dataETL.execute(jobInfo);
+        List<Map<String, String>> expectedTasks = Comparator.getParsedCsvDataWithHeaderNamespaceResolved(EXPECTED_UI_TESTDATA_DIR + "PlayBookTasks.csv");
+        List<Map<String, String>> actualTasks = Comparator.getParsedCsvDataWithHeaderNamespaceResolved(EXPECTED_UI_TESTDATA_DIR + "CSTasks.csv");
+        List<Map<String, String>> differenceData = Comparator.compareListData(expectedTasks, actualTasks);
+        Assert.assertEquals(actualTasks.size(), 12, "Number of CSTasks are not matching for the cta's created");
+        Log.info("Difference is : " + mapper.writeValueAsString(differenceData));
+        Assert.assertEquals(differenceData.size(), 0, "Check the Diff above for which the CS-Tasks are not matching for the cta");
+    }
+
+
 }
