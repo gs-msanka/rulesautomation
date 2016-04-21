@@ -283,6 +283,17 @@ public class ReportingFilterUtils extends BasePage {
 
 	public void addHavingExpression(String havingExpression) {
 		item.clearAndSetText(HAVING_FILTER_EXPRESSION, havingExpression);
-		item.clearAndSetText(HAVING_FILTER_EXPRESSION, havingExpression);
-	}
+        item.clearAndSetText(HAVING_FILTER_EXPRESSION, havingExpression);
+    }
+
+    public String replaceWhereFilterLogic(String filter) {
+        String updateFilter = filter.replace("JBCXM__1", "A").replace("JBCXM__2", "B");
+        return updateFilter;
+    }
+
+    public String replaceHavingFilterLogic(String filter) {
+        String updateFilter = filter.replace("JBCXM__1", "1").replace("JBCXM__2", "2");
+        return updateFilter;
+    }
+
 }

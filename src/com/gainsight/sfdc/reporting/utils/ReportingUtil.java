@@ -199,7 +199,8 @@ public class ReportingUtil extends BaseTest {
             for (ReportFilterSFDC reportFilter : reportFilters) {
                 reportingFilterUtils.addFilter(reportFilter);
             }
-            reportingFilterUtils.addWhereExpression(reportAdvanceFilterSFDC.getFilterLogic());
+            String whereLogic = reportingFilterUtils.replaceWhereFilterLogic(reportAdvanceFilterSFDC.getFilterLogic());
+            reportingFilterUtils.addWhereExpression(whereLogic);
         }
 
         if (reportInfoSFDC.getHavingAdvanceFilter() != null) {
@@ -209,7 +210,8 @@ public class ReportingUtil extends BaseTest {
             for (ReportFilterSFDC reportFilter : reportFiltersHaving) {
                 reportingFilterUtils.addFilter(reportFilter);
             }
-            reportingFilterUtils.addHavingExpression(reportAdvanceFiltersHaving.getFilterLogic());
+            String havingLogic = reportingFilterUtils.replaceHavingFilterLogic(reportAdvanceFiltersHaving.getFilterLogic());
+            reportingFilterUtils.addHavingExpression(havingLogic);
         }
 
         ReportingSettingsUtils reportingSettingsUtils = new ReportingSettingsUtils();
