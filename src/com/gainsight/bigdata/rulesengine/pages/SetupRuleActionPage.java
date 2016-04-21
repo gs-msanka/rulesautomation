@@ -172,6 +172,8 @@ public class SetupRuleActionPage extends BasePage {
         } finally {
             env.setTimeout(30);
         }
+        Log.debug("**Setting action name as:***"+ctaAction.getName());
+        wait.waitTillElementDisplayed(CTA_NAME_INPUT, MIN_TIME, MAX_TIME);
         field.clearAndSetText(CTA_NAME_INPUT, ctaAction.getName());
         item.click(xpath + PRIORITY_BUTTON);
         selectValueInDropDown(ctaAction.getPriority());
