@@ -1,0 +1,100 @@
+{
+  "name": "User_Outreach_MonthlyAgg",
+  "category": "default",
+  "smartListId": "***",
+  "smartListName": "***",
+  "defaultECA": [
+    {
+      "actions": [
+        {
+          "order": 0,
+          "actionType": "EMAIL",
+          "emailTemplateName": "***",
+          "emailTemplateId": "***",
+          "params": {
+            "areaName": "EMAIL"
+          },
+          "fromAddress": {
+            "name": "Abhii",
+            "emailId": "athadukaaa@gainsight.com",
+            "replyTo": "athadukaaa@gainsight.com"
+          },
+          "copyToAddress": [],
+          "tokenMapping": {
+            "isNotNullable": false,
+            "tokens": [
+              {
+                "name": "embd::6fd5ef90-9baa-4cd7-a132-c7db6f2ad714",
+                "value": {
+                  "type": "field",
+                  "field": "Calculated Field - 2",
+                  "fieldName": "Calculated Field - 2",
+                  "fieldType": "DOUBLE",
+                  "label": "Calculated Field - 2",
+                  "valueType": "DOUBLE",
+                  "fieldLabel": "Calculated Field - 2"
+                }
+              },
+              {
+                "name": "embd::5b84d9fa-ab21-4924-b5da-013e23f39af4",
+                "value": {
+                  "type": "field",
+                  "field": "CreatedBy.Email",
+                  "fieldName": "CreatedBy.Email",
+                  "entity": "JBCXM__UsageData__c",
+                  "alias": "",
+                  "fieldType": "EMAIL",
+                  "label": "Created By ID Email",
+                  "aggregation": "",
+                  "valueType": "STRING",
+                  "fieldLabel": "Usage Data ? Created By ID Email",
+                  "objectName": "JBCXM__UsageData__c"
+                }
+              },
+              {
+                "name": "subj::43e4a77a-ea21-4962-a69a-dc57203dbe03",
+                "value": {
+                  "type": "field",
+                  "field": "Calculated Field - 1",
+                  "fieldName": "Calculated Field - 1",
+                  "fieldType": "DOUBLE",
+                  "label": "Calculated Field - 1",
+                  "valueType": "DOUBLE",
+                  "fieldLabel": "Calculated Field - 1"
+                }
+              },
+              {
+                "name": "unsubscribeText",
+                "value": {
+                  "type": "value",
+                  "valueType": "STRING",
+                  "value": "Manage your subscription preferences &lt;a href=&quot;${%s}&quot;&gt;here&lt;/a&gt;"
+                }
+              }
+            ]
+          },
+          "reportTokenMappings": [],
+          "reportNotNullable": true,
+          "addUnsubscribeFooter": true,
+          "isTransactional": false,
+          "preventDuplicateDays": 0
+        }
+      ]
+    }
+  ],
+  "followUpECA": [],
+  "status": "ACTIVATED",
+  "totalRecipients": 0,
+  "settings": {
+    "SEND_EMAIL_ONLY_ONCE": true,
+    "TEST_RUN": false
+  },
+  "outreachEmailTemplateTypes": [
+    "STANDARD"
+  ],
+  "preventDuplicateDays": 0,
+  "logActivity": false,
+  "cascadeDelete": false,
+  "published": false,
+  "reportTokenMappings": []
+}

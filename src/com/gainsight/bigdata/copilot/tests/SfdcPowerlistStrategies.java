@@ -7,6 +7,8 @@ import com.gainsight.bigdata.copilot.bean.smartlist.SmartList;
 import com.gainsight.bigdata.gsData.apiImpl.GSDataImpl;
 import com.gainsight.bigdata.pojo.NsResponseObj;
 import com.gainsight.bigdata.tenantManagement.enums.MDAErrorCodes;
+import com.gainsight.sfdc.util.datagen.JobInfo;
+import com.gainsight.testdriver.Application;
 import com.gainsight.utils.annotations.TestInfo;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
@@ -29,6 +31,9 @@ import java.io.File;
 
 public class SfdcPowerlistStrategies extends CopilotTestUtils{
 
+    private static final String SET_USAGE_DATA_LEVEL_FILE = Application.basedir + "/testdata/sfdc/rulesEngine/scripts/Set_Account_Level_Weekly.apex";
+    private static final String SET_USAGE_DATA_MEASURE_FILE = Application.basedir + "/testdata/sfdc/rulesEngine/scripts/UsageData_Measures.apex";
+
     @BeforeClass
     public void setUp() throws Exception {
         copilotAPI = new CopilotAPIImpl(header);
@@ -39,6 +44,14 @@ public class SfdcPowerlistStrategies extends CopilotTestUtils{
             createCustomFields();
             cleanAndGenerateData();
         }
+
+        metaUtil.createFieldsOnUsageData(sfdc);
+        sfdc.runApexCode(getNameSpaceResolvedFileContents(SET_USAGE_DATA_LEVEL_FILE));
+        sfdc.runApexCode(getNameSpaceResolvedFileContents(SET_USAGE_DATA_MEASURE_FILE));
+        // Creating usage data Account Level Weekly
+        sfdc.runApexCode(resolveStrNameSpace("Delete [SELECT Id FROM JBCXM__UsageData__c];"));
+        JobInfo jobInfo = mapper.readValue(getNameSpaceResolvedFileContents(Application.basedir + "/testdata/newstack/CoPilot/dataSet/Job/LoadToUsageData_Weekly.txt"), JobInfo.class);
+        dataETL.execute(jobInfo);
 
     }
 
@@ -858,5 +871,101 @@ public class SfdcPowerlistStrategies extends CopilotTestUtils{
         NsResponseObj smartListNsResponse = copilotAPI.getSmartListNsResponse(actualSmartList.getSmartListId());
         Assert.assertEquals(smartListNsResponse.getErrorCode(), MDAErrorCodes.SMARTLIST_DOESNOT_EXISTS.getGSCode(), "Smart list not found error code not matched.");
 
+    }
+
+
+    @TestInfo(testCaseIds = {"GS-7666"})
+    @Test(description = "Testcase to validate User Strategy - Base Object - UsageData , with Calc Field (Day Agg)")
+    public void testUserStrategyWithUsageDataAndCalculatedFieldDayAgg() throws Exception {
+        // creating and asserting smartList
+        SmartList actualSmartList = createAndValidateSmartList(mapper.readValue(getNameSpaceResolvedFileContents(testDataDir + "test/UsageDataBaseObject/User_SmartList.json"), SmartList.class), 1, 3);
+
+        //Create email template & verify the same.
+        EmailTemplate actualEmailTemplate = createAndValidateEmailTemplate(mapper.readValue(new File(testDataDir + "test/UsageDataBaseObject/EmailTemplate.json"), EmailTemplate.class));
+
+        //Creating out reach & verifying the same.
+        OutReach actualOutReach = createAndTriggerOutreach(mapper.readValue(getNameSpaceResolvedFileContents(testDataDir + "test/UsageDataBaseObject/User_Outreach.json"), OutReach.class), actualSmartList, actualEmailTemplate);
+        verifyOutReachExecutionHistory(actualOutReach.getStatusId(), 9, 0);
+        Assert.assertEquals(actualOutReach.getLastRunStatus(), "SUCCESS", "Outreach Run Status is not Success");
+
+        // verifying the email template use in outreach.
+        verifyTemplateUsedInOutreach(actualEmailTemplate, actualOutReach);
+
+        //Deleting outreach, email template, smart list.
+        Assert.assertTrue(copilotAPI.deleteOutReach(actualOutReach.getCampaignId()), "Outreach deletion failed.");
+        Assert.assertTrue(copilotAPI.deleteEmailTemplate(actualEmailTemplate.getTemplateId()), "Email template deletion failed.");
+        Assert.assertTrue(copilotAPI.deleteSmartList(actualSmartList.getSmartListId()), "APowerList list deletion failed.");
+    }
+
+
+    @TestInfo(testCaseIds = {"GS-7667"})
+    @Test(description = "Testcase to validate User Strategy - Base Object - UsageData , with Calc Field (Monthly Agg)")
+    public void testUserStrategyWithUsageDataAndCalculatedFieldMonthlyAgg() throws Exception {
+        // creating and asserting smartList
+        SmartList actualSmartList = createAndValidateSmartList(mapper.readValue(getNameSpaceResolvedFileContents(testDataDir + "test/UsageDataBaseObject/User_SmartList_MonthlyAgg.json"), SmartList.class), 1, 3);
+
+        //Create email template & verify the same.
+        EmailTemplate actualEmailTemplate = createAndValidateEmailTemplate(mapper.readValue(new File(testDataDir + "test/UsageDataBaseObject/EmailTemplate.json"), EmailTemplate.class));
+
+        //Creating out reach & verifying the same.
+        OutReach actualOutReach = createAndTriggerOutreach(mapper.readValue(getNameSpaceResolvedFileContents(testDataDir + "test/UsageDataBaseObject/User_Outreach_MonthlyAgg.json"), OutReach.class), actualSmartList, actualEmailTemplate);
+        verifyOutReachExecutionHistory(actualOutReach.getStatusId(), 3, 0);
+        Assert.assertEquals(actualOutReach.getLastRunStatus(), "SUCCESS", "Outreach Run Status is not Success");
+
+        // verifying the email template use in outreach.
+        verifyTemplateUsedInOutreach(actualEmailTemplate, actualOutReach);
+
+        //Deleting outreach, email template, smart list.
+        Assert.assertTrue(copilotAPI.deleteOutReach(actualOutReach.getCampaignId()), "Outreach deletion failed.");
+        Assert.assertTrue(copilotAPI.deleteEmailTemplate(actualEmailTemplate.getTemplateId()), "Email template deletion failed.");
+        Assert.assertTrue(copilotAPI.deleteSmartList(actualSmartList.getSmartListId()), "APowerList list deletion failed.");
+    }
+
+
+    @TestInfo(testCaseIds = {"GS-7668"})
+    @Test(description = "Testcase to validate User Strategy - Base Object - UsageData , with Calc Field (Yearly Agg)")
+    public void testUserStrategyWithUsageDataAndCalculatedFieldYearlyAgg() throws Exception {
+        // creating and asserting smartList
+        SmartList actualSmartList = createAndValidateSmartList(mapper.readValue(getNameSpaceResolvedFileContents(testDataDir + "test/UsageDataBaseObject/User_SmartList_YearlyAgg.json"), SmartList.class), 1, 1);
+
+        //Create email template & verify the same.
+        EmailTemplate actualEmailTemplate = createAndValidateEmailTemplate(mapper.readValue(new File(testDataDir + "test/UsageDataBaseObject/EmailTemplate.json"), EmailTemplate.class));
+
+        //Creating out reach & verifying the same.
+        OutReach actualOutReach = createAndTriggerOutreach(mapper.readValue(getNameSpaceResolvedFileContents(testDataDir + "test/UsageDataBaseObject/User_Outreach_YearlyAgg.json"), OutReach.class), actualSmartList, actualEmailTemplate);
+        verifyOutReachExecutionHistory(actualOutReach.getStatusId(), 1, 0);
+        Assert.assertEquals(actualOutReach.getLastRunStatus(), "SUCCESS", "Outreach Run Status is not Success");
+
+        // verifying the email template use in outreach.
+        verifyTemplateUsedInOutreach(actualEmailTemplate, actualOutReach);
+
+        //Deleting outreach, email template, smart list.
+        Assert.assertTrue(copilotAPI.deleteOutReach(actualOutReach.getCampaignId()), "Outreach deletion failed.");
+        Assert.assertTrue(copilotAPI.deleteEmailTemplate(actualEmailTemplate.getTemplateId()), "Email template deletion failed.");
+        Assert.assertTrue(copilotAPI.deleteSmartList(actualSmartList.getSmartListId()), "APowerList list deletion failed.");
+    }
+
+
+    @TestInfo(testCaseIds = {"GS-4632"})
+    @Test(description = "Testcase to validate User Strategy - Base Object - UsageData , with Calc Field (Weekly Agg)")
+    public void testUserStrategyWithUsageDataAndCalculatedFieldWeeklyAgg() throws Exception {
+        // creating and asserting smartList
+        SmartList actualSmartList = createAndValidateSmartList(mapper.readValue(getNameSpaceResolvedFileContents(testDataDir + "test/UsageDataBaseObject/User_SmartList_WeeklyAgg.json"), SmartList.class), 1, 1);
+
+        //Create email template & verify the same.
+        EmailTemplate actualEmailTemplate = createAndValidateEmailTemplate(mapper.readValue(new File(testDataDir + "test/UsageDataBaseObject/EmailTemplate.json"), EmailTemplate.class));
+
+        //Creating out reach & verifying the same.
+        OutReach actualOutReach = createAndTriggerOutreach(mapper.readValue(getNameSpaceResolvedFileContents(testDataDir + "test/UsageDataBaseObject/User_Outreach_YearlyAgg.json"), OutReach.class), actualSmartList, actualEmailTemplate);
+        verifyOutReachExecutionHistory(actualOutReach.getStatusId(), 1, 0);
+        Assert.assertEquals(actualOutReach.getLastRunStatus(), "SUCCESS", "Outreach Run Status is not Success");
+
+        // verifying the email template use in outreach.
+        verifyTemplateUsedInOutreach(actualEmailTemplate, actualOutReach);
+
+        //Deleting outreach, email template, smart list.
+        Assert.assertTrue(copilotAPI.deleteOutReach(actualOutReach.getCampaignId()), "Outreach deletion failed.");
+        Assert.assertTrue(copilotAPI.deleteEmailTemplate(actualEmailTemplate.getTemplateId()), "Email template deletion failed.");
+        Assert.assertTrue(copilotAPI.deleteSmartList(actualSmartList.getSmartListId()), "APowerList list deletion failed.");
     }
 }

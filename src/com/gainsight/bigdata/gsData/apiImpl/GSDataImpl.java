@@ -70,7 +70,7 @@ public class GSDataImpl {
     }
 
     public CollectionInfo getCollectionMasterByName(String collectionName) throws IOException {
-        COMMetadata metadata = mapper.readValue("{\"limit\":1,\"skip\":0,\"whereAdvanceFilter\":{\"filters\":[{\"dbName\":\"CollectionDetails.CollectionName\",\"alias\":\"A\",\"dataType\":\"string\",\"filterOperator\":\"EQ\",\"logicalOperator\":\"AND\",\"filterValues\":[\"Unsubscribed Emails\"]}],\"expression\":\"A\"},\"includeFields\":[\"CollectionDetails\",\"CollectionDescription\",\"createdByName\",\"createdDate\",\"modifiedByName\",\"modifiedDate\",\"Columns\"]}", COMMetadata.class);
+        COMMetadata metadata = mapper.readValue("{\"limit\":1,\"skip\":0,\"whereAdvanceFilter\":{\"filters\":[{\"dbName\":\"CollectionDetails.CollectionName\",\"alias\":\"A\",\"dataType\":\"string\",\"filterOperator\":\"EQ\",\"logicalOperator\":\"AND\",\"filterValues\":[\""+collectionName+"\"]}],\"expression\":\"A\"},\"includeFields\":[\"CollectionDetails\",\"CollectionDescription\",\"createdByName\",\"createdDate\",\"modifiedByName\",\"modifiedDate\",\"Columns\"]}", COMMetadata.class);
         NsResponseObj nsResponseObj = getCustomObjectsDetailsNsResponse(metadata);
         if(nsResponseObj.isResult()) {
             List<HashMap<String, Object>> response = null;
@@ -366,6 +366,7 @@ public class GSDataImpl {
             header.addHeader("Content-Type","application/json");
         }
         Log.info("Data sent to MDA.");
+
         return responseObj;
     }
 
