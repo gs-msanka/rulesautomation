@@ -287,11 +287,15 @@ public class ReportingFilterUtils extends BasePage {
     }
 
     public String replaceWhereFilterLogic(String filter) {
-        return filter.replace("JBCXM__1", "A").replace("JBCXM__2", "B");
+        filter = filter.replace("JBCXM__", "");
+        for (int i = 0; i < 24; i++) {
+            filter = filter.replace(i + "", (char) (i + 64) + "");
+        }
+        return filter;
     }
 
     public String replaceHavingFilterLogic(String filter) {
-        return filter.replace("JBCXM__1", "1").replace("JBCXM__2", "2");
+        return filter.replace("JBCXM__", "");
     }
 
 }
