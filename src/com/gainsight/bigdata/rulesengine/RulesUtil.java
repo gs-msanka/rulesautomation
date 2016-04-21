@@ -642,8 +642,10 @@
 				}
 				if (comment != null) {
 					String comments = (String) obj.getField(resolveStrNameSpace("JBCXM__Comments__c"));
+					Log.info("************************************");
 					Log.info("Comments from table:---"+comments);
 					Log.info("Comments from input file:--"+comment);
+					Log.info("************************************");
 					if (!(comments.equalsIgnoreCase(comment))) {
 						Log.error("Comments did not match!!");
 						check = false;
