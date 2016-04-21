@@ -287,13 +287,11 @@ public class ReportingFilterUtils extends BasePage {
     }
 
     public String replaceWhereFilterLogic(String filter) {
-        String updateFilter = filter.replace("JBCXM__1", "A").replace("JBCXM__2", "B");
-        return updateFilter;
+        return filter.replace("JBCXM__1", "A").replace("JBCXM__2", "B");
     }
 
     public String replaceHavingFilterLogic(String filter) {
-        String updateFilter = filter.replace("JBCXM__1", "1").replace("JBCXM__2", "2");
-        return updateFilter;
+        return filter.replace("JBCXM__1", "1").replace("JBCXM__2", "2");
     }
 
 }
