@@ -33,8 +33,8 @@
     },
     "test1" : {
       "ns_sfdc_username"  : "test1admin@gainsighttest.com",
-      "ns_sfdc_password"  : "jbara@123",
-      "ns_sfdc_stoken"    : "NHQeOPESfpKst0YZeB026fhI",
+      "ns_sfdc_password" : "1234567jbr",
+      "ns_sfdc_stoken" : "3OKgzS5gphQVFKyKASPgalQ4",
       "ns_appUrl"         : "https://test1-api-router.herokuapp.com",
       "ns_adminUrl"       : "https://test1-api-router.herokuapp.com",
       "ns_version"        : "v1.0",
@@ -218,7 +218,7 @@
     "rawqa01": {
       "ns_sfdc_username": "rawqa01@gainsight.com",
       "ns_sfdc_password": "gainsightrawqa1",
-      "ns_sfdc_stoken": "ECA11cqhfp7wZX2v876Lxx2t",
+      "ns_sfdc_stoken": "tqhhRdQPNnzHX48xMTFR4kA8z",
       "ns_appUrl": "https://rawqa01-api-router.herokuapp.com",
       "ns_adminUrl": "https://rawqa01-api-router.herokuapp.com",
       "ns_version": "v1.0",
