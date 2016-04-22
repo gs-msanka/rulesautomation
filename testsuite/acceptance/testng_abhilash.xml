@@ -1,25 +1,38 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<suite name="RulesEngine UI Automation Project" preserve-order="true">
+<suite name="Copilot UI Automation Project" preserve-order="true">
     <listeners>
         <listener class-name="com.gainsight.utils.AutTestListener"/>
         <listener class-name="com.gainsight.utils.testlink.TestLinkListener"/>
     </listeners>
-    <test verbose="3" name="RulesEngine UI Automation Tests Using Native Data" preserve-order="true">
-        <classes>
-            <class name="com.gainsight.bigdata.rulesengine.tests.CallToActionWithRelationshipsTest">
-                <methods>
-                    <exclude name="createCtaUsingMdaLinkedCollection"/>
-                </methods>
-            </class>
-            <class name="com.gainsight.bigdata.rulesengine.tests.CallToActionTest"/>
-        </classes>
-    </test>
-    <test verbose="3" name="RulesEngine UI Automation TestCases Using MDA MONGO DataBase" preserve-order="true">
+
+
+    <test verbose="3" name="Copilot TestCases Using  Mongo DataBase" preserve-order="true">
         <parameter name="dbStoreType" value="Mongo"/>
         <classes>
-            <class name="com.gainsight.bigdata.rulesengine.tests.CallToActionWithRelationshipsTest">
+            <class name="com.gainsight.bigdata.copilot.tests.CopilotWithMdaDataTest"/>
+        </classes>
+    </test>
+    <test verbose="3" name="Copilot TestCases Using Redshift DataBase" preserve-order="true">
+        <parameter name="dbStoreType" value="Redshift"/>
+        <classes>
+            <class name="com.gainsight.bigdata.copilot.tests.CopilotWithMdaDataTest">
                 <methods>
-                    <include name="createCtaUsingMdaLinkedCollection"/>
+                    <include name="testAccountStrategyWithMdaCollection"/>
+                    <include name="testContactStrategyWithMdaCollection"/>
+                    <include name="testEmailStrategyWithMdaCollection"/>
+                </methods>
+            </class>
+        </classes>
+    </test>
+    <test verbose="3" name="Copilot TestCases Using Sfdc objects" preserve-order="true">
+        <classes>
+            <class name="com.gainsight.bigdata.copilot.tests.SfdcPowerlistStrategies">
+                <methods>
+                    <include name="testUserStrategyWithUsageDataAndCalculatedFieldDayAgg"/>
+                    <include name="testUserStrategyWithUsageDataAndCalculatedFieldMonthlyAgg"/>
+                    <include name="testUserStrategyWithUsageDataAndCalculatedFieldYearlyAgg"/>
+                    <include name="testUserStrategyWithUsageDataAndCalculatedFieldWeeklyAgg"/>
+                    <include name="testPowerListClone"/>
                 </methods>
             </class>
         </classes>

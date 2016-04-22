@@ -688,4 +688,21 @@ public class DateUtil {
         int year = cal.get(Calendar.YEAR);
         return year;
     }
+
+    /**
+     * @param date     - date as string
+     * @param format   - dateFormat {eg: yyyy-MM-dd}
+     * @param timeZone - timezone
+     * @return - epoch  in particular timezone
+     * @throws ParseException
+     */
+    public static long getEpochTime(String date, String format, String timeZone) throws ParseException {
+        DateFormat dateFormat = new SimpleDateFormat(format);
+        dateFormat.setTimeZone(TimeZone.getTimeZone(timeZone));
+        Date parsedDate = dateFormat.parse(date);
+        long epochTime = parsedDate.getTime();
+        Log.info("Epoch time is " + epochTime);
+        return parsedDate.getTime();
+    }
+
 }

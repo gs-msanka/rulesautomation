@@ -7,9 +7,11 @@ import com.gainsight.bigdata.copilot.bean.smartlist.SmartList;
 import com.gainsight.bigdata.gsData.apiImpl.GSDataImpl;
 import com.gainsight.bigdata.pojo.NsResponseObj;
 import com.gainsight.bigdata.tenantManagement.enums.MDAErrorCodes;
+import com.gainsight.sfdc.util.DateUtil;
 import com.gainsight.sfdc.util.datagen.JobInfo;
 import com.gainsight.testdriver.Application;
 import com.gainsight.utils.annotations.TestInfo;
+import com.sforce.soap.partner.sobject.SObject;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
@@ -957,6 +959,35 @@ public class SfdcPowerlistStrategies extends CopilotTestUtils{
 
         //Creating out reach & verifying the same.
         OutReach actualOutReach = createAndTriggerOutreach(mapper.readValue(getNameSpaceResolvedFileContents(testDataDir + "test/UsageDataBaseObject/User_Outreach_YearlyAgg.json"), OutReach.class), actualSmartList, actualEmailTemplate);
+        verifyOutReachExecutionHistory(actualOutReach.getStatusId(), 1, 0);
+        Assert.assertEquals(actualOutReach.getLastRunStatus(), "SUCCESS", "Outreach Run Status is not Success");
+
+        // verifying the email template use in outreach.
+        verifyTemplateUsedInOutreach(actualEmailTemplate, actualOutReach);
+
+        //Deleting outreach, email template, smart list.
+        Assert.assertTrue(copilotAPI.deleteOutReach(actualOutReach.getCampaignId()), "Outreach deletion failed.");
+        Assert.assertTrue(copilotAPI.deleteEmailTemplate(actualEmailTemplate.getTemplateId()), "Email template deletion failed.");
+        Assert.assertTrue(copilotAPI.deleteSmartList(actualSmartList.getSmartListId()), "APowerList list deletion failed.");
+    }
+
+
+    @TestInfo(testCaseIds = {"GS-7499", "GS-7504"})
+    @Test(description = "Testcase to validate Preview Email")
+    public void testPowerListClone() throws Exception {
+        // Creating and asserting smartList
+        SmartList actualSmartList = createAndValidateSmartList(mapper.readValue(getNameSpaceResolvedFileContents(testDataDir + "test/AccountBaseObject/PreviewEmail_SmartList.json"), SmartList.class), 1, 1);
+        actualSmartList.setSmartListName("New Cloned smartList - GS-200275");
+        actualSmartList.setName("New Cloned smartList - GS-200275");
+
+        // Cloning powerList
+        cloneAndValidateSmartList(actualSmartList, 1, 1);
+
+        //Create email template & verify the same.
+        EmailTemplate actualEmailTemplate = createAndValidateEmailTemplate(mapper.readValue(new File(testDataDir + "test/AccountBaseObject/EmailTemplate.json"), EmailTemplate.class));
+
+        //Creating out reach & verifying the samee
+        OutReach actualOutReach = createAndTriggerOutreach(mapper.readValue(getNameSpaceResolvedFileContents(testDataDir + "test/AccountBaseObject/PreviewEmail_Outreach.json"), OutReach.class), actualSmartList, actualEmailTemplate);
         verifyOutReachExecutionHistory(actualOutReach.getStatusId(), 1, 0);
         Assert.assertEquals(actualOutReach.getLastRunStatus(), "SUCCESS", "Outreach Run Status is not Success");
 

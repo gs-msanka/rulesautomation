@@ -416,4 +416,20 @@ public class CopilotTestUtils extends NSTestBase {
             dataETL.execute(jobInfo);
         }
     }
+
+
+    /**
+     * Method which does cloning of a smartList and verifies the data
+     *
+     * @param smartList
+     * @param contactCount
+     * @param customerCount
+     * @return
+     * @throws Exception
+     */
+    protected SmartList cloneAndValidateSmartList(SmartList smartList, int contactCount, int customerCount) throws Exception {
+        SmartList actualSmartList = copilotAPI.cloneSmartlist(mapper.writeValueAsString(smartList));
+        Assert.assertNotNull(actualSmartList.getSmartListId(), "Smart list Id should not be null !!!!");
+        return runSmartList(actualSmartList, contactCount, customerCount);
+    }
 }

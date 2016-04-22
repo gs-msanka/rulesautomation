@@ -51,8 +51,8 @@ public class CopilotWithMdaDataTest extends CopilotTestUtils {
         copilotAPI = new CopilotAPIImpl(header);
         gsDataAPI = new GSDataImpl(header);
         tenantInfo = gsDataAPI.getTenantInfo(sfinfo.getOrg());
-        /*        createCustomFields();
-        cleanAndGenerateData();*/
+        createCustomFields();
+        cleanAndGenerateData();
         storageType = dbStoreType;
         mongoDBDAO = MongoDBDAO.getGlobalMongoDBDAOInstance();
         schemaDBDetails = mongoDBDAO.getSchemaDBDetail(tenantInfo.getTenantId());
@@ -327,6 +327,7 @@ public class CopilotWithMdaDataTest extends CopilotTestUtils {
         Assert.assertTrue(copilotAPI.deleteEmailTemplate(actualEmailTemplate.getTemplateId()), "Email template deletion failed.");
         Assert.assertTrue(copilotAPI.deleteSmartList(actualSmartList.getSmartListId()), "APowerList list deletion failed.");
     }
+
 
     @TestInfo(testCaseIds = {"GS-4639"})
     @Test(description = "Validating Email Strategy with Mda custom collection as base object")
