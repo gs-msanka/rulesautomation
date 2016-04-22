@@ -39,6 +39,7 @@ public class ReportBuilderSFDCUITest extends BaseTest {
         nsTestBase.tenantAutoProvision();
         reportingBuilderPageUrl = visualForcePageUrl + "ReportBuilder";
         reportingBasePage = new ReportingBasePage();
+        sfdc.runApexCode("Delete [SELECT Id FROM JBCXM__UIViews__c where Name Like 'SFDC%'];");
         // Modifying api names to display names
         List<SObject> soList = sfdcRestApi.getSfdcObjects();
 
