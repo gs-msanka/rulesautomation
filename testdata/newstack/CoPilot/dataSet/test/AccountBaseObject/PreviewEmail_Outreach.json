@@ -104,6 +104,5 @@
   "logActivity": false,
   "cascadeDelete": false,
   "published": false,
-  "reportTokenMappings": [],
-  "campaignId": "0e7165a6-17e3-45ad-96e7-6623a902e4a3"
+  "reportTokenMappings": []
 }

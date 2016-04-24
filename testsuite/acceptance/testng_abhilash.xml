@@ -33,6 +33,7 @@
                     <include name="testUserStrategyWithUsageDataAndCalculatedFieldYearlyAgg"/>
                     <include name="testUserStrategyWithUsageDataAndCalculatedFieldWeeklyAgg"/>
                     <include name="testPowerListClone"/>
+                    <include name="testPreviewEmail"/>
                 </methods>
             </class>
         </classes>

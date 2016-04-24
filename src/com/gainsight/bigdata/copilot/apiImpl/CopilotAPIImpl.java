@@ -1139,7 +1139,7 @@ public class CopilotAPIImpl {
             if (responseObj.getStatusCode() == HttpStatus.SC_OK) {
                 NsResponseObj nsResponseObj = mapper.readValue(responseObj.getContent(), NsResponseObj.class);
                 if (nsResponseObj.isResult()) {
-                    nsResponseObj.getData().toString();
+                    data= mapper.writeValueAsString(nsResponseObj.getData());
                 }
             }
         } catch (Exception ex) {
@@ -1429,4 +1429,6 @@ public class CopilotAPIImpl {
         Log.error("Response Obj :" +responseObj.toString());
         return false;
     }
+
+
 }

@@ -86,7 +86,7 @@
           "reportNotNullable": true,
           "addUnsubscribeFooter": true,
           "isTransactional": false,
-          "preventDuplicateDays": 90
+          "preventDuplicateDays": 0
         }
       ]
     }
@@ -101,7 +101,7 @@
   "outreachEmailTemplateTypes": [
     "STANDARD"
   ],
-  "preventDuplicateDays": 90,
+  "preventDuplicateDays": 0,
   "logActivity": false,
   "cascadeDelete": false,
   "published": false,

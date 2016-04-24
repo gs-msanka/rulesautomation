@@ -54,6 +54,7 @@ public class ZendeskTest extends NSTestBase {
 
     @BeforeClass
     public void setup() throws Exception {
+        Assert.assertTrue(tenantAutoProvision(), "Tenant Auto-Provisioning failed, Please check log for more details !!!");
         zendeskImpl = new ZendeskImpl(header);
         rulesUtil = new RulesUtil();
         rulesUtil.populateObjMaps();
@@ -361,7 +362,7 @@ public class ZendeskTest extends NSTestBase {
         JsonFluentAssert.assertThatJson(array.toString()).isEqualTo(expectedResponse2);
     }
 
-    @Test(description = "Does Zendesk tickets sync, This testcases needs to be changed in future, since Dev is changing the code")
+    @Test(enabled = false,description = "Does Zendesk tickets sync, This testcases needs to be changed in future, since Dev is changing the code")
     @TestInfo(testCaseIds = {"GS-6204"})
     public void doTicketsSync() throws Exception {
         // creating lookup between sfdc accounts and zendesk organizations
