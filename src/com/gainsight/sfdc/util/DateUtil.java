@@ -702,7 +702,23 @@ public class DateUtil {
         Date parsedDate = dateFormat.parse(date);
         long epochTime = parsedDate.getTime();
         Log.info("Epoch time is " + epochTime);
-        return parsedDate.getTime();
+        return epochTime;
     }
 
+    /**
+     * Method to convert epoch Time to date
+     *
+     * @param epochTime
+     * @param format
+     * @param timeZone
+     * @return
+     */
+    public static String getDateFromEpoch(long epochTime, String format, String timeZone) {
+        Date date = new Date(epochTime);
+        DateFormat dateFormat = new SimpleDateFormat(format);
+        dateFormat.setTimeZone(TimeZone.getTimeZone(timeZone));
+        String formatted = dateFormat.format(date);
+        Log.info("Formatted Date is  " + formatted);
+        return formatted;
+    }
 }
