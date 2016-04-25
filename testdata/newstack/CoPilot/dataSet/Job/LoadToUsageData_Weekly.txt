@@ -1,0 +1,19 @@
+{
+  "jobName": "Loading Data into JBCXM__UsageData__c for CoPilot Automation",
+  "namespacePrefix": "JBCXM",
+  "useNameSpace": true,
+  "preprocess": {
+    "inputFile": "/testdata/newstack/CoPilot/dataSet/data/UsageData.csv",
+    "monthly": false,
+    "weekly": true,
+    "fieldName": "JBCXM__Date__c",
+    "outputFile": "/testdata/newstack/CoPilot/dataSet/output/UsageData_Weekly-Output.csv"
+  },
+  "load": {
+    "target": "sfdc",
+    "sObject": "JBCXM__UsageData__c",
+    "operation": "insert",
+    "contentType": "CSV",
+    "file": "/testdata/newstack/CoPilot/dataSet/output/UsageData_Weekly-Output.csv"
+  }
+}

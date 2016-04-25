@@ -1,0 +1,109 @@
+{
+  "name": "Account Strategy OutReach - With Email Logs as base collection for powerlist -  Automated By Abhilash",
+  "category": "default",
+  "smartListId": "*******",
+  "smartListName": "*******",
+  "defaultECA": [
+    {
+      "actions": [
+        {
+          "order": 0,
+          "actionType": "EMAIL",
+          "emailTemplateName": "*******",
+          "emailTemplateId": "*******",
+          "params": {
+            "areaName": "EMAIL"
+          },
+          "fromAddress": {
+            "name": "Test Abhilash",
+            "emailId": "abhi@gainsight.com",
+            "replyTo": "abhi@gainsight.com"
+          },
+          "copyToAddress": [],
+          "tokenMapping": {
+            "isNotNullable": true,
+            "tokens": [
+              {
+                "name": "embd::6fd5ef90-9baa-4cd7-a132-c7db6f2ad714",
+                "value": {
+                  "type": "field",
+                  "field": "Name",
+                  "fieldName": "Name",
+                  "entity": "Contact",
+                  "alias": "",
+                  "fieldType": "STRING",
+                  "label": "Full Name",
+                  "aggregation": "",
+                  "valueType": "STRING",
+                  "isExternalCriteria": true,
+                  "fieldLabel": "Contact ➝ Full Name",
+                  "objectName": "Contact"
+                }
+              },
+              {
+                "name": "embd::5b84d9fa-ab21-4924-b5da-013e23f39af4",
+                "value": {
+                  "type": "field",
+                  "field": "${AccountName}",
+                  "fieldName": "${AccountName}",
+                  "entity": "${collectionId}",
+                  "alias": "",
+                  "fieldType": "STRING",
+                  "label": "Account Name",
+                  "aggregation": "",
+                  "valueType": "STRING",
+                  "fieldLabel": "Email Logs ➝ Account Name",
+                  "objectName": "${collectionId}"
+                }
+              },
+              {
+                "name": "subj::43e4a77a-ea21-4962-a69a-dc57203dbe03",
+                "value": {
+                  "type": "field",
+                  "field": "${AccountName}",
+                  "fieldName": "${AccountName}",
+                  "entity": "${collectionId}",
+                  "alias": "",
+                  "fieldType": "STRING",
+                  "label": "Account Name",
+                  "aggregation": "",
+                  "valueType": "STRING",
+                  "fieldLabel": "Email Logs ➝ Account Name",
+                  "objectName": "${collectionId}"
+                }
+              },
+              {
+                "name": "unsubscribeText",
+                "value": {
+                  "type": "value",
+                  "valueType": "STRING",
+                  "value": "Manage your subscription preferences &lt;a href=&quot;${%s}&quot;&gt;here&lt;/a&gt;"
+                }
+              }
+            ]
+          },
+          "reportTokenMappings": [],
+          "reportNotNullable": true,
+          "addUnsubscribeFooter": true,
+          "isTransactional": false,
+          "preventDuplicateDays": 0
+        }
+      ]
+    }
+  ],
+  "followUpECA": [],
+  "status": "ACTIVATED",
+  "totalRecipients": 0,
+  "settings": {
+    "SEND_EMAIL_ONLY_ONCE": true,
+    "TEST_RUN": false
+  },
+  "outreachEmailTemplateTypes": [
+    "STANDARD"
+  ],
+  "preventDuplicateDays": 0,
+  "logActivity": false,
+  "cascadeDelete": false,
+  "published": false,
+  "reportTokenMappings": []
+}

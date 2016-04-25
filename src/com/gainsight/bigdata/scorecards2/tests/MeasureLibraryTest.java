@@ -34,7 +34,7 @@ public class MeasureLibraryTest extends NSTestBase {
 
     @BeforeClass
     public void setup() throws Exception {
-
+        Assert.assertTrue(tenantAutoProvision(), "Tenant Auto-Provisioning failed, Please check log for more details !!!");
         scorecardsApi = new ScorecardsApi(header);
 
         tenantDetails = tenantManager.getTenantDetail(sfdc.fetchSFDCinfo().getOrg(), null);

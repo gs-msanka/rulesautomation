@@ -1,0 +1,96 @@
+{
+  "jobName": "Update Account names and ID",
+  "jobType": "AccountUpsert",
+  "namespacePrefix": "JBCXM",
+  "useNameSpace": false,
+  "dateProcess": {
+    "inputFile": "/testdata/newstack/CoPilot/dataSet/globalMdaTestData/Mda_Data.csv",
+    "outputFile": "/testdata/newstack/CoPilot/dataSet/globalMdaTestData/Mda_Data_Processed.csv",
+    "fields": [
+      {
+        "weekly": false,
+        "daily": true,
+        "dateTime": false,
+        "fieldName": "CustomDate1",
+        "timeZone": "America/Los_Angeles"
+      }
+    ]
+  },
+  "extract": {
+    "useRestApi": true,
+    "source": "sfdc",
+    "connection": "conf/application.conf",
+    "table": "Contact",
+    "fields": [
+      "Id",
+      "Name",
+      "AccountId",
+      "Account.Name",
+      "Email"
+    ],
+    "output": "/testdata/newstack/CoPilot/dataSet/globalMdaTestData/Mda_Data_extracted.csv"
+  },
+  "transform": {
+    "query": "",
+    "useQuery": false,
+    "tableInfo": [
+      {
+        "file": "/testdata/newstack/CoPilot/dataSet/globalMdaTestData/Mda_Data_extracted.csv",
+        "table": "account",
+        "joinColumnName": "Name",
+        "columns": [
+          {
+            "name": "Id",
+            "alias": "ContactID"
+          },
+          {
+            "name": "Name",
+            "alias": "ContactName"
+          },
+          {
+            "name": "AccountId",
+            "alias": "AccountID"
+          },
+          {
+            "name": "Email",
+            "alias": "EmailAddressField"
+          }
+        ]
+      },
+      {
+        "file": "/testdata/newstack/CoPilot/dataSet/globalMdaTestData/Mda_Data_Processed.csv",
+        "table": "accounts",
+        "joinColumnName": "ContactName",
+        "columns": [
+          {
+            "name": "CustomDate1",
+            "alias": "CustomDate1"
+          },
+          {
+            "name": "CustomNumber1",
+            "alias": "CustomNumber1"
+          },
+          {
+            "name": "CustomNumber2",
+            "alias": "CustomNumber2"
+          },
+          {
+            "name": "CustomNumberWithDecimals1",
+            "alias": "CustomNumberWithDecimals1"
+          },
+          {
+            "name": "CustomNumberWithDecimals2",
+            "alias": "CustomNumberWithDecimals2"
+          },
+          {
+            "name": "AccountName",
+            "alias": "AccountName"
+          }
+        ]
+      }
+    ],
+    "join": true,
+    "picklist": false,
+    "output": "/testdata/newstack/CoPilot/dataSet/globalMdaTestData/Mda_Data_Final.csv"
+  }
+}

@@ -416,4 +416,38 @@ public class CopilotTestUtils extends NSTestBase {
             dataETL.execute(jobInfo);
         }
     }
+
+
+    /**
+     * Method which does cloning of a smartList and verifies the data
+     *
+     * @param smartList
+     * @param contactCount
+     * @param customerCount
+     * @return
+     * @throws Exception
+     */
+    protected SmartList cloneAndValidateSmartList(SmartList smartList, int contactCount, int customerCount) throws Exception {
+        SmartList actualSmartList = copilotAPI.cloneSmartlist(mapper.writeValueAsString(smartList));
+        Assert.assertNotNull(actualSmartList.getSmartListId(), "Smart list Id should not be null !!!!");
+        return runSmartList(actualSmartList, contactCount, customerCount);
+    }
+
+    /**
+     * Method which send test email and waits for processing status to complete
+      * @param actualOutReach - campaign/oureach Id
+     * @param payload - entity
+     * @return
+     * @throws Exception
+     */
+    OutReach triggerSampleRunOutreach(OutReach actualOutReach, String payload) throws Exception {
+        //Triggering sample run outReach, waits for outreach process
+        String statusId = copilotAPI.triggerOutReach(actualOutReach.getCampaignId(), payload);
+        actualOutReach.setStatusId(statusId);
+        rulesUtil.waitForRuleProcessingToComplete(statusId);
+        Assert.assertTrue(rulesUtil.isRuleProcessingSuccessful(statusId), "Out reach process is not successful.");
+        actualOutReach = copilotAPI.getOutReach(actualOutReach.getCampaignId());
+        actualOutReach.setStatusId(statusId);
+        return actualOutReach;
+    }
 }

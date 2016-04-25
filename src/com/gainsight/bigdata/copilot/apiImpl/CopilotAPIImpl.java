@@ -97,15 +97,23 @@ public class CopilotAPIImpl {
     }
 
     /**
-     * Create a smart list - Just as clone
+     * Method which does cloning of a smartList
+     *
      * @param payload - Smart list Metadata
-     * @return - Http Response Object.
-     * @throws Exception - if request failed to create a smart list.
+     * @return - smartlist Object
+     * @throws Exception - if request failed to clone a smart list.
      */
-    public ResponseObj createSmartList(String payload) throws Exception {
+    public SmartList cloneSmartlist(String payload) throws Exception {
         ResponseObj responseObj = wa.doPost(API_SMARTLIST, header.getAllHeaders(), payload);
-        Log.debug("Response Obj : " + responseObj.toString());
-        return responseObj;
+        if (responseObj.getStatusCode() == HttpStatus.SC_OK) {
+            NsResponseObj nsResponseObj = mapper.readValue(responseObj.getContent(), NsResponseObj.class);
+            if (nsResponseObj.isResult()) {
+                SmartList smartList = mapper.convertValue(nsResponseObj.getData(), SmartList.class);
+                return smartList;
+            }
+        }
+        Log.error("Smart List Clone action Response : " + responseObj.getContent());
+        throw new RuntimeException("Failed to Clone smart list.");
     }
 
     /**
@@ -1124,12 +1132,20 @@ public class CopilotAPIImpl {
      * @return
      * @throws Exception
      */
-    public ResponseObj previewOutReachResponseObj(String outreachId, String payload) throws Exception {
-        if(outreachId ==null) {
-            throw new IllegalArgumentException("Out Reach Id can be null.");
+    public String previewOutReachAndGetData(String outreachId, String payload) throws Exception {
+        String data = null;
+        try {
+            ResponseObj responseObj = wa.doPost(String.format(API_OUTREACH_PREVIEW, outreachId), header.getAllHeaders(), payload);
+            if (responseObj.getStatusCode() == HttpStatus.SC_OK) {
+                NsResponseObj nsResponseObj = mapper.readValue(responseObj.getContent(), NsResponseObj.class);
+                if (nsResponseObj.isResult()) {
+                    data= mapper.writeValueAsString(nsResponseObj.getData());
+                }
+            }
+        } catch (Exception ex) {
+            throw new RuntimeException("Error occurred while getting preview response " + ex);
         }
-        ResponseObj responseObj = wa.doPost(API_OUTREACH_PREVIEW, header.getAllHeaders(), payload);
-        return responseObj;
+        return data;
     }
 
     /**
@@ -1413,4 +1429,6 @@ public class CopilotAPIImpl {
         Log.error("Response Obj :" +responseObj.toString());
         return false;
     }
+
+
 }
