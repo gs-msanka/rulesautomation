@@ -1132,7 +1132,7 @@ public class CopilotAPIImpl {
      * @return
      * @throws Exception
      */
-    public String previewOutReachAndGetNsResponse(String outreachId, String payload) throws Exception {
+    public String previewOutReachAndGetData(String outreachId, String payload) throws Exception {
         String data = null;
         try {
             ResponseObj responseObj = wa.doPost(String.format(API_OUTREACH_PREVIEW, outreachId), header.getAllHeaders(), payload);
