@@ -29,8 +29,8 @@
     },
     "weRules" : {
       "sfdc_username" : "rules@gsautomation.com",
-      "sfdc_password" : "Gainsight123#",
-      "sfdc_stoken" : "MQ1hNfHlcGiG8NEwx9ZvagFn"
+      "sfdc_password" : "gainsight.12345",
+      "sfdc_stoken" : "WrMK9g5B4KsyVIURRHuyyTO9"
     },
     "avengers" : {
       "sfdc_username" : "avengers@gsautomation.com",
@@ -87,6 +87,11 @@
       "sfdc_username" : "pbandi@11demo.com",
       "sfdc_password" : "p.kumar1b",
       "sfdc_stoken" : "3kBHiHUUZdCo1QKIj6Uq2fenN"
+    },
+    "siva"  : {
+      "sfdc_username" : "werule@package3.com",
+      "sfdc_password" : "gainsight.123",
+      "sfdc_stoken" : "eVDAUHvvdjt6cDH5aHgvBGz9D"
     }
   }
 }
