@@ -32,7 +32,7 @@ public class RulesManagerPage extends BasePage {
     private final String RULE_LISTING_ACTIONS = "//span[contains(@class, 'rule-type-tag')]/../a[text()='%s']/ancestor::li/div[contains(@class, 'rule-item-actions')]/span[@title='%s']";
     private final String CLONE_RULE_INPUT = "//div[contains(@class, 'gs-rw-clone-rule')]/descendant::input";
     private final String SAVE_OK_BUTTON = "//button[@data-dialog-action='OK']";
-    private final String RULE_LASTRUN_STATUS = "//span[contains(@class, 'rule-type-tag')]/../a[text()='rest1']/ancestor::li/div[contains(@class, 'runinfo')]/span[contains(@class, 'lastrun-status')]"
+    private final String RULE_LASTRUN_STATUS = "//span[contains(@class, 'rule-type-tag')]/../a[text()='rest1']/ancestor::li/div[contains(@class, 'runinfo')]/span[contains(@class, 'lastrun-status')]";
 
     
     private final String ADD_RULE_LINK = "//span[contains(@class, 'addRuleBrn') and text()='+ Rule']";
