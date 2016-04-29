@@ -7,10 +7,10 @@
     <test verbose="3" name="RulesEngine UI Automation TestCases Using MDA MONGO DataBase" preserve-order="true">
         <parameter name="dbStoreType" value="Mongo"/>
         <classes>
-          <!--  <class name="com.gainsight.bigdata.rulesengine.tests.LoadToMdaTest"/>-->
-            <class name="com.gainsight.bigdata.rulesengine.tests.LoadToCustomersTest"/>
-         <!--   <class name="com.gainsight.bigdata.rulesengine.tests.LoadToCustomersTestUsingMatrixData"/>
-            <class name="com.gainsight.bigdata.rulesengine.tests.CalculatedFieldsAndMeasuresTestUsingMatrixData"/>
+          <!--  <class name="com.gainsight.bigdata.rulesengine.tests.LoadToMdaTest"/>
+            <class name="com.gainsight.bigdata.rulesengine.tests.LoadToCustomersTest"/>-->
+             <class name="com.gainsight.bigdata.rulesengine.tests.LoadToCustomersTestUsingMatrixData"/>
+            <!--<class name="com.gainsight.bigdata.rulesengine.tests.CalculatedFieldsAndMeasuresTestUsingMatrixData"/>
             <class name="com.gainsight.bigdata.rulesengine.tests.CalculatedFieldsAndMeasuresTestUsingMongoAsSourceData"/>
             <class name="com.gainsight.bigdata.rulesengine.tests.CallToActionWithRelationshipsTest">
                 <methods>
