@@ -10,10 +10,7 @@ import java.util.concurrent.TimeUnit;
 import com.gainsight.bigdata.rulesengine.pojo.setupaction.*;
 import com.gainsight.bigdata.rulesengine.pojo.setupaction.FieldMapping.PickListMappings;
 
-import org.openqa.selenium.By;
-import org.openqa.selenium.JavascriptExecutor;
-import org.openqa.selenium.Keys;
-import org.openqa.selenium.WebElement;
+import org.openqa.selenium.*;
 import org.openqa.selenium.interactions.Actions;
 
 import com.gainsight.pageobject.util.Timer;
@@ -364,9 +361,15 @@ public class SetupRuleActionPage extends BasePage {
         item.click(xpath + SELECT_BUTTON);
         selectValueInDropDown("Load to SFDC Object");
         try{
-            if(element.getElement("//div[contains(@class, 'gs-dialog gs-alert')]").isDisplayed()){
+
+
+
+            if(element.isElementPresent("//div[contains(@class, 'gs-dialog gs-alert')]") && element.isElementDisplayed("//div[contains(@class, 'gs-dialog gs-alert')]")){
                 item.click("//div[@class= 'gs-dialog-footer']/button");
                 wait.waitTillElementNotDisplayed("//div[contains(@class,'gs-dialog-overlay')]", MIN_TIME, 15);
+
+            }
+            else {
 
             }
         }
