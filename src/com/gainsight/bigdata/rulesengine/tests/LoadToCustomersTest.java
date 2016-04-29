@@ -80,7 +80,7 @@ public class LoadToCustomersTest extends BaseTest {
     }
 	
 	@TestInfo(testCaseIds = { "GS-5135" })
-	@Test()
+	@Test(enabled = false)
 	public void testLoadToCustomers2() throws Exception {
 		sfdc.runApexCode(getNameSpaceResolvedFileContents(Application.basedir + "/testdata/newstack/RulesEngine/RulesUI-Scripts/AccountsAndCustomersForLoadtoCustomerAction.txt"));
 		RulesPojo rulesPojo = mapper.readValue(new File(Application.basedir + "/testdata/newstack/RulesEngine/RulesUI-TestData/TC42.json"), RulesPojo.class);
@@ -100,7 +100,7 @@ public class LoadToCustomersTest extends BaseTest {
 	
 	
 	@TestInfo(testCaseIds = { "GS-5134" })
-	@Test()
+	@Test(enabled = false)
 	public void testLoadToCustomers3() throws Exception {
 		RulesPojo rulesPojo = mapper.readValue(new File(Application.basedir + "/testdata/newstack/RulesEngine/RulesUI-TestData/TC43.json"), RulesPojo.class);
 		rulesManagerPage.openRulesManagerPage(rulesManagerPageUrl);
@@ -126,7 +126,7 @@ public class LoadToCustomersTest extends BaseTest {
 	}
 	
 	@TestInfo(testCaseIds = { "GS-5152" })
-	@Test()
+	@Test(enabled = false)
 	public void testLoadToCustomers4() throws Exception {
 		sfdc.runApexCode(resolveStrNameSpace("Delete [select id from Account where name like '%rule%'];"));
 		sfdc.runApexCode(getNameSpaceResolvedFileContents(CREATE_ACCOUNTS));

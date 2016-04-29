@@ -8,7 +8,7 @@
         <parameter name="dbStoreType" value="Mongo"/>
         <classes>
           <!--  <class name="com.gainsight.bigdata.rulesengine.tests.LoadToMdaTest"/>-->
-            <class name="com.gainsight.bigdata.rulesengine.tests.LoadToCustomersTestUsingMongoAsSourceData"/>
+            <class name="com.gainsight.bigdata.rulesengine.tests.LoadToCustomersTest"/>
          <!--   <class name="com.gainsight.bigdata.rulesengine.tests.LoadToCustomersTestUsingMatrixData"/>
             <class name="com.gainsight.bigdata.rulesengine.tests.CalculatedFieldsAndMeasuresTestUsingMatrixData"/>
             <class name="com.gainsight.bigdata.rulesengine.tests.CalculatedFieldsAndMeasuresTestUsingMongoAsSourceData"/>
