@@ -9,7 +9,7 @@
         <classes>
 
             <class name="com.gainsight.bigdata.rulesengine.tests.CalculatedFieldsAndMeasuresTest"/>
-            <class name="com.gainsight.bigdata.rulesengine.tests.CreateRuleTest"/>
+          <!--  <class name="com.gainsight.bigdata.rulesengine.tests.CreateRuleTest"/>-->
 
             <!--<class name="com.gainsight.bigdata.rulesengine.tests.LoadToMilestonesAndFeaturesTest"/>-->
            <!-- <class name="com.gainsight.bigdata.rulesengine.tests.LoadToCustomersTest"/>
