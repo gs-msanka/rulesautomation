@@ -42,7 +42,7 @@ public class SetupRuleActionPage extends BasePage {
     private final String DEFAULTOWNER = "//label[contains(text(),'Default Owner')]/following-sibling::div//input";
     private final String POSTUPDATE_BUTTON = "//select[contains(@class, 'comments_post_frequency')]/following-sibling::button";
     private final String COMMENTS = "//label[contains(text(),'Comments')]/../descendant::div[contains(@class,'form')]";
-    private final String SAVE_BUTTON = "//input[@type='button' and @class='gs-btn btn-save']";
+    private final String SAVE_BUTTON = "//input[@type='button' and contains(@class,'btn-save')]";
     private final String CREATE_CTA_RADIO_BUTTON = "//input[@value='create']";
     private final String CTA_NAME_INPUT = "//div[contains(@class, 'ctaName')]";
     private final String SCORECARD_COMMENTS = "//div[contains(@class, 'setup-action-body create-score-card')]/descendant::textarea[contains(@class, 'scorecardComment')]";
