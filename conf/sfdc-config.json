@@ -29,8 +29,8 @@
     },
     "weRules" : {
       "sfdc_username" : "rules@gsautomation.com",
-      "sfdc_password" : "Gainsight123#",
-      "sfdc_stoken" : "MQ1hNfHlcGiG8NEwx9ZvagFn"
+      "sfdc_password" : "gainsight.12345",
+      "sfdc_stoken" : "WrMK9g5B4KsyVIURRHuyyTO9"
     },
     "avengers" : {
       "sfdc_username" : "avengers@gsautomation.com",
