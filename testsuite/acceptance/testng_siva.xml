@@ -18,6 +18,7 @@
                 </methods>
             </class>
         </classes>-->
+        <classes>
     </test>
    <!-- <test verbose="3" name="RulesEngine UI Automation TestCases Using MDA REDSHIFT DataBase" preserve-order="true">
         <parameter name="dbStoreType" value="Redshift"/>
