@@ -17,7 +17,7 @@ public class DataLoadConfiguration extends BasePage {
 	private final String SOURCE_FIELD_SEARCH = "//div[contains(@class, 'ui-multiselect-single')]/descendant::input[@placeholder='Search']";
 	private final String FIELDS_IN_OBJECT = "//li[contains(@class, 'ui-multiselect-option')]/descendant::span[text()='%s']";
 	private final String OBJECT_IN_NATIVE = "//a[contains(text(),'+')]/../button";
-	private final String OBJECT_IN_NATIVE_SYMBOL = "//a[contains(text(),'+')]";
+	private final String OBJECT_IN_NATIVE_SYMBOL = "//a[contains(@class,'gs-btn-flat js-add pull-left')]/i";
 	private final String ACTUAL_OBJECT = "//ul[contains(@class, 'trgt-obj-list')]//a[@data-obj-label='%s']";
 	private final String MOVE_RIGHT = "//a[contains(@class,'moveright')]";
 	private final String MOVE_LEFT = "//a[contains(@class,'moveleft')]";

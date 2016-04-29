@@ -166,6 +166,9 @@ public class RulesManagerPage extends BasePage {
 		wait.waitTillElementDisplayed(
 				"//div[contains(@class, 'gs-dialog gs-confirm')]", MIN_TIME, MAX_TIME);
 		item.click(CONFIRMATION_BUTTON);
+        if(element.getElement("@class, 'gs-dialog gs-alert')]").isDisplayed()){
+            item.click("//div[@class= 'gs-dialog-footer']/button");
+        }
 		wait.waitTillElementDisplayed(ADD_RULE_LINK, MIN_TIME, WAIT_FOR_A_MINUTE);
     }
 
