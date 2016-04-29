@@ -12,6 +12,6 @@ Delete [select id from JBCXM__CustomerInfo__c];
 Delete [SELECT Id FROM JBCXM__CTA__c];
 Delete [SELECT Id FROM JBCXM__CustomerFeatures__c];
 Delete [SELECT Id FROM JBCXM__ScorecardFact__c];
-Delete [SELECT Id FROM RulesSFDCCustom__c];
+//Delete [SELECT Id FROM RulesSFDCCustom__c];
 Delete [SELECT Id FROM JBCXM__UsageData__c];
 Delete [SELECT Id FROM JBCXM__Milestone__c];
