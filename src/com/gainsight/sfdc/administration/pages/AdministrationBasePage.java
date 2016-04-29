@@ -11,7 +11,9 @@ import com.gainsight.sfdc.reporting.pages.ReportingBasePage;
  * To change this template use File | Settings | File Templates.
  */
 public class AdministrationBasePage extends BasePage {
-    private final String READY_INDICATOR        = "//h1[@class='pageType noSecondHeader' and contains(text(),'Administration')]";
+    private final String READY_INDICATOR        = "//h2[@class='mainTitle' and contains(text(),'Customer Status')]";
+    private final String Toggle_Arrow           = "//div[@class='gs-toggle-arrow']";
+    private final String Gs_Search_Module       = "//div[@class='gs-module-search-ctn']/descendant::input[@placeholder='Search']";
     private final String SCORECARD_SECTION      = "//a[contains(@href, 'scorecardsetup')]";
     private final String ADMIN_RETENTION        = "//a[contains(@href,'Administration-Retention')]";
     private final String ADMIN_NPS              = "//a[contains(@href,'Administration-NPS')]";
@@ -65,6 +67,10 @@ public class AdministrationBasePage extends BasePage {
     }
 
     public AdminScorecardSection clickOnScorecardSection(){
+        item.click(Toggle_Arrow);
+        wait.waitTillElementDisplayed(Gs_Search_Module, MIN_TIME, MAX_TIME);
+        element.clearAndSetText(Gs_Search_Module, "Scorecards 1.0");
+
         item.click(SCORECARD_SECTION);
         return new AdminScorecardSection();
     }

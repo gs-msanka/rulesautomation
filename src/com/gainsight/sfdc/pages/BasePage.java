@@ -184,6 +184,7 @@ public class BasePage extends WebPage implements Constants {
     }
 
 	public AdministrationBasePage clickOnAdminTab() {
+        item.click("//div[contains(@class, 'gs-toggle-salesforce-header')]");
 		clickOnTab(ADMINISTRATION_TAB);
 		return new AdministrationBasePage();
 	}

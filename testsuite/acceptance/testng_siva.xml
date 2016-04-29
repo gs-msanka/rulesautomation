@@ -7,14 +7,15 @@
     <test verbose="3" name="RulesEngine UI Automation Tests Using Native Data" preserve-order="true">
         <classes>
 
+           <class name="com.gainsight.bigdata.rulesengine.tests.CreateRuleTest"/>
            <class name="com.gainsight.bigdata.rulesengine.tests.LoadToMilestonesAndFeaturesTest"/>
-            <class name="com.gainsight.bigdata.rulesengine.tests.LoadToCustomersTest"/>
+           <!-- <class name="com.gainsight.bigdata.rulesengine.tests.LoadToCustomersTest"/>
             <class name="com.gainsight.bigdata.rulesengine.tests.LoadToUsageTest"/>
             <class name="com.gainsight.bigdata.rulesengine.tests.SetScoreActionWithNumericSchemeTest"/>
             <class name="com.gainsight.bigdata.rulesengine.tests.SetScoreActionWithGradingSchemeTest"/>
             <class name="com.gainsight.bigdata.rulesengine.tests.SetScoreActionWithColorSchemeTest"/>
             <class name="com.gainsight.bigdata.rulesengine.tests.CalculatedFieldsAndMeasuresTest"/>
-            <class name="com.gainsight.bigdata.rulesengine.tests.SetupRuleActionsWithNativeDataTest"/>
+            <class name="com.gainsight.bigdata.rulesengine.tests.SetupRuleActionsWithNativeDataTest"/>-->
         </classes>
     </test>
 </suite>
