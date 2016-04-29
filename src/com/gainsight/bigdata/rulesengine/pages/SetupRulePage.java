@@ -12,7 +12,7 @@ import com.gainsight.testdriver.Log;
  * Created by vmenon on 9/3/2015.
  */
 public class SetupRulePage extends BasePage {
-    private final String READY_INDICATOR = "//div[@class='RuleContainer']";
+    private final String READY_INDICATOR = "//div[@class='QueryBuilderScreen']";
     private final String DATA_SOURCE_FORCE = "//input[@value='force']";
     private final String DATA_SOURCE_NEWSTACK = "//input[@value='new-stack']";
     private final String SOURCE_OBJECT_DROPDOWN_LOC = "//div[contains(@class,'obj-list')]/descendant::button";
@@ -23,7 +23,7 @@ public class SetupRulePage extends BasePage {
     private final String ADVANCE_LOGIC_INPUT = "//div[@class='advanced-logic']/span[@class='expression']";
     private final String NEXT_BUTTON = "//span[contains(@class, 'visual-query-build') and text()='Next']";
     private final String PRIVIEW_RESULTS_BUTTON = "//span[contains(@class, 'visual-show-results') and text()='Preview Results']";
-    private final String LOADING_ICON = "//div[contains(@class, 'gs-loader-image')]";
+    private final String LOADING_ICON = "//div[contains(@class, 'spinner-layer')]";
     private final String CALCULATED_FILED_LINKTEXT = "Add Calculated Field";
     private final String OK_BUTTON_IN_CALCULATED_FIELD_DIV = "//div[@id='add_calculated_popup']/descendant::span[text()='Ok']";
     private final String FIELDS_IN_OBJECT = "//li[contains(@class, 'ui-multiselect-option')]/descendant::span[text()='%s']";
@@ -88,7 +88,7 @@ public class SetupRulePage extends BasePage {
 
     public void waitForPageLoad() {
         Log.info("Waiting for the page to load");
-        wait.waitTillElementNotDisplayed(LOADING_ICON, MIN_TIME, MAX_TIME);
+		wait.waitTillElementNotDisplayed(LOADING_ICON, MIN_TIME, TEN_SECONDS);
     }
 
     public void selectSourceObjectFromNativeData() {
@@ -105,7 +105,7 @@ public class SetupRulePage extends BasePage {
             field.clearAndSetText(ADVANCE_LOGIC_INPUT, advanceLogic);
             element.getElement(ADVANCE_LOGIC_INPUT).sendKeys(Keys.ENTER);
             // Clickng somewhere on screen to auto change the additional criteria from small to capital case if any
-            item.click("//div[@class='RuleContainer']/descendant::h1[contains(@class, 'rule-name')]");
+            item.click("//h2[contains(text(), 'Advanced Logic')]");
         }
     }
 

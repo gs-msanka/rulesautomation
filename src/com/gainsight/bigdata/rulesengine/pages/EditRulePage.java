@@ -11,29 +11,29 @@ import com.gainsight.testdriver.Log;
  * Created by vmenon on 8/26/2015.
  */
 public class EditRulePage extends BasePage {
-    private final String READY_INDICATOR = "//div[@class='RuleContainer']";
-    private final String LOADING_ICON = "//div[contains(@class, 'gs-loader-image')]";
+    private final String READY_INDICATOR = "//div[contains(@class, 'rulesViewStack')]";
+    private final String LOADING_ICON = "//div[contains(@class, 'RulesMainCntr gs gs-panel gs-container ready')]";
     private final String RULE_NAME = "//div/input[contains(@class,'rule-name')]";
     private final String RULE_DESCRIPTION = "//div/textarea[contains(@class,'rule-description')]";
-    private final String RULE_NEXT = "//div/span[contains(@class,'btn-save')]";
-    private final String RULE_CANCEL = "//div/span[contains(@class,'btn-cancel')]";
-    private final String SETUP_RULE_LINK = "//li[@data-id ='SetupView']/a";
+    private final String RULE_NEXT = "//div/input[@value='Next']";
+    private final String RULE_CANCEL = "//div/input[@value='Cancel']";
+    private final String SETUP_RULE_LINK = "//div[contains(@class,'ruleSetupStepsWizard')]/ul/descendant::span[contains(@class,'step-id') and text()='2']";
     private final String SETUP_ACTION_LINK = "//li[@data-id ='SetupActionView']/a";
     private final String SETUP_SCHEDULE_LINK = "//li[@data-id ='SetupScheduleView']/a";
     private final String SELECT_RULE_BUTTON = "//select[contains(@class, 'select-type')]/following-sibling::button";
-    private final String RULES_LIST_VIEW = "//li[@data-id ='ListView']/a";
-    private final String RULES_HEADER = "//div[contains(@class, 'gs-re-top-section')]";
+    private final String RULES_LIST_VIEW = "//li/a[@title ='Go to Rules List']";
+    private final String RULES_HEADER = "//ul[contains(@class, 'gs-tabs')]";
     private final String RULE_FOR_ACCOUNT_TYPE = "rule-for-account";
     private final String RULE_FOR_RELATIONSHIP_TYPE = "rule-for-relationship";
     private final String RELATIONSHIP_TYPE = "//select[contains(@class, 'relationship-type')]/following-sibling::button";
 
     public EditRulePage() {
-        wait.waitTillElementDisplayed(READY_INDICATOR, MIN_TIME, MAX_TIME);
+        wait.waitTillElementDisplayed(LOADING_ICON, MIN_TIME, MAX_TIME);
     }
 
     public void waitForPageLoad() {
         Log.info("Refreshing the Page");
-        wait.waitTillElementNotDisplayed(LOADING_ICON, MIN_TIME, TEN_SECONDS);
+        wait.waitTillElementDisplayed(LOADING_ICON, MIN_TIME, TEN_SECONDS);
     }
 
     /**
@@ -53,7 +53,7 @@ public class EditRulePage extends BasePage {
     public void selectRuleFor(String ruleForType) {
         try {
             env.setTimeout(1);
-            if (element.isElementDisplayed("//label[(contains(text(),'Rule For'))]")) {
+            if (element.isElementDisplayed("//div[(contains(text(),'Rule For'))]")) {
                 if ("Relationship".equalsIgnoreCase(ruleForType)) {
                     item.click(RULE_FOR_RELATIONSHIP_TYPE);
                 } else {
@@ -73,7 +73,7 @@ public class EditRulePage extends BasePage {
     public void selectRelationShipType(String relationshipType) {
         try {
             env.setTimeout(1);
-            if (element.isElementDisplayed("//label[(contains(text(),'Relationship Type'))]")) {
+            if (element.isElementDisplayed("//div[(contains(text(),'Relationship Type'))]")) {
                 item.click(RELATIONSHIP_TYPE);
                 wait.waitTillElementDisplayed("//input[contains(@title, '" + relationshipType + "')]/following-sibling::span[contains(text(), '" + relationshipType + "')]", MIN_TIME, MAX_TIME);
                 selectValueInDropDown(relationshipType);

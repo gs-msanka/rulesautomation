@@ -102,7 +102,7 @@ public class SetupRuleActionPage extends BasePage {
 
 
     private final String FIELD_MAPPING_DESTINATION = "//option[contains(text(), '%s')]";
-    private final String LOAD_TO_OBJECT = "//div[contains(@class, 'object-name-select')]/descendant::select/following-sibling::button";
+    private final String LOAD_TO_OBJECT = "//select[contains(@class, 'object-name-select')]/following-sibling::button";
     private final String LOAD_TO_OBJECT_OPERATION_TYPE = "//select[contains(@class, 'operation-type')]/following-sibling::button";
 
     private final String NEWRULE_PART1 = "//div[contains(@class,'setup-action-ctn')]/div[";

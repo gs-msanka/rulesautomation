@@ -58,7 +58,7 @@ public class BasePage extends WebPage implements Constants {
     private final String WORKFLOW_TAB		= "//a[contains(@title, 'Cockpit Tab')]";
     private final String MORE_TABS          = "MoreTabs_Tab";
     private final String MORE_TABS_LIST     = "MoreTabs_List";
-    protected final String LOADING_ICON       = "//div[contains(@class, 'gs-loader-image')]";
+    protected final String LOADING_ICON       = "//div[contains(@class, 'spinner-layer')]";
 	private final String LOADING_ICON_360 = "//div[@class='gs-loadingMsg gs-loader-container-64' and contains(@style,'display: block;')]";
     private final String SEARCH_LOADING     = "//div[@class='base_filter_search_progress_icon']";
 

@@ -1,5 +1,6 @@
 package com.gainsight.bigdata.rulesengine.pages;
 
+import org.apache.commons.lang.StringUtils;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
@@ -14,26 +15,27 @@ import com.gainsight.testdriver.Log;
  */
 public class RulesManagerPage extends BasePage {
 
-    private final String LOADING_ICON = "//div[contains(@class, 'gs-loader-image')]";
-    private final String READY_INDICATOR = "//div[@class='Rules_homepage']";
-    private final String RULES_LISTING_PAGE = "//div[@class='Rules_Manager']";
-    private final String SEARCH_RULE_NAME_FIELD = "//input[@class='search-rule' and @placeholder='Filter by rule name']";
+    private final String LOADING_ICON = "//div[contains(@class, 'spinner-layer')]";
+    private final String READY_INDICATOR = "//div[contains(@class, 'rulesViewStack')]";
+    private final String RULES_LISTING_PAGE = "//div[contains(@class, 'rulesViewStack')]";
+    private final String SEARCH_RULE_NAME_FIELD = "//input[@class='rules-by-name' and @placeholder='Filter by rule name']";
  //   private final String ADD_RULE_LINK = "//input[@value='+ Rule']";
     private final String RULE_NAME_LINK = "//span[contains(@class, 'gs-re-rule-name')]";
-    private final String RULE_WITH_NAME = "//span[contains(@class, 'gs-re-rule-name') and normalize-space(text())='%s']";
-    private final String ACTIVE_RULES_CHECKBOX = "//span[contains(@class,'gs-re-active')]";
-    private final String INACTIVE_RULES_CHECKBOX = "//span[contains(@class,'gs-re-inactive')]";
-    private final String RUN_RULE = "//span[contains(@class, 'gs-re-rule-name') and normalize-space(text())='%s']/ancestor::div[contains(@class, 're-rule-content')]/descendant::span[@title='Run rule']";
-    private final String CONFIRMATION_BUTTON = "//input[contains(@class, 'saveSummary') and @data-action='Yes']";
-	private final String SWITCH_ON_OFF_RULE = "//span[contains(@class, 'gs-re-rule-name') and normalize-space(text())='%s']/following::div[contains(@class, 'pull-right gs-re-action-list')]/descendant::div[contains(@class, 'onoffswitch-ctn pull-left')]/descendant::label";
+    private final String RULE_WITH_NAME = "//span[contains(@class, 'rule-type-tag')]/../a[text()='%s']";
+    private final String ACTIVE_RULES_CHECKBOX = "active-rules";
+    private final String INACTIVE_RULES_CHECKBOX = "inactive-rules";
+    private final String RUN_RULE = "//span[contains(@class, 'rule-type-tag')]/../a[text()='%s']/ancestor::li/div[contains(@class, 'rule-item-actions')]/span[@title='Run rule']";
+    private final String CONFIRMATION_BUTTON = "//button[@data-dialog-action='Yes']";
+	private final String SWITCH_ON_OFF_RULE = "//span[contains(@class, 'rule-type-tag')]/../a[text()='%s']/ancestor::li/div[contains(@class, 'rule-item-actions')]/descendant::label";
     private final String RULE_INACTIVE = "//span[contains(@class, 'gs-re-rule-name inactive') and normalize-space(text())='%s']";
-    private final String RULES_CONFIGURE_LINK = "//div[contains(@class, 'configure-settings')]/descendant::span";
-    private final String RULE_LISTING_ACTIONS = "//span[contains(@class, 'gs-re-rule-name') and (contains(text(),'%s'))]/parent::div[@class='pull-left']/following-sibling::div/div[@class='gs-re-actions']/descendant::span[@title='%s']";
-    private final String CLONE_RULE_INPUT = "//div[contains(@class, 'template-saveAs-popup')]/descendant::input[@placeholder='Name your Rule']";
-    private final String SAVE_OK_BUTTON = "//input[contains(@class, 'btn_save') and @data-action='OK']";
+    private final String RULES_CONFIGURE_LINK = "//a[contains(@class, 'btnRuleConfig')]/i";
+    private final String RULE_LISTING_ACTIONS = "//span[contains(@class, 'rule-type-tag')]/../a[text()='%s']/ancestor::li/div[contains(@class, 'rule-item-actions')]/span[@title='%s']";
+    private final String CLONE_RULE_INPUT = "//div[contains(@class, 'gs-rw-clone-rule')]/descendant::input";
+    private final String SAVE_OK_BUTTON = "//button[@data-dialog-action='OK']";
+    private final String RULE_LASTRUN_STATUS = "//span[contains(@class, 'rule-type-tag')]/../a[text()='rest1']/ancestor::li/div[contains(@class, 'runinfo')]/span[contains(@class, 'lastrun-status')]"
 
     
-    private final String ADD_RULE_LINK = "//input[contains(@class, 'add-rule') and @value='+ Rule']";
+    private final String ADD_RULE_LINK = "//span[contains(@class, 'addRuleBrn') and text()='+ Rule']";
 
     public RulesManagerPage() {
 
@@ -51,11 +53,7 @@ public class RulesManagerPage extends BasePage {
     public EditRulePage clickOnAddRule() {
         try {
             env.setTimeout(5);
-            if (element.isElementPresent(ADD_RULE_LINK)) {
-                item.click(ADD_RULE_LINK);
-            } else {
-                item.click("//div[@class='Rules_homepage']/descendant::span[text()='Rule']");
-            }
+            item.click(ADD_RULE_LINK);
         } finally {
             env.setTimeout(30);
         }
@@ -97,10 +95,14 @@ public class RulesManagerPage extends BasePage {
 		element.mouseOver(String.format(RULE_WITH_NAME, ruleName));
 		JavascriptExecutor executor = (JavascriptExecutor)Application.getDriver();
 		executor.executeScript("arguments[0].click();", element.getElement(ruleNameOFF));
-		wait.waitTillElementDisplayed(
-				"//div[contains(@class, 'layout_popup ui-dialog-content ui-widget-content')]", MIN_TIME, MAX_TIME);
-		item.click(CONFIRMATION_BUTTON);
-		waitForPageLoad();
+        if(StringUtils.isNotBlank(element.getElement(RULE_LASTRUN_STATUS).getText())){
+            wait.waitTillElementDisplayed(
+                    "//div[contains(@class, 'gs-dialog gs-confirm')]", MIN_TIME, MAX_TIME);
+            item.click(CONFIRMATION_BUTTON);
+        }
+
+
+
     }
 
     /**
@@ -111,7 +113,7 @@ public class RulesManagerPage extends BasePage {
         String ruleNameON = String.format(SWITCH_ON_OFF_RULE, ruleName);
         Log.info("Rule xpath is" + " " + ruleNameON);
         item.click(ruleNameON);
-        waitForPageLoad();
+
     }
 
     /**
@@ -162,7 +164,7 @@ public class RulesManagerPage extends BasePage {
 		JavascriptExecutor executor = (JavascriptExecutor)Application.getDriver();
 		executor.executeScript("arguments[0].click();", element.getElement(ruleNameToDelete));
 		wait.waitTillElementDisplayed(
-				"//div[contains(@class, 'layout_popup ui-dialog-content ui-widget-content')]", MIN_TIME, MAX_TIME);
+				"//div[contains(@class, 'gs-dialog gs-confirm')]", MIN_TIME, MAX_TIME);
 		item.click(CONFIRMATION_BUTTON);
 		wait.waitTillElementDisplayed(ADD_RULE_LINK, MIN_TIME, WAIT_FOR_A_MINUTE);
     }
@@ -213,8 +215,8 @@ public class RulesManagerPage extends BasePage {
 		wait.waitTillElementDisplayed(CLONE_RULE_INPUT, MIN_TIME, MAX_TIME);
 		element.clearAndSetText(CLONE_RULE_INPUT, newRuleName);
 		item.click(SAVE_OK_BUTTON);
+        waitForPageLoad();
 		clickOnInActiveRules();
-		waitForPageLoad();
     }
     
     /**
