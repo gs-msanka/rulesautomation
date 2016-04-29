@@ -120,7 +120,7 @@ public class LoadToCustomersTestUsingMongoAsSourceData extends BaseTest {
     }
 
     @TestInfo(testCaseIds = {"GS-3149", "GS-5134"})
-    @Test()
+    @Test(enabled = false)
     public void testLoadToCustomers() throws Exception {
         RulesPojo rulesPojo = mapper.readValue(new File(TEST_DATA_DIR + "GS-3149/GS-3149-input-mongo.json"), RulesPojo.class);
         rulesEngineUtil.updateSourceObjectInRule(rulesPojo, collectionName);
@@ -141,7 +141,7 @@ public class LoadToCustomersTestUsingMongoAsSourceData extends BaseTest {
 
 
     @TestInfo(testCaseIds = { "GS-5135" , "GS-5152"})
-    @Test()
+    @Test(enabled = false)
     public void testLoadToCustomers2() throws Exception {
         RulesPojo rulesPojo = mapper.readValue(new File(TEST_DATA_DIR + "GS-5135/GS-5135-input-mongo.json"), RulesPojo.class);
         rulesEngineUtil.updateSourceObjectInRule(rulesPojo, collectionName);
