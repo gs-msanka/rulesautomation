@@ -8,7 +8,7 @@
 
         <classes>
 
-            <class name="com.gainsight.bigdata.rulesengine.tests.CalculatedFieldsAndMeasuresTest"/>
+            <class name="com.gainsight.bigdata.rulesengine.tests.CallToActionTest"/>
           <!--  <class name="com.gainsight.bigdata.rulesengine.tests.CreateRuleTest"/>-->
 
             <!--<class name="com.gainsight.bigdata.rulesengine.tests.LoadToMilestonesAndFeaturesTest"/>-->
@@ -21,7 +21,7 @@
             <class name="com.gainsight.bigdata.rulesengine.tests.SetupRuleActionsWithNativeDataTest"/>-->
         </classes>
     </test>
-    <test verbose="3" name="RulesEngine UI Automation TestCases Using MDA REDSHIFT DataBase" preserve-order="true">
+  <!--  <test verbose="3" name="RulesEngine UI Automation TestCases Using MDA REDSHIFT DataBase" preserve-order="true">
         <parameter name="dbStoreType" value="Redshift"/>
         <classes>
             <class name="com.gainsight.bigdata.rulesengine.tests.CalculatedFieldsAndMeasuresTestUsingMatrixData"/>
@@ -40,5 +40,5 @@
             <class name="com.gainsight.bigdata.rulesengine.tests.CalculatedFieldsAndMeasuresTestUsingMatrixData"/>
             <class name="com.gainsight.bigdata.rulesengine.tests.CalculatedFieldsAndMeasuresTestUsingMongoAsSourceData"/>
         </classes>
-    </test>
+    </test>-->
 </suite>
