@@ -24,12 +24,12 @@ public class RulesManagerPage extends BasePage {
     private final String RULE_WITH_NAME = "//span[contains(@class, 'rule-type-tag')]/../a[text()='%s']";
     private final String ACTIVE_RULES_CHECKBOX = "active-rules";
     private final String INACTIVE_RULES_CHECKBOX = "inactive-rules";
-    private final String RUN_RULE = "//span[contains(@class, 'rule-type-tag')]/../a[text()='%s']/ancestor::li/div[contains(@class, 'rule-item-actions')]/span[@title='Run rule']";
+    private final String RUN_RULE = "//span[contains(@class, 'rule-type-tag')]/../a[text()='%s']/ancestor::li/div[contains(@class, 'rule-item-actions')]/descendant::span[@title='Run rule']";
     private final String CONFIRMATION_BUTTON = "//button[@data-dialog-action='Yes']";
 	private final String SWITCH_ON_OFF_RULE = "//span[contains(@class, 'rule-type-tag')]/../a[text()='%s']/ancestor::li/div[contains(@class, 'rule-item-actions')]/descendant::label";
     private final String RULE_INACTIVE = "//span[contains(@class, 'gs-re-rule-name inactive') and normalize-space(text())='%s']";
     private final String RULES_CONFIGURE_LINK = "//a[contains(@class, 'btnRuleConfig')]/i";
-    private final String RULE_LISTING_ACTIONS = "//span[contains(@class, 'rule-type-tag')]/../a[text()='%s']/ancestor::li/div[contains(@class, 'rule-item-actions')]/span[@title='%s']";
+    private final String RULE_LISTING_ACTIONS = "//span[contains(@class, 'rule-type-tag')]/../a[text()='%s']/ancestor::li/div[contains(@class, 'rule-item-actions')]/descendant::span[@title='%s']";
     private final String CLONE_RULE_INPUT = "//div[contains(@class, 'gs-rw-clone-rule')]/descendant::input";
     private final String SAVE_OK_BUTTON = "//button[@data-dialog-action='OK']";
     private final String RULE_LASTRUN_STATUS = "//span[contains(@class, 'rule-type-tag')]/../a[text()='rest1']/ancestor::li/div[contains(@class, 'runinfo')]/span[contains(@class, 'lastrun-status')]";
