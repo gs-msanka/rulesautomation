@@ -215,7 +215,8 @@ public class RulesManagerPage extends BasePage {
 		wait.waitTillElementDisplayed(CLONE_RULE_INPUT, MIN_TIME, MAX_TIME);
 		element.clearAndSetText(CLONE_RULE_INPUT, newRuleName);
 		item.click(SAVE_OK_BUTTON);
-        waitForPageLoad();
+        wait.waitTillElementDisplayed("//div[contains(@class, 'gs-dialog gs-alert')]",MIN_TIME, MAX_TIME);
+        item.click("//div[@class= 'gs-dialog-footer']/button");
 		clickOnInActiveRules();
     }
     
