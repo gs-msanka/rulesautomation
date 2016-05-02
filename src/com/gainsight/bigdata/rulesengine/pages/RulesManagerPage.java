@@ -9,6 +9,7 @@ import com.gainsight.pageobject.core.WebPage;
 import com.gainsight.sfdc.pages.BasePage;
 import com.gainsight.testdriver.Application;
 import com.gainsight.testdriver.Log;
+import org.testng.Assert;
 
 /**
  * Created by vmenon on 8/26/2015.
@@ -27,12 +28,12 @@ public class RulesManagerPage extends BasePage {
     private final String RUN_RULE = "//span[contains(@class, 'rule-type-tag')]/../a[text()='%s']/ancestor::li/div[contains(@class, 'rule-item-actions')]/descendant::span[@title='Run rule']";
     private final String CONFIRMATION_BUTTON = "//button[@data-dialog-action='Yes']";
 	private final String SWITCH_ON_OFF_RULE = "//span[contains(@class, 'rule-type-tag')]/../a[text()='%s']/ancestor::li/div[contains(@class, 'rule-item-actions')]/descendant::label";
-    private final String RULE_INACTIVE = "//span[contains(@class, 'gs-re-rule-name inactive') and normalize-space(text())='%s']";
+    private final String RULE_INACTIVE = "//li[contains(@data-status, 'inactive')]/h6/a[text()='%s']";
     private final String RULES_CONFIGURE_LINK = "//a[contains(@class, 'btnRuleConfig')]/i";
     private final String RULE_LISTING_ACTIONS = "//span[contains(@class, 'rule-type-tag')]/../a[text()='%s']/ancestor::li/div[contains(@class, 'rule-item-actions')]/descendant::span[@title='%s']";
     private final String CLONE_RULE_INPUT = "//div[contains(@class, 'gs-rw-clone-rule')]/descendant::input";
     private final String SAVE_OK_BUTTON = "//button[@data-dialog-action='OK']";
-    private final String RULE_LASTRUN_STATUS = "//span[contains(@class, 'rule-type-tag')]/../a[text()='rest1']/ancestor::li/div[contains(@class, 'runinfo')]/span[contains(@class, 'lastrun-status')]";
+    private final String RULE_LASTRUN_STATUS = "//span[contains(@class, 'rule-type-tag')]/../a[text()='%s']/ancestor::li/div[contains(@class, 'runinfo')]/span[contains(@class, 'lastrun-status')]";
 
     
     private final String ADD_RULE_LINK = "//span[contains(@class, 'addRuleBrn') and text()='+ Rule']";
@@ -95,14 +96,11 @@ public class RulesManagerPage extends BasePage {
 		element.mouseOver(String.format(RULE_WITH_NAME, ruleName));
 		JavascriptExecutor executor = (JavascriptExecutor)Application.getDriver();
 		executor.executeScript("arguments[0].click();", element.getElement(ruleNameOFF));
-        if(StringUtils.isNotBlank(element.getElement(RULE_LASTRUN_STATUS).getText())){
+        if(element.isElementPresent(RULE_LASTRUN_STATUS) && StringUtils.isNotBlank(element.getElement(RULE_LASTRUN_STATUS).getText())){
             wait.waitTillElementDisplayed(
                     "//div[contains(@class, 'gs-dialog gs-confirm')]", MIN_TIME, MAX_TIME);
             item.click(CONFIRMATION_BUTTON);
         }
-
-
-
     }
 
     /**
@@ -166,9 +164,8 @@ public class RulesManagerPage extends BasePage {
 		wait.waitTillElementDisplayed(
 				"//div[contains(@class, 'gs-dialog gs-confirm')]", MIN_TIME, MAX_TIME);
 		item.click(CONFIRMATION_BUTTON);
-        if(element.getElement("@class, 'gs-dialog gs-alert')]").isDisplayed()){
-            item.click("//div[@class= 'gs-dialog-footer']/button");
-        }
+        wait.waitTillElementDisplayed("//div[contains(@class, 'gs-dialog gs-alert')]",MIN_TIME, MAX_TIME);
+        item.click("//div[@class= 'gs-dialog-footer']/button");
 		wait.waitTillElementDisplayed(ADD_RULE_LINK, MIN_TIME, WAIT_FOR_A_MINUTE);
     }
 

@@ -360,22 +360,6 @@ public class SetupRuleActionPage extends BasePage {
         clickOnActionButton();
         item.click(xpath + SELECT_BUTTON);
         selectValueInDropDown("Load to SFDC Object");
-        try{
-
-
-
-            if(element.isElementPresent("//div[contains(@class, 'gs-dialog gs-alert')]") && element.isElementDisplayed("//div[contains(@class, 'gs-dialog gs-alert')]")){
-                item.click("//div[@class= 'gs-dialog-footer']/button");
-                wait.waitTillElementNotDisplayed("//div[contains(@class,'gs-dialog-overlay')]", MIN_TIME, 15);
-
-            }
-            else {
-
-            }
-        }
-        finally {
-
-        }
         item.click(xpath + LOAD_TO_OBJECT);
 
         selectValueInDropDown(loadToSFDCAction.getObjectName());

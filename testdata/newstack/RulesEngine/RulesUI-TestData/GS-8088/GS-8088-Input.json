@@ -15,10 +15,10 @@
       "action": {
         "name": "Create Relationship CTA using linked object",
         "priority": "High",
-        "type": "Event",
+        "type": "Expansion",
         "status": "Work In Progress",
-        "playbook": "Annual Review",
-        "reason": "Marketing Activity",
+        "playbook": "NPS Promoter",
+        "reason": "Product Risk",
         "dueDate": "50",
         "defaultOwner": "weRules",
         "chatterUpdate": "Once",

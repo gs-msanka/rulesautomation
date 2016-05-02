@@ -18,7 +18,7 @@
         "type": "Risk",
         "status": "New",
         "playbook": "Collections",
-        "reason": "Product Issue",
+        "reason": "Product Risk",
         "ownerField": "Relationship :: Created By ID",
         "dueDate": "50",
         "defaultOwner": "weRules",
