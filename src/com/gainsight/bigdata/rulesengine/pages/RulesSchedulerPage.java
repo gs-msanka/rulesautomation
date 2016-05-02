@@ -46,7 +46,8 @@ public class RulesSchedulerPage extends BasePage {
      * @return RulesSchedulerPage object after clicking on scheduler link
      */
     public RulesSchedulerPage clickOnSchedulerLink(){
-        item.click(SCHEDULER_HYPERLINK);
+        wait.waitTillElementDisplayed(SCHEDULER_HYPERLINK, MIN_TIME, MAX_TIME);
+		item.click(SCHEDULER_HYPERLINK);
     	return this;
     }
     
