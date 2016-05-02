@@ -33,7 +33,7 @@ public class RulesSchedulerPage extends BasePage {
     private final String TIME_ZONE = "//select[contains(@class, 'timezone-list')]//following-sibling::button";
     private final String EMAIL_FEATURE = "//textarea[contains(@class, 'emailList form-control')]";
     private final String HISTORYRUN = "//div[contains(text(),'Run for historical periods')]/preceding-sibling::input";
-    private final String SCHEDULER_HYPERLINK = "//div[contains(@class, 'ruleSetupStepsWizard')]//a[@class='step-id' and text()='4']";
+    private final String SCHEDULER_HYPERLINK = "//div[contains(@class, 'ruleSetupStepsWizard')]//span[@class='step-id' and text()='4']";
     private final String SCHEDULER_DIV_CONTAINER = "//div[@class='gs-module-container']/descendant::div[contains(@class, 'scheduler-events')]";
     private final String START_SCHEDULER_BUTTON = "//a[contains(@class, 'btn-save') and text()='Start']";
     private final String YEARY_ON_EVERY_MONTHLYPICK = "//select[contains(@class, 'yearly-onevery-monthpick')]/following-sibling::button";
@@ -46,10 +46,8 @@ public class RulesSchedulerPage extends BasePage {
      * @return RulesSchedulerPage object after clicking on scheduler link
      */
     public RulesSchedulerPage clickOnSchedulerLink(){
-        wait.waitTillElementPresent(SCHEDULER_HYPERLINK, MIN_TIME, MAX_TIME);
         item.click(SCHEDULER_HYPERLINK);
-    	wait.waitTillElementNotDisplayed("//div[contains(@class, 'ui-draggable') and contains(@style,'display: block;')]", MIN_TIME, MAX_TIME);
-    	return this; 	
+    	return this;
     }
     
     /**
