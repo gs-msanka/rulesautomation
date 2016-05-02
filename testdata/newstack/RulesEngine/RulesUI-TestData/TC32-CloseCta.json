@@ -10,7 +10,7 @@
         "name": "Rule-32-GS-3873-Testcase-ID-CloseCtaFromSpecificSource-UI",
         "type": "Expansion",
         "source": "Rules",
-        "setCtaStatusTo": "Closed Success",
+        "setCtaStatusTo": "Closed No Action",
         "reason": "Product Risk",
         "comments": "@Account::Account Name,@Account::Id,@Account::Percent Auto,@Account::C_Picklist"
       }

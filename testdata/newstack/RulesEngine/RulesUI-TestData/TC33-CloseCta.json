@@ -10,7 +10,7 @@
         "name": "Rule-33-GS-3874-Testcase-ID-CloseCtaFromAllSources-UI",
         "type": "Expansion",
         "source": "Rules,Manual,Survey",
-        "setCtaStatusTo": "Closed Success",
+        "setCtaStatusTo": "Closed No Action",
         "reason": "Product Risk",
         "comments": "These are test comments for CTA-These are test comments for CTA-These are test comments for CTA-These are test comments for CTA-These are test comments for CTA-These are test comments for CTA"
       }
