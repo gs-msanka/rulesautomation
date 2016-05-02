@@ -49,6 +49,7 @@ public class LoadToMilestonesAndFeaturesTest extends BaseTest {
 	private RulesEngineUtil rulesEngineUtil = new RulesEngineUtil();
 	DataETL dataETL = new DataETL();
 	private RulesManagerPage rulesManagerPage;
+	private static final String CLEANUP_FEATURES = Application.basedir + "/testdata/newstack/RulesEngine/LoadToFeature/FeatureInsertion.apex";
 	private String rulesManagerPageUrl;
 
 	@BeforeClass
@@ -63,6 +64,7 @@ public class LoadToMilestonesAndFeaturesTest extends BaseTest {
 		dataETL.execute(jobInfo);
 		JobInfo loadData = mapper.readValue((new FileReader(LOAD_DATA_INTO_CUSTOMOBJECT)), JobInfo.class);
 		dataETL.execute(loadData);
+		sfdc.runApexCode(getNameSpaceResolvedFileContents(CLEANUP_FEATURES));
 	}
 	
     @BeforeMethod

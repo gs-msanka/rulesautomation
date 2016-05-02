@@ -12,6 +12,7 @@ import com.gainsight.testdriver.Log;
 public class RulesSchedulerPage extends BasePage {
 
     private final String DAILY = "//input[@value='DAILY']";
+	private final String LOADING_ICON = "//div[contains(@class, 'spinner-layer')]";
     private final String DAILY_WEEKDAY_RADIOBUTTON = "//input[@id='dr-weekday']";
     private final String DAILY_EVERYDAY_RADIOBUTTON = "//input[@id='dr-day']";
     private final String WEEKLY = "//input[@value='WEEKLY']";
@@ -48,6 +49,7 @@ public class RulesSchedulerPage extends BasePage {
     public RulesSchedulerPage clickOnSchedulerLink(){
         wait.waitTillElementDisplayed(SCHEDULER_HYPERLINK, MIN_TIME, MAX_TIME);
 		item.click(SCHEDULER_HYPERLINK);
+		wait.waitTillElementNotDisplayed(LOADING_ICON, MIN_TIME, MAX_TIME);
     	return this;
     }
     
