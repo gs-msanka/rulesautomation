@@ -8,10 +8,10 @@
       "actionType": "closeCta",
       "action": {
         "name": "Rule-32-GS-3873-Testcase-ID-CloseCtaFromSpecificSource-UI",
-        "type": "Opportunity",
+        "type": "Expansion",
         "source": "Rules",
         "setCtaStatusTo": "Closed Success",
-        "reason": "Product Issue",
+        "reason": "Product Risk",
         "comments": "@Account::Account Name,@Account::Id,@Account::Percent Auto,@Account::C_Picklist"
       }
     }

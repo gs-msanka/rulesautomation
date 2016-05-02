@@ -41,7 +41,7 @@
         "type": "Risk",
         "status": "New",
         "playbook": "",
-        "reason": "Product Issue",
+        "reason": "Product Risk",
         "ownerField": "",
         "dueDate": "10",
         "defaultOwner": "weRules",

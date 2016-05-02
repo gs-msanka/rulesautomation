@@ -50,10 +50,10 @@
       "action": {
         "name": "Rule-32-GS-3873-Testcase-ID-CloseCtaFromSpecificSource-UI",
         "priority": "Medium",
-        "type": "Opportunity",
+        "type": "Expansion",
         "status": "New",
         "playbook": "NPS Promoter",
-        "reason": "Product Issue",
+        "reason": "Product Risk",
         "ownerField": "Account::Created By ID",
         "dueDate": "10",
         "defaultOwner": "weRules",

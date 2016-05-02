@@ -8,10 +8,10 @@
       "actionType": "closeCta",
       "action": {
         "name": "Rule-33-GS-3874-Testcase-ID-CloseCtaFromAllSources-UI",
-        "type": "Opportunity",
+        "type": "Expansion",
         "source": "Rules,Manual,Survey",
-        "setCtaStatusTo": "Closed Risk",
-        "reason": "Product Issue",
+        "setCtaStatusTo": "Closed Success",
+        "reason": "Product Risk",
         "comments": "These are test comments for CTA-These are test comments for CTA-These are test comments for CTA-These are test comments for CTA-These are test comments for CTA-These are test comments for CTA"
       }
     }

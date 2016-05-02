@@ -14,7 +14,7 @@
         "type": "Risk",
         "status": "New",
         "playbook": "Decline in usage",
-        "reason": "Product Issue",
+        "reason": "Product Risk",
         "ownerField": "",
         "dueDate": "10",
         "defaultOwner": "weRules",

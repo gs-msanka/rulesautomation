@@ -38,10 +38,10 @@
       "action": {
         "name": "Rule-30-GS-4261-Testcase-ID-SkipAllWeekends-UI",
         "priority": "Medium",
-        "type": "Opportunity",
+        "type": "Expansion",
         "status": "New",
         "playbook": "NPS Promoter",
-        "reason": "Product Issue",
+        "reason": "Product Risk",
         "ownerField": "",
         "dueDate": "10",
         "defaultOwner": "weRules",

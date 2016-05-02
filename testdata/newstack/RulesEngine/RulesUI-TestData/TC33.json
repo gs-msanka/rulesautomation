@@ -46,10 +46,10 @@
       "action": {
         "name": "Rule-33-GS-3874-Testcase-ID-CloseCtaFromAllSources-UI",
         "priority": "Medium",
-        "type": "Opportunity",
+        "type": "Expansion",
         "status": "New",
         "playbook": "NPS Promoter",
-        "reason": "Product Issue",
+        "reason": "Product Risk",
         "ownerField": "",
         "dueDate": "10",
         "defaultOwner": "weRules",

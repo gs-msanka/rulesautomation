@@ -38,10 +38,10 @@
       "action": {
         "name": "Rule-31-GS-4261-Testcase-ID-SkipWeekendIfDueOnAWeekend-UI",
         "priority": "Medium",
-        "type": "Opportunity",
+        "type": "Expansion",
         "status": "New",
         "playbook": "NPS Promoter",
-        "reason": "Product Issue",
+        "reason": "Product Risk",
         "ownerField": "",
         "dueDate": "9",
         "defaultOwner": "weRules",
