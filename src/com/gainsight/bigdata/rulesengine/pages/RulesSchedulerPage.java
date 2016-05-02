@@ -33,8 +33,8 @@ public class RulesSchedulerPage extends BasePage {
     private final String TIME_ZONE = "//select[contains(@class, 'timezone-list')]//following-sibling::button";
     private final String EMAIL_FEATURE = "//textarea[contains(@class, 'emailList form-control')]";
     private final String HISTORYRUN = "//div[contains(text(),'Run for historical periods')]/preceding-sibling::input";
-    private final String SCHEDULER_HYPERLINK = "//li[@data-view='ScheduleView']/a";
-    private final String SCHEDULER_DIV_CONTAINER = "//div[@class='RuleContainer']/descendant::div[contains(@class, 'scheduler-events')]";
+    private final String SCHEDULER_HYPERLINK = "//div[contains(@class, 'ruleSetupStepsWizard')]//a[@class='step-id' and text()='4']";
+    private final String SCHEDULER_DIV_CONTAINER = "//div[@class='gs-module-container']/descendant::div[contains(@class, 'scheduler-events')]";
     private final String START_SCHEDULER_BUTTON = "//a[contains(@class, 'btn-save') and text()='Start']";
     private final String YEARY_ON_EVERY_MONTHLYPICK = "//select[contains(@class, 'yearly-onevery-monthpick')]/following-sibling::button";
     private final String YEARY_ON_EVERY_DAY_NUM_PICK = "//select[contains(@class, 'yearly-onevery-daynumpick')]/following-sibling::button";
