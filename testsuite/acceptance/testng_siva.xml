@@ -28,23 +28,23 @@
             <class name="com.gainsight.bigdata.rulesengine.tests.SetupRuleActionsWithNativeDataTest"/>-->
         </classes>
     </test>
-    <test verbose="3" name="RulesEngine UI Automation TestCases Using MDA REDSHIFT DataBase" preserve-order="true">
+    <!--<test verbose="3" name="RulesEngine UI Automation TestCases Using MDA REDSHIFT DataBase" preserve-order="true">
         <parameter name="dbStoreType" value="Redshift"/>
         <classes>
             <class name="com.gainsight.bigdata.rulesengine.tests.LoadToMdaTest"/>
             <class name="com.gainsight.bigdata.rulesengine.tests.LoadToSfdcTest"/>
             <class name="com.gainsight.bigdata.rulesengine.tests.LoadToCustomersTestUsingMatrixData"/>
             <class name="com.gainsight.bigdata.rulesengine.tests.LoadToCustomersTestUsingRedshiftAsSourceData"/>
-           <!-- <class name="com.gainsight.bigdata.rulesengine.tests.CalculatedFieldsAndMeasuresTestUsingMatrixData"/>
-            <class name="com.gainsight.bigdata.rulesengine.tests.CalculatedFieldsAndMeasuresTestUsingRedShiftAsSourceData"/>-->
+           &lt;!&ndash; <class name="com.gainsight.bigdata.rulesengine.tests.CalculatedFieldsAndMeasuresTestUsingMatrixData"/>
+            <class name="com.gainsight.bigdata.rulesengine.tests.CalculatedFieldsAndMeasuresTestUsingRedShiftAsSourceData"/>&ndash;&gt;
         </classes>
     </test>
-   <!-- <test verbose="3" name="RulesEngine UI Automation TestCases Using MDA POSTGRES DataBase" preserve-order="true">
+   &lt;!&ndash; <test verbose="3" name="RulesEngine UI Automation TestCases Using MDA POSTGRES DataBase" preserve-order="true">
         <parameter name="dbStoreType" value="POSTGRES"/>
         <classes>
             <class name="com.gainsight.bigdata.rulesengine.tests.CalculatedFieldsAndMeasuresTestUsingMatrixData"/>
         </classes>
-    </test>-->
+    </test>&ndash;&gt;
     <test verbose="3" name="RulesEngine UI Automation TestCases Using MDA MONGO DataBase" preserve-order="true">
         <parameter name="dbStoreType" value="Mongo"/>
         <classes>
@@ -58,5 +58,5 @@
             </class>
 
         </classes>
-    </test>
+    </test>-->
 </suite>
