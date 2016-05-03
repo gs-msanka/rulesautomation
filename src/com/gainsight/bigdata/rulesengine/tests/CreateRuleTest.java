@@ -236,13 +236,14 @@ public class CreateRuleTest extends BaseTest {
         }
         verifier.assertVerification();
     }
-	*
+	/*
 	 * TestCase to verify Gainsight package objects(JBCXM) are available under
 	 * dataload configuration Dropdownlist or not.
 	 * 
 	 * This testcase will work in Beta or managed package only(Since, In Dev org
 	 * Rules Team is not handling this case)
-	 * @throws IOException 
+	 * @throws IOException
+	 */
 
 	@TestInfo(testCaseIds = { "GS-9067" })
 	@Test
