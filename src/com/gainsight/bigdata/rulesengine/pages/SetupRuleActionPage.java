@@ -128,6 +128,7 @@ public class SetupRuleActionPage extends BasePage {
                 item.click(NOACTION_BUTTON);
             }
         } catch (Exception e) {
+            Log.debug("clicking on action button for second action");
             item.click(ACTION_BUTTON);
         } finally {
             env.setTimeout(MAX_ELEMENT_WAIT);

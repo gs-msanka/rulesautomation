@@ -92,7 +92,7 @@ public class CreateRuleTest extends BaseTest {
 		nsTestBase.init();
 		rulesManagerPageUrl=visualForcePageUrl+"Rulesmanager";
 		rulesManagerPage = new RulesManagerPage();
-		rulesUtil.populateObjMaps();
+		/*rulesUtil.populateObjMaps();
 	    nsTestBase.tenantAutoProvision();
         tenantManager= new TenantManager();
         GSEmailSetup gs=new GSEmailSetup();
@@ -121,7 +121,7 @@ public class CreateRuleTest extends BaseTest {
         rulesConfigureAndDataSetup.updateTimeZoneInAppSettings("America/Los_Angeles");
         sfdc.runApexCode(getNameSpaceResolvedFileContents(CREATE_ACCOUNTS_CUSTOMERS));
         JobInfo jobInfo = mapper.readValue((new FileReader(LOAD_ACCOUNTS_JOB)), JobInfo.class);
-        dataETL.execute(jobInfo);
+        dataETL.execute(jobInfo);*/
 	}
 
     @BeforeMethod
@@ -236,15 +236,15 @@ public class CreateRuleTest extends BaseTest {
         }
         verifier.assertVerification();
     }
-
-	/**
+/*
+	*//**
 	 * TestCase to verify Gainsight package objects(JBCXM) are available under
 	 * dataload configuration Dropdownlist or not.
 	 * 
 	 * This testcase will work in Beta or managed package only(Since, In Dev org
 	 * Rules Team is not handling this case)
 	 * @throws IOException 
-	 */
+	 *//*
 	@TestInfo(testCaseIds = { "GS-9067" })
 	@Test
 	public void testGainsightObjectsArePresentInDataLoadConfigurationList() throws IOException {
@@ -429,5 +429,5 @@ public class CreateRuleTest extends BaseTest {
 		editRulePage.clickOnRulesList();
 		rulesManagerPage.editRuleByName(rulesPojo.getRuleName());
 		Assert.assertTrue(rulesManagerPage.isEditRulePagePresent(), "Check whether clicking on edit rule lands on editrule page or not!!");
-	}
+	}*/
 }
