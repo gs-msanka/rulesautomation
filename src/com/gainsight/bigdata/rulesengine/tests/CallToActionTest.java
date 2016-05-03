@@ -550,7 +550,7 @@ public class CallToActionTest extends BaseTest {
                 String ctaComment = (String) tokenRecords.getField(resolveStrNameSpace("JBCXM__Comments__c"));
                 String actualTokenComments = (String) tokenRecords.getChild((resolveStrNameSpace("JBCXM__Account__r"))).getChild("Name").getValue() + tokenRecords.getChild(resolveStrNameSpace("JBCXM__Account__r")).getChild("Id").getValue() + tokenRecords.getChild(resolveStrNameSpace("JBCXM__Account__r")).getChild("Percent_Auto__c").getValue() + tokenRecords.getChild(resolveStrNameSpace("JBCXM__Account__r")).getChild("C_Picklist__c").getValue();
                 // Asserting both create cta and close cta comments
-                Assert.assertEquals(ctaComment, actualTokenComments + "\n" + "\n" + actualTokenComments);
+                Assert.assertEquals(ctaComment, actualTokenComments + "\n" + "\n" + actualTokenComments + "\n\n" + actualTokenComments);
             }
         }
     }

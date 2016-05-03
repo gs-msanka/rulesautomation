@@ -11,7 +11,7 @@
             <!--<class name="com.gainsight.bigdata.rulesengine.tests.CallToActionTest"/>
             <class name="com.gainsight.bigdata.rulesengine.tests.CalculatedFieldsAndMeasuresTest"/>-->
 
-            <class name="com.gainsight.bigdata.rulesengine.tests.CreateRuleTest"/>
+            <class name="com.gainsight.bigdata.rulesengine.tests.CallToActionTest"/>
            <!-- <class name="com.gainsight.bigdata.rulesengine.tests.CallToActionWithRelationshipsTest">
                 <methods>
                     <exclude name="createCtaUsingMdaLinkedCollection"/>

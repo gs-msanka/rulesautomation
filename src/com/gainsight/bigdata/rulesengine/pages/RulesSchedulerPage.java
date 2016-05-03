@@ -39,7 +39,7 @@ public class RulesSchedulerPage extends BasePage {
     private final String START_SCHEDULER_BUTTON = "//a[contains(@class, 'btn-save') and text()='Start']";
     private final String YEARY_ON_EVERY_MONTHLYPICK = "//select[contains(@class, 'yearly-onevery-monthpick')]/following-sibling::button";
     private final String YEARY_ON_EVERY_DAY_NUM_PICK = "//select[contains(@class, 'yearly-onevery-daynumpick')]/following-sibling::button";
-    private final String RULES_CONTAINER = "//div[contains(@class, 'Rules_Manager')]/descendant::div[contains(@class, 'gs-re-top-section row')]";
+    private final String RULES_CONTAINER = "div[contains(@class, 'rulesViewStack')]";
     
     
     /**
@@ -47,7 +47,7 @@ public class RulesSchedulerPage extends BasePage {
      * @return RulesSchedulerPage object after clicking on scheduler link
      */
     public RulesSchedulerPage clickOnSchedulerLink(){
-        wait.waitTillElementDisplayed(SCHEDULER_HYPERLINK, MIN_TIME, MAX_TIME);
+		wait.waitTillElementNotDisplayed("//div[contains(@class,'ui-widget-overlay')]",MIN_TIME,MAX_TIME);
 		item.click(SCHEDULER_HYPERLINK);
 		wait.waitTillElementNotDisplayed(LOADING_ICON, MIN_TIME, MAX_TIME);
     	return this;
@@ -66,6 +66,7 @@ public class RulesSchedulerPage extends BasePage {
      * @param scheduler object
      */
     public void dailySchedule(ShowScheduler scheduler) {
+		wait.waitTillElementNotDisplayed("//div[contains(@class,'ui-widget-overlay')]",MIN_TIME,MAX_TIME);
 		Log.info("Filling scheduler information for scheduler type - Daily");
 		item.click(DAILY);
 		if (scheduler.getDailyRecurringInterval().equals("EveryWeekday")) {
@@ -81,6 +82,7 @@ public class RulesSchedulerPage extends BasePage {
      * @param scheduler object
      */
     public void weeklySchedule(ShowScheduler scheduler) {
+		wait.waitTillElementNotDisplayed("//div[contains(@class,'ui-widget-overlay')]",MIN_TIME,MAX_TIME);
 		Log.info("Filling scheduler information for scheduler type - Weekly");
 		item.click(WEEKLY);
 		Log.info("Weekly schedule check box selected");
@@ -94,6 +96,7 @@ public class RulesSchedulerPage extends BasePage {
      * @param scheduler object
      */
     public void monthlySchedule(ShowScheduler scheduler) {
+		wait.waitTillElementNotDisplayed("//div[contains(@class,'ui-widget-overlay')]",MIN_TIME,MAX_TIME);
 		Log.info("Filling scheduler information for scheduler type - Monthly");
 		item.click(MONTHLY);
 		if (scheduler.getMonthlyRecurringInterval().startsWith("Day")) {
