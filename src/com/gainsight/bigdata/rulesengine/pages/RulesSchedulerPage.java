@@ -39,7 +39,7 @@ public class RulesSchedulerPage extends BasePage {
     private final String START_SCHEDULER_BUTTON = "//a[contains(@class, 'btn-save') and text()='Start']";
     private final String YEARY_ON_EVERY_MONTHLYPICK = "//select[contains(@class, 'yearly-onevery-monthpick')]/following-sibling::button";
     private final String YEARY_ON_EVERY_DAY_NUM_PICK = "//select[contains(@class, 'yearly-onevery-daynumpick')]/following-sibling::button";
-    private final String RULES_CONTAINER = "div[contains(@class, 'rulesViewStack')]";
+    private final String RULES_CONTAINER = "//div[contains(@class, 'rulesViewStack')]";
     
     
     /**
