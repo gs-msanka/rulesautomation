@@ -127,9 +127,12 @@ public class SetupRuleActionPage extends BasePage {
             if (element.getElement(NOACTION_YET).isDisplayed()) {
                 item.click(NOACTION_BUTTON);
             }
+            else {
+                Log.debug("clicking on action button for second action");
+                item.click(ACTION_BUTTON);
+            }
         } catch (Exception e) {
-            Log.debug("clicking on action button for second action");
-            item.click(ACTION_BUTTON);
+
         } finally {
             env.setTimeout(MAX_ELEMENT_WAIT);
         }
