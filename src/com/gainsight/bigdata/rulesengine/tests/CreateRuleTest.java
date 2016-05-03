@@ -142,7 +142,7 @@ public class CreateRuleTest extends BaseTest {
         assertForAllActionsUsingSFDCData(rulesPojo);
     }
 
-    @TestInfo(testCaseIds = { "GS-9068", "GS-4187", "GS-4239"})
+ /*   @TestInfo(testCaseIds = { "GS-9068", "GS-4187", "GS-4239"})
     @Test
     public void testCTAActionWithCalculatedFieldsOnUsageDataObject() throws Exception {
         RuleEngineDataSetup ruleEngineDataSetup = new RuleEngineDataSetup();
@@ -162,7 +162,7 @@ public class CreateRuleTest extends BaseTest {
                     ctaAction.getType(), ctaAction.getReason(), ctaAction.getComments(), ctaAction.getName(), ctaAction.getPlaybook()),
                     "verify whether cta action configured resulted in  correct cta or not");
         }
-    }
+    }*/
 	
     public void assertForAllActionsUsingSFDCData(RulesPojo rulesPojo) throws Exception {
         List<RuleAction> ruleActions = rulesPojo.getSetupActions();
