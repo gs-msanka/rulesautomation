@@ -7,11 +7,10 @@
     <test verbose="3" name="RulesEngine UI Automation Tests Using Native Data" preserve-order="true">
 
         <classes>
-
             <!--<class name="com.gainsight.bigdata.rulesengine.tests.CallToActionTest"/>
             <class name="com.gainsight.bigdata.rulesengine.tests.CalculatedFieldsAndMeasuresTest"/>-->
 
-            <class name="com.gainsight.bigdata.rulesengine.tests.CreateRuleTest"/>
+
             <class name="com.gainsight.bigdata.rulesengine.tests.CallToActionWithRelationshipsTest">
                 <methods>
                     <exclude name="createCtaUsingMdaLinkedCollection"/>
