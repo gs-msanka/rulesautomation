@@ -273,7 +273,7 @@ public class RulesEngineUtil{
 		rulePojo.getSetupRule().getSetupData().get(0).setSourceObject(objectName);
 		for(RuleAction ruleAction: rulePojo.getSetupActions()){
 			Log.debug("Rule action before modification: "+ new ObjectMapper().writeValueAsString(ruleAction));
-			if(ruleAction.getAction() != null ){
+			if(ruleAction.getAction() != null && ruleAction.getAction().get("fieldMappings") != null){
 				Iterator<JsonNode> fieldMapIterator =  ruleAction.getAction().get("fieldMappings").getElements();
 				while(fieldMapIterator.hasNext()){
 					ObjectNode objNode = (ObjectNode)fieldMapIterator.next();

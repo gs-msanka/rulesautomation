@@ -1,0 +1,21 @@
+{
+  "jobName": "GS-4185.",
+  "jobType": "GS-4185.",
+  "namespacePrefix": "JBCXM",
+  "useNameSpace": false,
+  "transform": {
+    "query": "Select AccountName as \"AccountName\"   from demo where PageViews <= 750 and Logins >= 30",
+    "useQuery": true,
+    "tableInfo": [
+      {
+        "file": "/testdata/newstack/RulesEngine/RulesUI-TestData/GlobalTestData/Data_Into_Custom_Object-Output.csv",
+        "table": "demo",
+        "joinColumnName": "",
+        "columns": []
+      }
+    ],
+    "join": true,
+    "picklist": false,
+    "output": "/testdata/newstack/RulesEngine/RulesUI-TestData/GS-4185/ExpectedData.csv"
+  }
+}

@@ -1,0 +1,27 @@
+{
+  "ruleType": "Custom",
+  "ruleName": "GS-6247-Matrix-Testcase-ID",
+  "ruleDescription": "GS-6247-Matrix-Testcase-ID Desc",
+
+  "setupActions": [
+    {
+      "actionType": "createCta",
+      "upsert": true,
+      "action": {
+        "name": "CTA Rule GS-6247 - UI",
+        "priority": "Low",
+        "ctaUpsert": true,
+        "type": "Risk",
+        "status": "New",
+        "playbook": "Collections",
+        "reason": "Product Risk",
+        "ownerField": "",
+        "chatterUpdate": "Once",
+        "dueDate": "10",
+        "defaultOwner": "weRules",
+        "dueDateType": "",
+        "comments": "These are test comments for CTA"
+      }
+    }
+  ]
+}

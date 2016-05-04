@@ -1,0 +1,68 @@
+{
+  "ruleType": "Custom",
+  "ruleName": "GS-4261-Matrix2-Testcase-ID",
+  "ruleDescription": "GS-4261-Matrix2-Testcase-ID Desc",
+  "setupRule": {
+    "dataSource": "Matrix",
+    "selectObject": "Object",
+    "setupData": [
+      {
+        "sourceObject": "Object",
+        "showFields": [
+          {
+            "fieldName": "ID",
+            "showAdvancedName": ""
+          },
+          {
+            "fieldName": "CustomDate1",
+            "showAdvancedName": ""
+          },
+          {
+            "fieldName": "PageViews",
+            "showAdvancedName": ""
+          },
+          {
+            "fieldName": "Logins",
+            "showAdvancedName": ""
+          }
+        ],
+        "filterFields": []
+      }
+    ],
+    "advancedLogic": "",
+    "timeIdentifier": "CustomDate1"
+  },
+  "setupActions": [
+    {
+      "actionType": "createCta",
+      "action": {
+        "name": "CTA Rule GS-4261-SkipAllWeekends-UI",
+        "priority": "Low",
+        "type": "Risk",
+        "status": "New",
+        "playbook": "Collections",
+        "reason": "Product Risk",
+        "ownerField": "",
+        "chatterUpdate": "Once",
+        "dueDate": "10",
+        "defaultOwner": "weRules",
+        "dueDateType": "Skip all weekends",
+        "comments": "These are test comments for CTA"
+      },
+      "criterias": [
+        {
+          "showField": "PageViews",
+          "operator": "less or equal",
+          "field": "value",
+          "value": "input_750"
+        },
+        {
+          "showField": "Logins",
+          "operator": "greater or equal",
+          "field": "value",
+          "value": "input_30"
+        }
+      ]
+    }
+  ]
+}
