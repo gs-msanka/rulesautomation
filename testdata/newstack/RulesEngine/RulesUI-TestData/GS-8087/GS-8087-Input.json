@@ -6,7 +6,7 @@
   "ruleDescription": "GS-8086-Create CTA Using relationship object-Desc",
   "setupRule": {
     "dataSource": "Native",
-    "selectObject": "Relationship",
+    "selectObject": "GS Relationship",
     "advancedLogic": ""
   },
   "setupActions": [
