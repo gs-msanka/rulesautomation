@@ -192,7 +192,7 @@ public class CallToActionWithRelationshipsTest extends BaseTest {
         List<Map<String, String>> expectedTasks = Comparator.getParsedCsvDataWithHeaderNamespaceResolved(Application.basedir + "/testdata/newstack/RulesEngine/RulesUI_ExpectedData/PlayBookTasks.csv");
         List<Map<String, String>> actualTasks = Comparator.getParsedCsvDataWithHeaderNamespaceResolved(Application.basedir + "/testdata/newstack/RulesEngine/RulesUI_ExpectedData/CSTasks.csv");
         List<Map<String, String>> differenceData = Comparator.compareListData(expectedTasks, actualTasks);
-        Assert.assertEquals(actualTasks.size(), 54, "Total Number of CSTasks are not matching for the cta's created");
+        Assert.assertEquals(actualTasks.size(), 27, "Total Number of CSTasks are not matching for the cta's created");
         Log.info("Difference is : " + mapper.writeValueAsString(differenceData));
         Assert.assertEquals(differenceData.size(), 0, "Check the Diff above for which the CS-Tasks are not matching for the cta");
     }
