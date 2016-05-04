@@ -344,9 +344,9 @@
 			}
 			tempQuery += " ORDER BY LastModifiedDate DESC NULLS LAST ";
 			Log.info("Query to get Rule Id " +ruleName);
-			Log.info("SFDC info: "+sfdc.fetchSFDCinfo().getEndpoint());
 			SObject[] sObjects = sfdc.getRecords(resolveStrNameSpace(tempQuery));
 			if(sObjects.length >0) {
+				Log.info("Returning ruleId: "+sObjects[0].getId());
 				return sObjects[0].getId();
 			} else {
 				Log.error("No Rules Exists in the system with matched criteria");
@@ -543,6 +543,7 @@
 		 */
 		public Boolean runRule(String ruleName) throws Exception {
 			String ruleId = getRuleId(ruleName);
+			Log.info("headers: "+header.getAllHeaders().toString());
 			result = wa.doPost(API_RULE_RUN + "/" + ruleId, header.getAllHeaders(), "{}");
 			ResponseObject responseObj = RulesUtil.convertToObject(result.getContent());
 			if (!Boolean.valueOf(responseObj.getResult()) || responseObj.getRequestId() == null) {
