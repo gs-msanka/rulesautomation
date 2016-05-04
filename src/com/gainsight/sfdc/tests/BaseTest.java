@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.text.DecimalFormat;
 import java.util.*;
 
+import com.gainsight.http.Header;
 import com.gainsight.sfdc.util.PackageUtil;
 
 import com.gainsight.util.config.NSConfigProvider;
@@ -49,6 +50,7 @@ public class BaseTest {
     public static String LOAD_SETUP_DATA_SCRIPT = "JBCXM.CEHandler.loadSetupData();";
     public static final String CTA_DUEDATE_FORMAT = "yyyy-MM-dd";
     public static String visualForcePageUrl = ".visual.force.com/apex/";
+    public static Header header;
     
 
 
@@ -65,6 +67,12 @@ public class BaseTest {
         packageUtil = new PackageUtil(sfdc.getMetadataConnection(), Double.valueOf(sfdcConfig.getSfdcApiVersion()));
         //Uninstall Application.
         sfdcInfo = sfdc.fetchSFDCinfo();
+        header = new Header();
+        header.addHeader("Origin", sfdcInfo.getEndpoint());
+        header.addHeader("Content-Type", "application/json");
+        header.addHeader("appOrgId", sfdcInfo.getOrg());
+        header.addHeader("appUserId", sfdcInfo.getUserId());
+        header.addHeader("appSessionId", sfdcInfo.getSessionId());
 		visualForcePageUrl = "https://"
 				+ (sfdcConfig.getSfdcManagedPackage() ? sfdcConfig
 						.getSfdcNameSpace().toLowerCase() : "c")
