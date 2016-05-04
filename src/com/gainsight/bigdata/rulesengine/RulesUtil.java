@@ -344,6 +344,7 @@
 			}
 			tempQuery += " ORDER BY LastModifiedDate DESC NULLS LAST ";
 			Log.info("Query to get Rule Id " +ruleName);
+			Log.info("SFDC info: "+sfdc.fetchSFDCinfo().getEndpoint());
 			SObject[] sObjects = sfdc.getRecords(resolveStrNameSpace(tempQuery));
 			if(sObjects.length >0) {
 				return sObjects[0].getId();
