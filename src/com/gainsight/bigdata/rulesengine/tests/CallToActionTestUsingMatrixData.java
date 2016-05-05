@@ -422,7 +422,7 @@ public class CallToActionTestUsingMatrixData extends BaseTest {
     }*/
 
     @TestInfo(testCaseIds = {"GS-4261"})
-    @Test(enabled = false)
+    @Test(enabled = true)
     public void testCtaActionWithDonNotSkipWeekendOption() throws Exception {
         RulesPojo rulesPojo = mapper.readValue(new File(TEST_DATA_DIR + "GS-4261/GS-4261-Matrix-input1.json"), RulesPojo.class);
         rulesEngineUtil.updateSourceObjectInRule(rulesPojo, collectionName);
@@ -456,7 +456,7 @@ public class CallToActionTestUsingMatrixData extends BaseTest {
     }
 
     @TestInfo(testCaseIds = {"GS-4261"})
-    @Test(enabled = false)
+    @Test(enabled = true)
     public void testCtaActionWithSkipAllWeekendsOption() throws Exception {
         RulesPojo rulesPojo = mapper.readValue(new File(TEST_DATA_DIR +"GS-4261/GS-4261-Matrix-input2.json"), RulesPojo.class);
         rulesEngineUtil.updateSourceObjectInRule(rulesPojo, collectionName);
@@ -494,7 +494,7 @@ public class CallToActionTestUsingMatrixData extends BaseTest {
     }
 
     @TestInfo(testCaseIds = {"GS-4261"})
-    @Test(enabled = false)
+    @Test(enabled = true)
     public void testCtaActionWithSkipWeekendIfDueOnWeekEndOption() throws Exception {
         RulesPojo rulesPojo = mapper.readValue(new File(TEST_DATA_DIR +"GS-4261/GS-4261-Matrix-input3.json"), RulesPojo.class);
         rulesEngineUtil.updateSourceObjectInRule(rulesPojo, collectionName);
@@ -625,7 +625,9 @@ public class CallToActionTestUsingMatrixData extends BaseTest {
             CTAAction ctaAction = mapper.readValue(closeCtaPojo.getSetupActions().get(0).getAction(), CTAAction.class);
             Assert.assertTrue((rulesUtil.isCTAclosedSuccessfully(closeCtaAction)), "check cta is closed with correct parammers or not");
             SetupRuleActionPage setupRuleActionPage = new SetupRuleActionPage();
-            int srcObjRecCount = sfdc.getRecordCount(resolveStrNameSpace(setupRuleActionPage.queryString(rulesPojo.getSetupActions().get(0).getCriterias())));
+            dataETL.execute(mapper.readValue(resolveNameSpace(TEST_DATA_DIR + "GS-4185/CTA-ExpectedJob.txt"),JobInfo.class));
+            List<Map<String, String>> filteredAccounts = Comparator.getParsedCsvDataWithHeaderNamespaceResolved(TEST_DATA_DIR + "GS-4185/ExpectedData.csv");
+            int srcObjRecCount = filteredAccounts.size();
             Assert.assertEquals(srcObjRecCount, sfdc.getRecordCount(resolveStrNameSpace(("select id, name FROM JBCXM__CTA__c where Name='" + ctaAction.getName() + "' and  JBCXM__Source__c='Rules' and JBCXM__ClosedDate__c!=null and isdeleted=false"))));
         }
     }

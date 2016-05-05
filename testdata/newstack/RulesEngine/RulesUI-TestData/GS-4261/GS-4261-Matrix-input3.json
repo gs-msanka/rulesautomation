@@ -37,10 +37,10 @@
       "actionType": "createCta",
       "action": {
         "name": "CTA Rule GS-4261-SkipWeekendIfDueOnAWeekend-UI",
-        "priority": "Low",
-        "type": "Risk",
+        "priority": "Medium",
+        "type": "Expansion",
         "status": "New",
-        "playbook": "Collections",
+        "playbook": "NPS Promoter",
         "reason": "Product Risk",
         "ownerField": "",
         "chatterUpdate": "Once",
