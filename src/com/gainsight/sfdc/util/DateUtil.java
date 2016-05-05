@@ -609,6 +609,7 @@ public class DateUtil {
     
     public static String  getDateWithRequiredFormat(int days, int months, String format) {
 		String date = null;
+        Log.info("TimeZone: "+timeZone.getDisplayName());
 		date = DateUtil.addDays(DateUtil.addMonths(timeZone, months), days, format);
 		Log.info("Formatted Date :" + date);
 		return date;

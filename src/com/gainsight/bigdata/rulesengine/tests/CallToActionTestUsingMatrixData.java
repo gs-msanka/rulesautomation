@@ -457,7 +457,7 @@ public class CallToActionTestUsingMatrixData extends BaseTest {
     }
 
     @TestInfo(testCaseIds = {"GS-4261"})
-    @Test(enabled = true)
+    @Test(enabled = false)
     public void testCtaActionWithSkipAllWeekendsOption() throws Exception {
         RulesPojo rulesPojo = mapper.readValue(new File(TEST_DATA_DIR +"GS-4261/GS-4261-Matrix-input2.json"), RulesPojo.class);
         rulesEngineUtil.updateSourceObjectInRule(rulesPojo, collectionName);
