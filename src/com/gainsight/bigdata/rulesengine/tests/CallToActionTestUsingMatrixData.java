@@ -115,11 +115,10 @@ public class CallToActionTestUsingMatrixData extends BaseTest {
     public void rulesCleanup() {
         sfdc.runApexCode(getNameSpaceResolvedFileContents(CLEANUP_DATA));
     }
-
+/*
     @TestInfo(testCaseIds = {"GS-4185", "GS-4186", "GS-4257", "GS-4256", "GS-4257"})
     @Test(enabled = true)
     public void testCtaWithUpsertPriorityAndCommentsAlwaysOption() throws Exception {
-        SetupRuleActionPage setupRuleActionPage = new SetupRuleActionPage();
         // Creating cta with Low priority
         RulesPojo rulesPojo = mapper.readValue(new File(TEST_DATA_DIR + "GS-4185/GS-4185-Matrix-input.json"), RulesPojo.class);
         rulesEngineUtil.updateSourceObjectInRule(rulesPojo, collectionName);
@@ -200,13 +199,12 @@ public class CallToActionTestUsingMatrixData extends BaseTest {
         Assert.assertEquals(actualTasks1.size(), 12, "Number of CSTasks are not matching for the cta's created");
         Log.info("Difference is : " + mapper.writeValueAsString(differenceData1));
         Assert.assertEquals(differenceData1.size(), 0, "Check the Diff above for which the CS-Tasks are not matching for the cta");
-    }
+    }*/
 
 
     @TestInfo(testCaseIds = { "GS-4257"})
     @Test(enabled = false)
     public void testCtaWithUpdateCommentsNeverOption() throws Exception {
-        SetupRuleActionPage setupRuleActionPage = new SetupRuleActionPage();
         // Creating cta with Low priority
         RulesPojo rulesPojo = mapper.readValue(new File(TEST_DATA_DIR + "GS-4257/GS-4257-Matrix-input.json"), RulesPojo.class);
         rulesEngineUtil.updateSourceObjectInRule(rulesPojo, collectionName);
