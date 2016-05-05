@@ -15,7 +15,7 @@ public class SetupRulePage extends BasePage {
     private final String READY_INDICATOR = "//div[@class='QueryBuilderScreen']";
     private final String DATA_SOURCE_FORCE = "//input[@value='force']";
     private final String DATA_SOURCE_NEWSTACK = "//input[@value='new-stack']";
-    private final String SOURCE_OBJECT_DROPDOWN_LOC = "//div[contains(@class,'obj-list')]/descendant::button";
+    private final String SOURCE_OBJECT_DROPDOWN_LOC = "//div[contains(@class,'obj-list')]/descendant::button/span";
     private final String SOURCE_OBJECT_LIST_SEARCH = "//div[contains(@class,'long_obj_list')]//input[@placeholder='Search']";
     private final String SOURCE_OBJECT_DRPDWN_ITEM_LOCATOR = "//li[@class='ui-multiselect-option']/label/input[@value='%s']";
     private final String SOURCE_FIELD_SEARCH = "//div[contains(@class, 'ui-multiselect-single')]/descendant::input[@placeholder='Search']";
@@ -77,7 +77,7 @@ public class SetupRulePage extends BasePage {
 
 
 	public SetupRulePage() {
-    	wait.waitTillElementDisplayed(READY_INDICATOR, MIN_TIME, TEN_SECONDS);
+    	wait.waitTillElementDisplayed(LOADING_ICON, MIN_TIME, TEN_SECONDS);
     	Log.info("Waiting for the page to load");
     }
 
@@ -132,6 +132,7 @@ public class SetupRulePage extends BasePage {
     
     public void selectSourceObject(String sourceObject) {
 		dropDownOFSourceObjectSelection();
+
 		field.clearAndSetText(SOURCE_FIELD_SEARCH, sourceObject);
 		String fieldNameXpath = String.format(FIELDS_IN_OBJECT, sourceObject);
 		item.click(fieldNameXpath);

@@ -543,7 +543,6 @@
 		 */
 		public Boolean runRule(String ruleName) throws Exception {
 			String ruleId = getRuleId(ruleName);
-			Log.info("headers: "+header.getAllHeaders().toString());
 			result = wa.doPost(API_RULE_RUN + "/" + ruleId, header.getAllHeaders(), "{}");
 			ResponseObject responseObj = RulesUtil.convertToObject(result.getContent());
 			if (!Boolean.valueOf(responseObj.getResult()) || responseObj.getRequestId() == null) {
