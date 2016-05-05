@@ -1,0 +1,80 @@
+{
+  "ruleType": "Custom",
+  "ruleName": "GS-3873-Matrix-Testcase-ID",
+  "ruleDescription": "GS-3873-Matrix-Testcase-ID Desc",
+  "setupRule": {
+    "dataSource": "Matrix",
+    "selectObject": "Object",
+    "setupData": [
+      {
+        "sourceObject": "Object",
+        "showFields": [
+          {
+            "fieldName": "ID",
+            "showAdvancedName": ""
+          },
+          {
+            "fieldName": "CustomDate1",
+            "showAdvancedName": ""
+          },
+          {
+            "fieldName": "PageViews",
+            "showAdvancedName": ""
+          },
+          {
+            "fieldName": "Logins",
+            "showAdvancedName": ""
+          }
+        ],
+        "filterFields": []
+      }
+    ],
+    "advancedLogic": "",
+    "timeIdentifier": "CustomDate1"
+  },
+  "setupActions": [
+    {
+      "actionType": "createCta",
+      "action": {
+        "name": "GS-3873-Testcase-ID-CloseCtaFromSpecificSource-UI",
+        "priority": "Medium",
+        "type": "Expansion",
+        "status": "New",
+        "playbook": "NPS Promoter",
+        "reason": "Product Risk",
+        "ownerField": "Account::Created By ID",
+        "dueDate": "10",
+        "defaultOwner": "weRules",
+        "dueDateType": "Do not skip weekend",
+        "chatterUpdate": "Once",
+        "comments": "@Account::Account Name,@Account::Id,@Account::Percent Auto,@Account::C_Picklist"
+      },
+      "criterias": [
+        {
+          "showField": "Account::Id",
+          "operator": "equals",
+          "field": "field",
+          "value": "Account::Id"
+        },
+        {
+          "showField": "Account::Date Auto",
+          "operator": "less or equal",
+          "field": "value",
+          "value": "Rule Date"
+        },
+        {
+          "showField": "Account::C_Picklist",
+          "operator": "equals",
+          "field": "value",
+          "value": "Pvalue1"
+        },
+        {
+          "showField": "Account::Number Auto",
+          "operator": "greater or equal",
+          "field": "value",
+          "value": "input_10"
+        }
+      ]
+    }
+  ]
+}

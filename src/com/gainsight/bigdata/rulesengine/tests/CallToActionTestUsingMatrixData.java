@@ -202,7 +202,7 @@ public class CallToActionTestUsingMatrixData extends BaseTest {
 
 
     @TestInfo(testCaseIds = { "GS-4257"})
-    @Test()
+    @Test(enabled = false)
     public void testCtaWithUpdateCommentsNeverOption() throws Exception {
         // Creating cta with Low priority
         RulesPojo rulesPojo = mapper.readValue(new File(TEST_DATA_DIR + "GS-4257/GS-4257-Matrix-input.json"), RulesPojo.class);
@@ -267,7 +267,7 @@ public class CallToActionTestUsingMatrixData extends BaseTest {
         }
         //Verifying CS tasks of a CTA for the playbook applied above
         dataETL.execute(mapper.readValue(resolveNameSpace(RULE_JOBS + "CSTasks.txt"), JobInfo.class));
-        JobInfo jobInfo = mapper.readValue(resolveNameSpace(RULE_JOBS + "PlayBookTasks.csv"), JobInfo.class);
+        JobInfo jobInfo = mapper.readValue(resolveNameSpace(RULE_JOBS + "PlayBookTasks.txt"), JobInfo.class);
         CTAAction act = mapper.readValue(upsertJson.getSetupActions().get(0).getAction(), CTAAction.class);
         jobInfo.getExtractionRule().setWhereCondition(" where JBCXM__PlaybookId__r.Name='" + act.getPlaybook() + "'");
         dataETL.execute(jobInfo);
@@ -425,6 +425,8 @@ public class CallToActionTestUsingMatrixData extends BaseTest {
     @Test()
     public void testCtaActionWithDonNotSkipWeekendOption() throws Exception {
         RulesPojo rulesPojo = mapper.readValue(new File(TEST_DATA_DIR + "GS-4261/GS-4261-Matrix-input1.json"), RulesPojo.class);
+        rulesEngineUtil.updateSourceObjectInRule(rulesPojo, collectionName);
+        Log.info("updated input testdata/pojo is " + mapper.writeValueAsString(rulesPojo));
         rulesManagerPage.openRulesManagerPage(rulesManagerPageUrl);
         rulesManagerPage.clickOnAddRule();
         rulesEngineUtil.createRuleFromUi(rulesPojo);
@@ -457,6 +459,8 @@ public class CallToActionTestUsingMatrixData extends BaseTest {
     @Test()
     public void testCtaActionWithSkipAllWeekendsOption() throws Exception {
         RulesPojo rulesPojo = mapper.readValue(new File(TEST_DATA_DIR +"GS-4261/GS-4261-Matrix-input2.json"), RulesPojo.class);
+        rulesEngineUtil.updateSourceObjectInRule(rulesPojo, collectionName);
+        Log.info("updated input testdata/pojo is " + mapper.writeValueAsString(rulesPojo));
         rulesManagerPage.openRulesManagerPage(rulesManagerPageUrl);
         rulesManagerPage.clickOnAddRule();
         rulesEngineUtil.createRuleFromUi(rulesPojo);
@@ -519,32 +523,34 @@ public class CallToActionTestUsingMatrixData extends BaseTest {
         Assert.assertEquals(actualTasks.size(), 12, "Total Number of CSTasks are not matching for the cta's created");
         Log.info("Difference is : " + mapper.writeValueAsString(differenceData));
         Assert.assertEquals(differenceData.size(), 0, "Check the Diff above for which the CS-Tasks are not matching for the cta");
-    }
+    }*/
 
-    @TestInfo(testCaseIds = {"GS-3873", "GS-4185"})
+/*    @TestInfo(testCaseIds = {"GS-3873", "GS-4185"})
     @Test()
     // This testcase handles owner field userlookup and cta token also for create cta action
     public void testCloseCtaFromSpecificSource() throws Exception {
-        RulesPojo rulesPojo = mapper.readValue(new File(Application.basedir + "/testdata/newstack/RulesEngine/RulesUI-TestData/TC32.json"), RulesPojo.class);
+        RulesPojo rulesPojo = mapper.readValue(new File(TEST_DATA_DIR + "GS-4185/GS-4185_3873-Matrix-input.json"), RulesPojo.class);
+        rulesEngineUtil.updateSourceObjectInRule(rulesPojo, collectionName);
+        Log.info("updated input testdata/pojo is " + mapper.writeValueAsString(rulesPojo));
         rulesManagerPage.openRulesManagerPage(rulesManagerPageUrl);
         rulesManagerPage.clickOnAddRule();
         rulesEngineUtil.createRuleFromUi(rulesPojo);
         Assert.assertTrue(rulesUtil.runRule(rulesPojo.getRuleName()), "Rule processing failed, Please check rule execution attachment for more details !");
         //Verifying CS tasks of a CTA for the playbook applied
-        dataETL.execute(mapper.readValue(resolveNameSpace(Application.basedir + "/testdata/newstack/RulesEngine/RulesUI-Jobs/CSTasks.txt"), JobInfo.class));
-        JobInfo jobInfo = mapper.readValue(resolveNameSpace(Application.basedir + "/testdata/newstack/RulesEngine/RulesUI-Jobs/playbookTasks.txt"), JobInfo.class);
+        dataETL.execute(mapper.readValue(resolveNameSpace(RULE_JOBS + "CSTasks.txt"), JobInfo.class));
+        JobInfo jobInfo = mapper.readValue(resolveNameSpace(RULE_JOBS + "playbookTasks.txt"), JobInfo.class);
         CTAAction act = mapper.readValue(rulesPojo.getSetupActions().get(0).getAction(), CTAAction.class);
         jobInfo.getExtractionRule().setWhereCondition(" where JBCXM__PlaybookId__r.Name='" + act.getPlaybook() + "'");
         dataETL.execute(jobInfo);
-        List<Map<String, String>> expectedTasks = Comparator.getParsedCsvDataWithHeaderNamespaceResolved(Application.basedir + "/testdata/newstack/RulesEngine/RulesUI_ExpectedData/PlayBookTasks.csv");
-        List<Map<String, String>> actualTasks = Comparator.getParsedCsvDataWithHeaderNamespaceResolved(Application.basedir + "/testdata/newstack/RulesEngine/RulesUI_ExpectedData/CSTasks.csv");
+        List<Map<String, String>> expectedTasks = Comparator.getParsedCsvDataWithHeaderNamespaceResolved(EXPECTED_UI_TESTDATA_DIR + "PlayBookTasks.csv");
+        List<Map<String, String>> actualTasks = Comparator.getParsedCsvDataWithHeaderNamespaceResolved(EXPECTED_UI_TESTDATA_DIR + "CSTasks.csv");
         List<Map<String, String>> differenceData = Comparator.compareListData(expectedTasks, actualTasks);
         Assert.assertEquals(actualTasks.size(), 9, "Total Number of CSTasks are not matching for the cta's created");
         Log.info("Difference is : " + mapper.writeValueAsString(differenceData));
         Assert.assertEquals(differenceData.size(), 0, "Check the Diff above for which the CS-Tasks are not matching for the cta");
         //   Again Editing same cta, since scenario is to create close cta action for the cta which is already existing
         rulesManagerPage.openRulesManagerPage(rulesManagerPageUrl);
-        RulesPojo closeCtaPojo = mapper.readValue(new File(Application.basedir + "/testdata/newstack/RulesEngine/RulesUI-TestData/TC32-CloseCta.json"), RulesPojo.class);
+        RulesPojo closeCtaPojo = mapper.readValue(new File(TEST_DATA_DIR + "GS-4185/GS-4185_3873-Matrix-CloseCTA-input.json"), RulesPojo.class);
         CloseCtaAction closeCtaAction = null;
         if (closeCtaPojo.getSetupActions().get(0).getActionType().name().contains("CloseCTA")) {
             JsonNode actionObject = closeCtaPojo.getSetupActions().get(0).getAction();
@@ -559,8 +565,8 @@ public class CallToActionTestUsingMatrixData extends BaseTest {
             SObject[] records = sfdc.getRecords(resolveStrNameSpace("select Id,Name from Account where"));
             int srcObjRecCount = records.length;
             Assert.assertEquals(srcObjRecCount, sfdc.getRecordCount(resolveStrNameSpace(("select id, name FROM JBCXM__CTA__c where Name='" + ctaAction.getName() + "' and  JBCXM__Source__c='Rules' and JBCXM__ClosedDate__c!=null and isdeleted=false"))));
-           */
-/* String names = getAccountNamesAsStringFromAccountObject(records, "Name", null, false);
+
+             String names = "";
             String query = resolveStrNameSpace("SELECT Id,Name,JBCXM__Account__r.Name,JBCXM__Account__r.Id,JBCXM__Comments__c,JBCXM__Account__r.C_Picklist__c," + "JBCXM__Account__r.Percent_Auto__c FROM JBCXM__CTA__c where JBCXM__Account__r.Name in (" + names + ") and isDeleted=false");
             Log.info("****Inside cta*** query: "+query);
             SObject[] ctarecords = sfdc.getRecords(query);
@@ -573,11 +579,11 @@ public class CallToActionTestUsingMatrixData extends BaseTest {
                 Log.info("Actual comment:"+actualTokenComments);
                 // Asserting both create cta and close cta comments
                 Assert.assertEquals(ctaComment, actualTokenComments + "\n" + "\n" + actualTokenComments);
-            }*//*
+            }
 
         }
-    }
-*/
+    }*/
+
 
 
 }
