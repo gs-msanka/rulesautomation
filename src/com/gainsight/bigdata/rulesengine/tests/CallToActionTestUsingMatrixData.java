@@ -186,7 +186,8 @@ public class CallToActionTestUsingMatrixData extends BaseTest {
             rulesEngineUtil.createRuleFromUi(CTA_Upsert);
             Assert.assertTrue(rulesUtil.runRule(CTA_Upsert.getRuleName()), "Rule processing failed, Please check rule execution attachment for more details !");
             Assert.assertTrue(rulesUtil.isCTACreateSuccessfully("High", ctaAction3.getStatus(), sfdcInfo.getUserId(), ctaAction3.getType(), ctaAction3.getReason(),ctaAction.getComments()+ "\n" + "\n" + ctaAction2.getComments()+ "\n" + "\n" + ctaAction3.getComments(), ctaAction3.getName(), ctaAction3.getPlaybook()), "verify whether cta action configured resulted correct cta or not");
-            Assert.assertEquals(sfdc.getRecordCount(resolveStrNameSpace(("select id, name FROM JBCXM__CTA__c where Name='" + ctaAction3.getName() + "' and JBCXM__Source__c='Rules' and isdeleted=false"))), srcObjRecCount ,"No.of accounts for which cta's should be created is not matching");        }
+            Assert.assertEquals(sfdc.getRecordCount(resolveStrNameSpace(("select id, name FROM JBCXM__CTA__c where Name='" + ctaAction3.getName() + "' and JBCXM__Source__c='Rules' and isdeleted=false"))), srcObjRecCount ,"No.of accounts for which cta's should be created is not matching");
+        }
         //Verifying CS tasks of a CTA for the playbook applied
         dataETL.execute(mapper.readValue(resolveNameSpace(RULE_JOBS + "CSTasks.txt"), JobInfo.class));
         JobInfo jobInfo1 = mapper.readValue(resolveNameSpace(RULE_JOBS + "playbookTasks.txt"), JobInfo.class);
@@ -200,7 +201,7 @@ public class CallToActionTestUsingMatrixData extends BaseTest {
         Log.info("Difference is : " + mapper.writeValueAsString(differenceData1));
         Assert.assertEquals(differenceData1.size(), 0, "Check the Diff above for which the CS-Tasks are not matching for the cta");
     }
-/*
+
 
     @TestInfo(testCaseIds = { "GS-4257"})
     @Test(enabled = false)
@@ -419,7 +420,7 @@ public class CallToActionTestUsingMatrixData extends BaseTest {
         Assert.assertEquals(differenceData2.size(), 0, "Check the Diff above for which the CS-Tasks are not matching for the cta");
     }
 
-    @TestInfo(testCaseIds = {"GS-4261"})
+  /*  @TestInfo(testCaseIds = {"GS-4261"})
     @Test()
     public void testCtaActionWithDonNotSkipWeekendOption() throws Exception {
         RulesPojo rulesPojo = mapper.readValue(new File(TEST_DATA_DIR + "GS-4261/GS-4261-Matrix-input1.json"), RulesPojo.class);
