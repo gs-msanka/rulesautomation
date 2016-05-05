@@ -434,6 +434,7 @@ public class CallToActionTestUsingMatrixData extends BaseTest {
         JsonNode action = rulesPojo.getSetupActions().get(0).getAction();
         CTAAction ctaAction = mapper.readValue(action, CTAAction.class);
         Assert.assertTrue(rulesUtil.isCTACreateSuccessfully(ctaAction.getPriority(), ctaAction.getStatus(), sfdcInfo.getUserId(), ctaAction.getType(), ctaAction.getReason(), ctaAction.getComments(), ctaAction.getName(), ctaAction.getPlaybook()), "verify whether cta action configured resulted correct cta or not");
+        DateUtil.timeZone = userTimezone;
         String date = DateUtil.getDateWithRequiredFormat(Integer.valueOf(ctaAction.getDueDate()), 0, "yyyy-MM-dd");
         Log.info("Duedate is " + date);
         SObject[] objRecords = sfdc.getRecords(resolveStrNameSpace("SELECT Id,Name,JBCXM__DueDate__c FROM JBCXM__CTA__c  where isdeleted=false"));
@@ -450,7 +451,7 @@ public class CallToActionTestUsingMatrixData extends BaseTest {
         List<Map<String, String>> expectedTasks = Comparator.getParsedCsvDataWithHeaderNamespaceResolved(EXPECTED_UI_TESTDATA_DIR + "PlayBookTasks.csv");
         List<Map<String, String>> actualTasks = Comparator.getParsedCsvDataWithHeaderNamespaceResolved(EXPECTED_UI_TESTDATA_DIR + "CSTasks.csv");
         List<Map<String, String>> differenceData = Comparator.compareListData(expectedTasks, actualTasks);
-        Assert.assertEquals(actualTasks.size(), 12, "Total Number of CSTasks are not matching for the cta's created");
+        Assert.assertEquals(actualTasks.size(), 6, "Total Number of CSTasks are not matching for the cta's created");
         Log.info("Difference is : " + mapper.writeValueAsString(differenceData));
         Assert.assertEquals(differenceData.size(), 0, "Check the Diff above for which the CS-Tasks are not matching for the cta");
     }
@@ -488,7 +489,7 @@ public class CallToActionTestUsingMatrixData extends BaseTest {
         List<Map<String, String>> expectedTasks = Comparator.getParsedCsvDataWithHeaderNamespaceResolved(EXPECTED_UI_TESTDATA_DIR + "PlayBookTasks.csv");
         List<Map<String, String>> actualTasks = Comparator.getParsedCsvDataWithHeaderNamespaceResolved(EXPECTED_UI_TESTDATA_DIR + "CSTasks.csv");
         List<Map<String, String>> differenceData = Comparator.compareListData(expectedTasks, actualTasks);
-        Assert.assertEquals(actualTasks.size(), 12, "Total Number of CSTasks are not matching for the cta's created");
+        Assert.assertEquals(actualTasks.size(), 6, "Total Number of CSTasks are not matching for the cta's created");
         Log.info("Difference is : " + mapper.writeValueAsString(differenceData));
         Assert.assertEquals(differenceData.size(), 0, "Check the Diff above for which the CS-Tasks are not matching for the cta");
     }
@@ -522,7 +523,7 @@ public class CallToActionTestUsingMatrixData extends BaseTest {
         List<Map<String, String>> expectedTasks = Comparator.getParsedCsvDataWithHeaderNamespaceResolved(EXPECTED_UI_TESTDATA_DIR + "PlayBookTasks.csv");
         List<Map<String, String>> actualTasks = Comparator.getParsedCsvDataWithHeaderNamespaceResolved(EXPECTED_UI_TESTDATA_DIR +"CSTasks.csv");
         List<Map<String, String>> differenceData = Comparator.compareListData(expectedTasks, actualTasks);
-        Assert.assertEquals(actualTasks.size(), 12, "Total Number of CSTasks are not matching for the cta's created");
+        Assert.assertEquals(actualTasks.size(), 6, "Total Number of CSTasks are not matching for the cta's created");
         Log.info("Difference is : " + mapper.writeValueAsString(differenceData));
         Assert.assertEquals(differenceData.size(), 0, "Check the Diff above for which the CS-Tasks are not matching for the cta");
     }
