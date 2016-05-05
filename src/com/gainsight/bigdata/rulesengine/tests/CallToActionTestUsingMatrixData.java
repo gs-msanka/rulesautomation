@@ -13,6 +13,7 @@ import com.gainsight.bigdata.rulesengine.util.MDACollectionCreator;
 import com.gainsight.bigdata.rulesengine.util.RulesEngineUtil;
 import com.gainsight.bigdata.tenantManagement.apiImpl.TenantManager;
 import com.gainsight.bigdata.tenantManagement.pojos.TenantDetails;
+import com.gainsight.http.Header;
 import com.gainsight.sfdc.tests.BaseTest;
 import com.gainsight.sfdc.util.DateUtil;
 import com.gainsight.sfdc.util.datagen.DataETL;
@@ -73,22 +74,8 @@ public class CallToActionTestUsingMatrixData extends BaseTest {
     @BeforeClass
     @Parameters("dbStoreType")
     public void setUp(@Optional("Redshift") String dbStoreType) throws Exception {
-        nsTestBase.sfdc = sfdc;
-        nsTestBase.header = header;
-        rulesManagerPageUrl = visualForcePageUrl + "Rulesmanager";
-        rulesManagerPage = new RulesManagerPage();
+        nsTestBase.init();
         tenantManager = new TenantManager();
-        ExecutorService executors = Executors.newFixedThreadPool(4);
-        Future<String> task = null;
-        boolean isLoadTestDataGlobally = true;
-        if (isLoadTestDataGlobally) {
-            dataETL.execute(mapper.readValue(resolveNameSpace(GLOBAL_TEST_DATA_DIR + "DataLoadJobMatrixCTA.txt"),JobInfo.class));
-            JobInfo loadTransform = mapper.readValue((new FileReader(GLOBAL_TEST_DATA_DIR + "DataloadJob.txt")), JobInfo.class);
-            File dataFile = FileProcessor.getDateProcessedFile(loadTransform, date);
-            String[] validFields = new String[] { "ID", "AccountName", "CustomDate1", "PageViews", "Logins", "Description"};
-            task = executors.submit(new MDACollectionCreator("CollectionSchemaForCTA.json", dbStoreType, dataFile, validFields));
-        }
-        sfdc.runApexCode(resolveStrNameSpace("Delete [SELECT Id FROM JBCXM__ActionTemplates__c];"));
         String tenantId = tenantManager.getTenantDetail(sfdc.fetchSFDCinfo().getOrg(), null).getTenantId();
         tenantDetails = tenantManager.getTenantDetail(null, tenantId);
         if (StringUtils.isNotBlank(dbStoreType) && dbStoreType.equalsIgnoreCase("Mongo")) {
@@ -102,6 +89,20 @@ public class CallToActionTestUsingMatrixData extends BaseTest {
                 assertTrue(tenantManager.enabledRedShiftWithDBDetails(tenantDetails), "Failed updating dataStoreType to Redshift");
             }
         }
+
+        ExecutorService executors = Executors.newFixedThreadPool(4);
+        Future<String> task = null;
+        boolean isLoadTestDataGlobally = true;
+        if (isLoadTestDataGlobally) {
+            dataETL.execute(mapper.readValue(resolveNameSpace(GLOBAL_TEST_DATA_DIR + "DataLoadJobMatrixCTA.txt"),JobInfo.class));
+            JobInfo loadTransform = mapper.readValue((new FileReader(GLOBAL_TEST_DATA_DIR + "DataloadJob.txt")), JobInfo.class);
+            File dataFile = FileProcessor.getDateProcessedFile(loadTransform, date);
+            String[] validFields = new String[] { "ID", "AccountName", "CustomDate1", "PageViews", "Logins", "Description"};
+            task = executors.submit(new MDACollectionCreator("CollectionSchemaForCTA.json", dbStoreType, dataFile, validFields));
+        }
+        sfdc.runApexCode(resolveStrNameSpace("Delete [SELECT Id FROM JBCXM__ActionTemplates__c];"));
+        rulesManagerPageUrl = visualForcePageUrl + "Rulesmanager";
+        rulesManagerPage = new RulesManagerPage();
         rulesUtil.populateObjMaps();
         sfdc.runApexCode(getNameSpaceResolvedFileContents(CREATE_ACCOUNTS_CUSTOMERS));
         this.collectionName = task.get();

@@ -352,4 +352,17 @@ public class NSTestBase {
             throw e;
         }
     }
+
+    public static void setGSHeaders(){
+
+        header = new Header();
+        sfinfo = sfdc.fetchSFDCinfo();
+
+        header.addHeader("Origin", sfinfo.getEndpoint());
+        header.addHeader("Content-Type", "application/json");
+        header.addHeader("appOrgId", sfinfo.getOrg());
+        header.addHeader("appUserId", sfinfo.getUserId());
+        header.addHeader("appSessionId", sfinfo.getSessionId());
+        System.out.print("headers:"+header.getAllHeaders().get(0));
+    }
 }
