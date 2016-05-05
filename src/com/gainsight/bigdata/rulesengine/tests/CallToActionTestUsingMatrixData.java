@@ -74,10 +74,12 @@ public class CallToActionTestUsingMatrixData extends BaseTest {
     @BeforeClass
     @Parameters("dbStoreType")
     public void setUp(@Optional("Redshift") String dbStoreType) throws Exception {
-        nsTestBase.init();
+        nsTestBase.sfdc = sfdc;
+        nsTestBase.setGSHeaders();
         tenantManager = new TenantManager();
         String tenantId = tenantManager.getTenantDetail(sfdc.fetchSFDCinfo().getOrg(), null).getTenantId();
         tenantDetails = tenantManager.getTenantDetail(null, tenantId);
+        sfdc.runApexCode(getNameSpaceResolvedFileContents(CREATE_ACCOUNTS_CUSTOMERS));
         if (StringUtils.isNotBlank(dbStoreType) && dbStoreType.equalsIgnoreCase("Mongo")) {
             if(tenantDetails.isRedshiftEnabled()){
                 mongoDBDAO = MongoDBDAO.getGlobalMongoDBDAOInstance();
@@ -89,7 +91,6 @@ public class CallToActionTestUsingMatrixData extends BaseTest {
                 assertTrue(tenantManager.enabledRedShiftWithDBDetails(tenantDetails), "Failed updating dataStoreType to Redshift");
             }
         }
-
         ExecutorService executors = Executors.newFixedThreadPool(4);
         Future<String> task = null;
         boolean isLoadTestDataGlobally = true;
@@ -104,7 +105,7 @@ public class CallToActionTestUsingMatrixData extends BaseTest {
         rulesManagerPageUrl = visualForcePageUrl + "Rulesmanager";
         rulesManagerPage = new RulesManagerPage();
         rulesUtil.populateObjMaps();
-        sfdc.runApexCode(getNameSpaceResolvedFileContents(CREATE_ACCOUNTS_CUSTOMERS));
+
         this.collectionName = task.get();
         assertTrue(StringUtils.isNotBlank(this.collectionName),"Collection name can not be Blank;");
     }
