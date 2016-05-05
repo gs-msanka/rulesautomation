@@ -528,7 +528,7 @@ public class CallToActionTestUsingMatrixData extends BaseTest {
     }
 
     @TestInfo(testCaseIds = {"GS-3873", "GS-4185"})
-    @Test()
+    @Test(enabled = false)
     // This testcase handles owner field userlookup and cta token also for create cta action
     public void testCloseCtaFromSpecificSource() throws Exception {
         RulesPojo rulesPojo = mapper.readValue(new File(TEST_DATA_DIR + "GS-4185/GS-4185_3873-Matrix-input.json"), RulesPojo.class);
