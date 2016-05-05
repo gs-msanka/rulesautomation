@@ -105,7 +105,6 @@ public class CallToActionTestUsingMatrixData extends BaseTest {
         rulesManagerPageUrl = visualForcePageUrl + "Rulesmanager";
         rulesManagerPage = new RulesManagerPage();
         rulesUtil.populateObjMaps();
-
         this.collectionName = task.get();
         assertTrue(StringUtils.isNotBlank(this.collectionName),"Collection name can not be Blank;");
     }
@@ -203,7 +202,7 @@ public class CallToActionTestUsingMatrixData extends BaseTest {
 
 
     @TestInfo(testCaseIds = { "GS-4257"})
-    @Test(enabled = false)
+    @Test()
     public void testCtaWithUpdateCommentsNeverOption() throws Exception {
         // Creating cta with Low priority
         RulesPojo rulesPojo = mapper.readValue(new File(TEST_DATA_DIR + "GS-4257/GS-4257-Matrix-input.json"), RulesPojo.class);
@@ -238,9 +237,10 @@ public class CallToActionTestUsingMatrixData extends BaseTest {
     @TestInfo(testCaseIds = {"GS-4258"})
     @Test()
     public void testCtaWithAddOrReplacePlaybook() throws Exception {
-        SetupRuleActionPage setupRuleActionPage = new SetupRuleActionPage();
         // Creating cta with no playbook
         RulesPojo rulesPojo = mapper.readValue(new File(TEST_DATA_DIR + "GS-4258/GS-4258-Matrix-input.json"), RulesPojo.class);
+        rulesEngineUtil.updateSourceObjectInRule(rulesPojo, collectionName);
+        Log.info("updated input testdata/pojo is " + mapper.writeValueAsString(rulesPojo));
         rulesManagerPage.openRulesManagerPage(rulesManagerPageUrl);
         rulesManagerPage.clickOnAddRule();
         rulesEngineUtil.createRuleFromUi(rulesPojo);
@@ -304,8 +304,9 @@ public class CallToActionTestUsingMatrixData extends BaseTest {
     @TestInfo(testCaseIds = {"GS-6247"})
     @Test()
     public void testCtaWithRuleNameChangeOption() throws Exception {
-        SetupRuleActionPage setupRuleActionPage = new SetupRuleActionPage();
         RulesPojo rulesPojo = mapper.readValue(new File(TEST_DATA_DIR + "GS-6247/GS-6247-Matrix-input.json"), RulesPojo.class);
+        rulesEngineUtil.updateSourceObjectInRule(rulesPojo, collectionName);
+        Log.info("updated input testdata/pojo is " + mapper.writeValueAsString(rulesPojo));
         rulesManagerPage.openRulesManagerPage(rulesManagerPageUrl);
         rulesManagerPage.clickOnAddRule();
         rulesEngineUtil.createRuleFromUi(rulesPojo);
@@ -363,8 +364,10 @@ public class CallToActionTestUsingMatrixData extends BaseTest {
     @TestInfo(testCaseIds = {"GS-4264"})
     @Test()
     public void testCtaUpsertWithSnoozeOption() throws Exception {
-        SetupRuleActionPage setupRuleActionPage = new SetupRuleActionPage();
+
         RulesPojo rulesPojo = mapper.readValue(new File(TEST_DATA_DIR + "GS-4264/GS-4264-Matrix-input.json"), RulesPojo.class);
+        rulesEngineUtil.updateSourceObjectInRule(rulesPojo, collectionName);
+        Log.info("updated input testdata/pojo is " + mapper.writeValueAsString(rulesPojo));
         rulesManagerPage.openRulesManagerPage(rulesManagerPageUrl);
         rulesManagerPage.clickOnAddRule();
         rulesEngineUtil.createRuleFromUi(rulesPojo);

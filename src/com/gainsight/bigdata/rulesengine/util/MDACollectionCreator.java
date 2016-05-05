@@ -10,6 +10,9 @@ import com.gainsight.bigdata.util.CollectionUtil;
 import com.gainsight.sfdc.tests.BaseTest;
 import com.gainsight.testdriver.Application;
 import com.gainsight.testdriver.Log;
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.pdfbox.util.StringUtil;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.testng.Assert;
 
@@ -26,11 +29,11 @@ public class MDACollectionCreator implements Callable<String> {
     private static final String GLOBAL_TEST_DATA_DIR = Application.basedir+ "/testdata/newstack/RulesEngine/RulesUI-TestData/GlobalTestData/";
     ObjectMapper mapper;
     File dataFile = null;
-    String dbStoreType;
+    String dbStoreType = null;
     String collectionSchemaFile;
     String[] validFields;
     GSDataImpl gsDataImpl = null;
-    String collectionName= null;
+    String collectionName= "Collection";
 
     public MDACollectionCreator(){
         mapper = new ObjectMapper();
@@ -40,6 +43,9 @@ public class MDACollectionCreator implements Callable<String> {
 
     public MDACollectionCreator(String collectionSchemaFile, String dbStoreType, File dataFile, String[] validFields){
         this();
+        if(StringUtils.isBlank(collectionSchemaFile)){
+            throw  new IllegalArgumentException("collectionSchemaFile is mandatory to Create Collection");
+        }
         this.collectionSchemaFile = GLOBAL_TEST_DATA_DIR  + collectionSchemaFile;
         this.dbStoreType = dbStoreType;
         this.dataFile = dataFile;
@@ -57,10 +63,15 @@ public class MDACollectionCreator implements Callable<String> {
         Assert.assertNotNull(collectionId, "Collection ID should not be null.");
         CollectionInfo actualCollectionInfo = gsDataImpl.getCollectionMaster(collectionId);
         collectionName = actualCollectionInfo.getCollectionDetails().getCollectionName();
-        DataLoadMetadata metadata = CollectionUtil.getDBDataLoadMetaData(actualCollectionInfo, this.validFields,	DataLoadOperationType.INSERT);
-        Assert.assertTrue(gsDataImpl.isValidDataProvided(mapper.writeValueAsString(metadata), dataFile), "Data is not valid");
-        NsResponseObj nsResponseObj = gsDataImpl.loadDataToMDA(mapper.writeValueAsString(metadata), dataFile);
-        Assert.assertTrue(nsResponseObj.isResult(), "Data is not loaded, please check log for more details");
+        Log.info("Successfully created MDA collection: "+collectionName);
+        if(dataFile != null){
+            Log.info("Started Loading data into MDA collection: "+collectionName);
+            DataLoadMetadata metadata = CollectionUtil.getDBDataLoadMetaData(actualCollectionInfo, this.validFields,	DataLoadOperationType.INSERT);
+            Assert.assertTrue(gsDataImpl.isValidDataProvided(mapper.writeValueAsString(metadata), dataFile), "Data is not valid");
+            NsResponseObj nsResponseObj = gsDataImpl.loadDataToMDA(mapper.writeValueAsString(metadata), dataFile);
+            Assert.assertTrue(nsResponseObj.isResult(), "Data is not loaded, please check log for more details");
+        }
+        Log.info("Skipping dataLoad into collection as the dataFile is empty");
         return collectionName;
     }
 }
