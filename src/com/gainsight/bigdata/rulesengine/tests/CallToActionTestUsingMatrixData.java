@@ -546,7 +546,7 @@ public class CallToActionTestUsingMatrixData extends BaseTest {
         List<Map<String, String>> expectedTasks = Comparator.getParsedCsvDataWithHeaderNamespaceResolved(EXPECTED_UI_TESTDATA_DIR + "PlayBookTasks.csv");
         List<Map<String, String>> actualTasks = Comparator.getParsedCsvDataWithHeaderNamespaceResolved(EXPECTED_UI_TESTDATA_DIR + "CSTasks.csv");
         List<Map<String, String>> differenceData = Comparator.compareListData(expectedTasks, actualTasks);
-        Assert.assertEquals(actualTasks.size(), 12, "Total Number of CSTasks are not matching for the cta's created");
+        Assert.assertEquals(actualTasks.size(), 6, "Total Number of CSTasks are not matching for the cta's created");
         Log.info("Difference is : " + mapper.writeValueAsString(differenceData));
         Assert.assertEquals(differenceData.size(), 0, "Check the Diff above for which the CS-Tasks are not matching for the cta");
         //   Again Editing same cta, since scenario is to create close cta action for the cta which is already existing
