@@ -1,7 +1,7 @@
 {
   "ruleType": "Custom",
-  "ruleName": "GS-3873-Matrix-Testcase-ID",
-  "ruleDescription": "GS-3873-Matrix-Testcase-ID Desc",
+  "ruleName": "GS-3874-Testcase-ID-CloseCtaFromAllSources",
+  "ruleDescription": "GS-3874-Testcase-ID-CloseCtaFromAllSources Desc",
   "setupRule": {
     "dataSource": "Matrix",
     "selectObject": "Object",
@@ -36,7 +36,7 @@
     {
       "actionType": "createCta",
       "action": {
-        "name": "GS-3873-Testcase-ID-CloseCtaFromSpecificSource-UI",
+        "name": "GS-3874-Testcase-ID-CloseCtaFromAllSources-UI",
         "priority": "Medium",
         "type": "Expansion",
         "status": "New",
@@ -47,7 +47,7 @@
         "defaultOwner": "weRules",
         "dueDateType": "Do not skip weekend",
         "chatterUpdate": "Once",
-        "comments": "@Account::Account Name,@Account::Id"
+        "comments": "These are test comments for CTA"
       },
       "criterias": [
         {
