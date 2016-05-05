@@ -357,7 +357,7 @@ public class NSTestBase {
 
         header = new Header();
         sfinfo = sfdc.fetchSFDCinfo();
-
+        wa = new WebAction();
         header.addHeader("Origin", sfinfo.getEndpoint());
         header.addHeader("Content-Type", "application/json");
         header.addHeader("appOrgId", sfinfo.getOrg());
