@@ -235,7 +235,7 @@ public class CallToActionTestUsingMatrixData extends BaseTest {
     }
 
     @TestInfo(testCaseIds = {"GS-4258"})
-    @Test()
+    @Test(enabled = false)
     public void testCtaWithAddOrReplacePlaybook() throws Exception {
         // Creating cta with no playbook
         RulesPojo rulesPojo = mapper.readValue(new File(TEST_DATA_DIR + "GS-4258/GS-4258-Matrix-input.json"), RulesPojo.class);
@@ -301,7 +301,7 @@ public class CallToActionTestUsingMatrixData extends BaseTest {
         Assert.assertEquals(differenceData1.size(), 0, "Check the Diff above for which the CS-Tasks are not matching for the cta");
     }
 
-    @TestInfo(testCaseIds = {"GS-6247"})
+    /*@TestInfo(testCaseIds = {"GS-6247"})
     @Test()
     public void testCtaWithRuleNameChangeOption() throws Exception {
         RulesPojo rulesPojo = mapper.readValue(new File(TEST_DATA_DIR + "GS-6247/GS-6247-Matrix-input.json"), RulesPojo.class);
@@ -359,7 +359,7 @@ public class CallToActionTestUsingMatrixData extends BaseTest {
         Log.info("Difference is : " + mapper.writeValueAsString(differenceData1));
         Assert.assertEquals(differenceData1.size(), 0, "Check the Diff above for which the CS-Tasks are not matching for the cta");
     }
-
+*/
 
    /* @TestInfo(testCaseIds = {"GS-4264"})
     @Test()
@@ -421,7 +421,7 @@ public class CallToActionTestUsingMatrixData extends BaseTest {
         Assert.assertEquals(differenceData2.size(), 0, "Check the Diff above for which the CS-Tasks are not matching for the cta");
     }*/
 
-  /*  @TestInfo(testCaseIds = {"GS-4261"})
+    @TestInfo(testCaseIds = {"GS-4261"})
     @Test()
     public void testCtaActionWithDonNotSkipWeekendOption() throws Exception {
         RulesPojo rulesPojo = mapper.readValue(new File(TEST_DATA_DIR + "GS-4261/GS-4261-Matrix-input1.json"), RulesPojo.class);
@@ -523,9 +523,9 @@ public class CallToActionTestUsingMatrixData extends BaseTest {
         Assert.assertEquals(actualTasks.size(), 12, "Total Number of CSTasks are not matching for the cta's created");
         Log.info("Difference is : " + mapper.writeValueAsString(differenceData));
         Assert.assertEquals(differenceData.size(), 0, "Check the Diff above for which the CS-Tasks are not matching for the cta");
-    }*/
+    }
 
-   /* @TestInfo(testCaseIds = {"GS-3873", "GS-4185"})
+    @TestInfo(testCaseIds = {"GS-3873", "GS-4185"})
     @Test()
     // This testcase handles owner field userlookup and cta token also for create cta action
     public void testCloseCtaFromSpecificSource() throws Exception {
@@ -542,10 +542,11 @@ public class CallToActionTestUsingMatrixData extends BaseTest {
         CTAAction act = mapper.readValue(rulesPojo.getSetupActions().get(0).getAction(), CTAAction.class);
         jobInfo.getExtractionRule().setWhereCondition(" where JBCXM__PlaybookId__r.Name='" + act.getPlaybook() + "'");
         dataETL.execute(jobInfo);
+
         List<Map<String, String>> expectedTasks = Comparator.getParsedCsvDataWithHeaderNamespaceResolved(EXPECTED_UI_TESTDATA_DIR + "PlayBookTasks.csv");
         List<Map<String, String>> actualTasks = Comparator.getParsedCsvDataWithHeaderNamespaceResolved(EXPECTED_UI_TESTDATA_DIR + "CSTasks.csv");
         List<Map<String, String>> differenceData = Comparator.compareListData(expectedTasks, actualTasks);
-        Assert.assertEquals(actualTasks.size(), 9, "Total Number of CSTasks are not matching for the cta's created");
+        Assert.assertEquals(actualTasks.size(), 12, "Total Number of CSTasks are not matching for the cta's created");
         Log.info("Difference is : " + mapper.writeValueAsString(differenceData));
         Assert.assertEquals(differenceData.size(), 0, "Check the Diff above for which the CS-Tasks are not matching for the cta");
         //   Again Editing same cta, since scenario is to create close cta action for the cta which is already existing
@@ -560,29 +561,32 @@ public class CallToActionTestUsingMatrixData extends BaseTest {
             Assert.assertTrue(rulesUtil.runRule(closeCtaPojo.getRuleName()), "Rule processing failed, Please check rule execution attachment for more details !");
             Assert.assertTrue(rulesUtil.isCTAclosedSuccessfully(closeCtaAction), "check cta is closed with correct parammers or not");
             CTAAction ctaAction = mapper.readValue(closeCtaPojo.getSetupActions().get(0).getAction(), CTAAction.class);
-            SetupRuleActionPage setupRuleActionPage = new SetupRuleActionPage();
             dataETL.execute(mapper.readValue(resolveNameSpace(TEST_DATA_DIR + "GS-4185/CTA-ExpectedJob.txt"),JobInfo.class));
-            SObject[] records = sfdc.getRecords(resolveStrNameSpace("select Id,Name from Account where"));
-            int srcObjRecCount = records.length;
+            List<Map<String, String>> filteredAccounts = Comparator.getParsedCsvDataWithHeaderNamespaceResolved(TEST_DATA_DIR + "GS-4185/ExpectedData.csv");
+            int srcObjRecCount = filteredAccounts.size();
             Assert.assertEquals(srcObjRecCount, sfdc.getRecordCount(resolveStrNameSpace(("select id, name FROM JBCXM__CTA__c where Name='" + ctaAction.getName() + "' and  JBCXM__Source__c='Rules' and JBCXM__ClosedDate__c!=null and isdeleted=false"))));
 
-             String names = "";
-            String query = resolveStrNameSpace("SELECT Id,Name,JBCXM__Account__r.Name,JBCXM__Account__r.Id,JBCXM__Comments__c,JBCXM__Account__r.C_Picklist__c," + "JBCXM__Account__r.Percent_Auto__c FROM JBCXM__CTA__c where JBCXM__Account__r.Name in (" + names + ") and isDeleted=false");
-            Log.info("****Inside cta*** query: "+query);
+            String names = "";
+            for(Map<String, String> namesMap : filteredAccounts){
+                names = "'" + namesMap.get("AccountName") + "',";
+            }
+            names = names.substring(0 , names.length()-1);
+            String query = resolveStrNameSpace("SELECT Id,Name,JBCXM__Account__r.Name,JBCXM__Account__r.Id,JBCXM__Comments__c," + "FROM JBCXM__CTA__c where JBCXM__Account__r.Name in (" + names + ") and isDeleted=false");
+            Log.info("Resolved query: "+query);
             SObject[] ctarecords = sfdc.getRecords(query);
             Log.debug("CTA Records: "+Arrays.toString(ctarecords));
             // Since UI names and API names are different, writing a common util will be error prone always.
             for (SObject tokenRecords : ctarecords) {
                 String ctaComment = (String) tokenRecords.getField(resolveStrNameSpace("JBCXM__Comments__c"));
                 Log.info("Expected comment:"+ctaComment);
-                String actualTokenComments = (String) tokenRecords.getChild((resolveStrNameSpace("JBCXM__Account__r"))).getChild("Name").getValue() + tokenRecords.getChild(resolveStrNameSpace("JBCXM__Account__r")).getChild("Id").getValue() + tokenRecords.getChild(resolveStrNameSpace("JBCXM__Account__r")).getChild("Percent_Auto__c").getValue() + tokenRecords.getChild(resolveStrNameSpace("JBCXM__Account__r")).getChild("C_Picklist__c").getValue();
+                String actualTokenComments = (String) tokenRecords.getChild((resolveStrNameSpace("JBCXM__Account__r"))).getChild("Name").getValue() + tokenRecords.getChild(resolveStrNameSpace("JBCXM__Account__r")).getChild("Id").getValue();
                 Log.info("Actual comment:"+actualTokenComments);
                 // Asserting both create cta and close cta comments
                 Assert.assertEquals(ctaComment, actualTokenComments + "\n" + "\n" + actualTokenComments);
             }
 
         }
-    }*/
+    }
 
 
 

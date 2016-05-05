@@ -47,32 +47,20 @@
         "defaultOwner": "weRules",
         "dueDateType": "Do not skip weekend",
         "chatterUpdate": "Once",
-        "comments": "@Account::Account Name,@Account::Id,@Account::Percent Auto,@Account::C_Picklist"
+        "comments": "@Account::Account Name,@Account::Id"
       },
       "criterias": [
         {
-          "showField": "Account::Id",
-          "operator": "equals",
-          "field": "field",
-          "value": "Account::Id"
-        },
-        {
-          "showField": "Account::Date Auto",
+          "showField": "PageViews",
           "operator": "less or equal",
           "field": "value",
-          "value": "Rule Date"
+          "value": "input_750"
         },
         {
-          "showField": "Account::C_Picklist",
-          "operator": "equals",
-          "field": "value",
-          "value": "Pvalue1"
-        },
-        {
-          "showField": "Account::Number Auto",
+          "showField": "Logins",
           "operator": "greater or equal",
           "field": "value",
-          "value": "input_10"
+          "value": "input_30"
         }
       ]
     }

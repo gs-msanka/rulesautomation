@@ -12,7 +12,7 @@
         "source": "Rules",
         "setCtaStatusTo": "Closed No Action",
         "reason": "Product Risk",
-        "comments": "@Account::Account Name,@Account::Id,@Account::Percent Auto,@Account::C_Picklist"
+        "comments": "@Account::Account Name,@Account::Id"
       }
     }
   ]
