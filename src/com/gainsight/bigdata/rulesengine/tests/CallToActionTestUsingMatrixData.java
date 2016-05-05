@@ -267,7 +267,7 @@ public class CallToActionTestUsingMatrixData extends BaseTest {
         }
         //Verifying CS tasks of a CTA for the playbook applied above
         dataETL.execute(mapper.readValue(resolveNameSpace(RULE_JOBS + "CSTasks.txt"), JobInfo.class));
-        JobInfo jobInfo = mapper.readValue(resolveNameSpace(RULE_JOBS + "PlayBookTasks.txt"), JobInfo.class);
+        JobInfo jobInfo = mapper.readValue(resolveNameSpace(RULE_JOBS + "playbookTasks.txt"), JobInfo.class);
         CTAAction act = mapper.readValue(upsertJson.getSetupActions().get(0).getAction(), CTAAction.class);
         jobInfo.getExtractionRule().setWhereCondition(" where JBCXM__PlaybookId__r.Name='" + act.getPlaybook() + "'");
         dataETL.execute(jobInfo);
@@ -361,7 +361,7 @@ public class CallToActionTestUsingMatrixData extends BaseTest {
     }
 
 
-    @TestInfo(testCaseIds = {"GS-4264"})
+   /* @TestInfo(testCaseIds = {"GS-4264"})
     @Test()
     public void testCtaUpsertWithSnoozeOption() throws Exception {
 
@@ -419,7 +419,7 @@ public class CallToActionTestUsingMatrixData extends BaseTest {
         Assert.assertEquals(actualTasks2.size(), 12, "Number of CSTasks are not matching for the cta's created");
         Log.info("Difference is : " + mapper.writeValueAsString(differenceData2));
         Assert.assertEquals(differenceData2.size(), 0, "Check the Diff above for which the CS-Tasks are not matching for the cta");
-    }
+    }*/
 
   /*  @TestInfo(testCaseIds = {"GS-4261"})
     @Test()
@@ -525,7 +525,7 @@ public class CallToActionTestUsingMatrixData extends BaseTest {
         Assert.assertEquals(differenceData.size(), 0, "Check the Diff above for which the CS-Tasks are not matching for the cta");
     }*/
 
-/*    @TestInfo(testCaseIds = {"GS-3873", "GS-4185"})
+   /* @TestInfo(testCaseIds = {"GS-3873", "GS-4185"})
     @Test()
     // This testcase handles owner field userlookup and cta token also for create cta action
     public void testCloseCtaFromSpecificSource() throws Exception {

@@ -2,7 +2,7 @@
   "ruleType": "Custom",
   "ruleName": "GS-6247-Matrix-Testcase-ID",
   "ruleDescription": "GS-6247-Matrix-Testcase-ID Desc",
-
+  "setupRule": null,
   "setupActions": [
     {
       "actionType": "createCta",
